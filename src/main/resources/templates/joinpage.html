@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+  </head>
+<body>
+<a href="index">홈</a>home
+  <br>
+  <form action="/auth/insertuser" method="POST">
+        이메일<input type="email" name="email" id="useremail"  placeholder="이메일을 적어 주세요">                   
+          <div id="emailcheck"></div>
+            비밀번호<input type="password" name="pwd" id="pwd" placeholder="10자 이상으로 입력해주세요">
+              <div id="passwordlength"></div>
+                이름<input type="text" name="name" id="username" placeholder="이름을 적어주세요">
+                  <div id="namecheck"></div>
+                  <br>
+          <input type="submit" value="완료">
+  </form>
+          <script src="../static/lib.js"></script>
+
+</body>
+</html>

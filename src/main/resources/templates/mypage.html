@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <title>마이페이지</title>
+</head>
+<body>
+    <h1>마이페이지</h1>
+    <a href="/">홈</a>
+        email
+        <div sec:authentication="name"></div>
+        이름
+        <div th:text="${uservo.getName()}"></div>
+        가입일
+        <div th:text="${uservo.getCreated()}"></div>
+        <br>
+        <div th:if="${uservo.getEmailcheck()!='true'}">
+            <input type="text" th:value="${uservo.getEmail()}" disabled>
+                <input type="button" class="sendemail" value="인증번호전송">
+                    <br>
+                        <input type="text" id="randnum" placeholder="인증번호를입력해주세요">
+                            <input type="button" id="confrimrandnum" value="제출">
+
+        </div>
+        <div th:if="${uservo.getEmailcheck()=='true'}">
+            이메일인증이 완료되었습니다.
+        </div>
+            <br>
+                <a href="/showreservationcepage">예약내역</a>
+                    <br>
+                        <a href="/updatepwdpage">비밀번호 변경하러 가기</a>
+                            <br>
+        <script src="../static/mypagelib.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>homepage</title>
+</head>
+<body>
+    <div sec:authorize="!isAuthenticated()"><!--세션을 이렇게 model로 안넘겨도 그냥 바로 꺼내쓸수 있다 20210515 편리하다-->
+            <a href="/auth/joinpage">회원가입</a>
+                <a href="/auth/loginpage">로그인</a>
+                    </div>
+    <div sec:authorize="isAuthenticated()"><!--else문을 모르겠다-->
+        <div sec:authentication="name"></div>
+            <a href="/mypage">마이페이지</a>
+                <a href="/logout">로그아웃</a>
+                    <a href="/showreservationcepage">예약내역</a>
+    </div>
+    <a href="/auth/boardlist">후기보기</a>
+        <a href="/auth/reservationpage">예약하기</a>
+</body>
+</html>

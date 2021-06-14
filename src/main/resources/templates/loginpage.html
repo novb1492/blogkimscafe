@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <a href="index">홈</a>
+<br>
+  <form action="/auth/loginprocess" method="post">
+      email:<input type="email"  name="username" placeholder=""><!--스프링 시큐리티 기본값 username =로해야 해시 풀떄 풀수 있다 젠장 20210520-->
+        <br>
+            pwd:<input type="password" name="password" placeholder="write pwd"><!--스프링 시큐리티 기본값 password 로해야 해시 풀떄 풀수 있다 젠장 20210520-->
+                <br>
+                    <input type="submit" value="로그인" >
+  </form>
+  <a href="/oauth2/authorization/google">구글로그인</a><!--고정주소암 20210603--><!--////시큐리티에서 .oauth2Login()해줘야함 20210603-->
+  <a href="/oauth2/authorization/facebook">페이스북로그인</a>
+  <a href="/auth/findpwdpage">비밀번호찾기</a>
+</body>
+</html>
