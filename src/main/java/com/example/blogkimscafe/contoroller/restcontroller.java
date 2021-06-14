@@ -43,7 +43,7 @@ public class restcontroller {
         return false;
     }
     @PostMapping("/confrimrandnum")
-    public boolean confrimEmail(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("randnum")String randnum) {
+    public boolean confrimRandnum(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("randnum")String randnum) {
         String email=principaldetail.getUsername();
         if(userservice.confrimRandnum(email,randnum)){
             principaldetail.getUservo().setEmailcheck(userservice.getEmailCheck(email));
