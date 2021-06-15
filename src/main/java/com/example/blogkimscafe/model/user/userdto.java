@@ -9,8 +9,6 @@ import lombok.Data;
 @Data
 public class userdto {
     
-    
-    private int id;
 
     @NotEmpty(message = "이메일이 빈칸입니다")
     @Email(message = "이메일형식으로 써주세요")
