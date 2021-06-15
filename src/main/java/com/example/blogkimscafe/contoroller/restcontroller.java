@@ -8,8 +8,11 @@ package com.example.blogkimscafe.contoroller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.email.sendemail;
+import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 
@@ -50,6 +53,12 @@ public class restcontroller {
             return true;
         }
         return false;
+        
+    }
+    @PostMapping("/updatepwd")
+    public boolean updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@Valid pwddto pwddto) {
+
+        return  userservice.updatePwd(principaldetail,pwddto);
         
     }
     

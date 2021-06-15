@@ -40,6 +40,11 @@ public class controller {
         model.addAttribute("uservo", principaldetail.getUservo());
         return "mypage";
     }
+    @GetMapping("/updatepwdpage")
+    public String updatepwdpage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
+        model.addAttribute("uservo", principaldetail.getUservo());
+        return "updatepwdpage";
+    }
 
    
 }

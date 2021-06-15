@@ -6,9 +6,11 @@ package com.example.blogkimscafe.service;
 import javax.transaction.Transactional;
 
 import com.example.blogkimscafe.config.security;
+import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.user.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +88,24 @@ public class userservice {
         }
         return null;
     }
+    public boolean updatePwd(@AuthenticationPrincipal principaldetail principaldetail,pwddto pwddto ) {
+        try {
+            uservo uservo=userdao.findByEmail(principaldetail.getUsername());
+            BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+            if(bCryptPasswordEncoder.matches(pwddto.getPwd(), uservo.getPwd())){
+                if(pwddto.getNpwd().equals(pwddto.getNpwd2())){
+                    String hashpwd=bCryptPasswordEncoder.encode(pwddto.getNpwd2());
+                    userdao.updatePwdNative(hashpwd,uservo.getEmail());
+                    principaldetail.getUservo().setPwd(hashpwd);
+                    return yes;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return no;
+    }
+    
     
     
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비밀번호변경</title>
+</head>
+<body>
+  <a href="/">홈</a>
+  <br>
+  <a href="/mypage">마이페이지</a>
+  <br>
+    현재비밀번호입력
+    <br>
+    <input type="password" id="pwd"  placeholder="현재 비밀번호를 입력해 주세요">
+    <br>
+    새로사용할 비밀번호 입력
+    <br>
+    <input type="password" id="npwd"  placeholder="새로 비밀번호를 입력해 주세요">
+    <br>
+    새로사용할 비밀번호 입력이 동일한지 한번더 입력해주세요
+    <br>
+    <input type="password" id="npwd2"  placeholder="새로 비밀번호를 입력해 주세요">
+    <br>
+    <div id="errormeseesge"></div>
+    <br>
+    <input type="button" id="updatePwdButton" value="완료">
+    <script src="../static/ajaxlib.js"></script>
+    <script src="../static/updatepwd.js"></script>
+</body>
+</html>
