@@ -1,11 +1,9 @@
 package com.example.blogkimscafe.model.user;
 
-import java.sql.Timestamp;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 import lombok.Data;
 
 @Data
@@ -25,17 +23,5 @@ public class userdto {
     @NotEmpty(message = "이름이 빈칸입니다")
     private String name;
 
-    private Timestamp created;
-
-    private String role;
-
-    private String provider;
-    
-    private String providerid;
-
-    private String emailcheck;
-    
-    private String randnum;
-
-   
+ 
 }
