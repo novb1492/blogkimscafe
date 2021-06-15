@@ -45,6 +45,10 @@ public class controller {
         model.addAttribute("uservo", principaldetail.getUservo());
         return "updatepwdpage";
     }
+    @GetMapping("/auth/findpwdpage")
+    public String findpwdpage() {
+        return "findpwdpage";
+    }
 
    
 }
