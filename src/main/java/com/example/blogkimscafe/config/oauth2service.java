@@ -4,6 +4,7 @@ import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.config.provider.igoogle;
 import com.example.blogkimscafe.config.provider.ioauth2;
 import com.example.blogkimscafe.enums.Role;
+
 import com.example.blogkimscafe.model.user.userdao;
 import com.example.blogkimscafe.model.user.uservo;
 import com.example.blogkimscafe.service.utilservice;
@@ -28,7 +29,6 @@ public class oauth2service extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         System.out.println("userrequest="+userRequest.getClientRegistration());///어떤 oauth로 로그인했는지 확인가능 ex google이면 google이라고 나옴
         System.out.println("userrequestaccesstoken="+userRequest.getAccessToken().getTokenValue());
-
         OAuth2User oAuth2User=super.loadUser(userRequest);///얘가 우리프로필을 다들고있는거다
         ioauth2 ioauth2=null;
         if(userRequest.getClientRegistration().getRegistrationId().equals("google")){

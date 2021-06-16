@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import com.example.blogkimscafe.config.security;
 import com.example.blogkimscafe.config.auth.principaldetail;
+import com.example.blogkimscafe.enums.Role;
 import com.example.blogkimscafe.model.user.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class userservice {
             uservo uservo=new uservo(userdto);
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
             uservo.setPwd(bCryptPasswordEncoder.encode(uservo.getPwd()));
-            uservo.setRole("ROLE_USER");
+            uservo.setRole(Role.USER.getValue());
             uservo.setRandnum(utilservice.GetRandomNum(6));
             uservo.setEmailcheck("false");
             userdao.save(uservo);

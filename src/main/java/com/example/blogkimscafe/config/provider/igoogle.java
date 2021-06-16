@@ -7,7 +7,7 @@ public class igoogle implements ioauth2 {
     private Map<String,Object>attributes;//oauth2user의 getattribute받는다
 
     public igoogle(Map<String,Object>attributes){
-        this.attributes=attributes;
+          this.attributes=attributes;
     }
     @Override
     public String getProviderid() {
