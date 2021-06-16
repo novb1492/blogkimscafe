@@ -2,23 +2,30 @@ package com.example.blogkimscafe.config.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import com.example.blogkimscafe.model.user.uservo;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import lombok.Data;
 
 
 @Data
-public class principaldetail implements UserDetails{
+public class principaldetail implements UserDetails,OAuth2User{
 
     private uservo uservo;
+    private Map<String,Object>attributtes;
  
     public principaldetail(uservo uservo)
     {
         this.uservo=uservo;
+    }
+    public principaldetail(uservo uservo,Map<String,Object>attributes){
+        this.uservo =uservo ;
+        this.attributtes=attributes;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -61,6 +68,15 @@ public class principaldetail implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    @Override
+    public Map<String, Object> getAttributes() {
+         return attributtes;
+    }
+    @Override
+    public String getName() {
+
+        return (String)this.attributtes.get("name");
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.blogkimscafe.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,7 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)//특정 주소 접근을 미리체크 한다  이3개는 셋트임 20210520
 public class security extends WebSecurityConfigurerAdapter {
 
-    
+    @Autowired
+    private oauth2service oauth2service;
+
   @Bean
     public BCryptPasswordEncoder pwdEncoder() {
 
@@ -33,7 +36,11 @@ public class security extends WebSecurityConfigurerAdapter {
          .formLogin()////로그인 발생시
          .loginPage("/auth/loginpage")///로그인페이지 지정
          .loginProcessingUrl("/auth/loginprocess")//여기로된링크를 가로채서    
-         .defaultSuccessUrl("/");//성공시 여기로보낸다      
+         .defaultSuccessUrl("/")//성공시 여기로보낸다  
+      .and()
+         .oauth2Login()
+         .userInfoEndpoint()
+         .userService(oauth2service);
     }
 
 
