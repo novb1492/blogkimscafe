@@ -3,10 +3,10 @@ package com.example.blogkimscafe.config;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.config.provider.igoogle;
 import com.example.blogkimscafe.config.provider.ioauth2;
+import com.example.blogkimscafe.enums.Role;
 import com.example.blogkimscafe.model.user.userdao;
 import com.example.blogkimscafe.model.user.uservo;
 import com.example.blogkimscafe.service.utilservice;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -37,8 +37,7 @@ public class oauth2service extends DefaultOAuth2UserService {
         String email=ioauth2.getEmail();
         String pwd="절대노출되지않는비번으로해줘야한다";
         String randnum=utilservice.GetRandomNum(6);
-        String role="ROLE_USER";
-        uservo uservo=new uservo(ioauth2,pwd,randnum,role);
+        uservo uservo=new uservo(ioauth2,pwd,randnum,Role.USER.getValue());
         if(userdao.findByEmail(email)==null){
             System.out.println(email+"은 처음임 회원가입 진행");
             userdao.save(uservo);
