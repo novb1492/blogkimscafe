@@ -31,16 +31,16 @@ public class oauth2service extends DefaultOAuth2UserService {
         System.out.println("oauth2로그인시도 "+oAuth2User);
         String email=(String)oAuth2User.getAttributes().get("email");
         uservo uservo=new uservo();
+        uservo.setEmail(email);
+        uservo.setEmailcheck("true");
+        uservo.setName((String)oAuth2User.getAttributes().get("name"));
+        uservo.setProvider("google");
+        uservo.setProviderid((String)oAuth2User.getAttributes().get("sub"));
+        uservo.setPwd("절대노출되지않는비번으로해줘야한다");
+        uservo.setRandnum(utilservice.GetRandomNum(6));
+        uservo.setRole("ROLE_USER");
         if(userdao.findByEmail(email)==null){
             System.out.println(email+"은 처음임 회원가입 진행");
-            uservo.setEmail(email);
-            uservo.setEmailcheck("true");
-            uservo.setName((String)oAuth2User.getAttributes().get("name"));
-            uservo.setProvider("google");
-            uservo.setProviderid((String)oAuth2User.getAttributes().get("sub"));
-            uservo.setPwd("절대노출되지않는비번으로해줘야한다");
-            uservo.setRandnum(utilservice.GetRandomNum(6));
-            uservo.setRole("ROLE_USER");
             userdao.save(uservo);
         }
         return new principaldetail(uservo, oAuth2User.getAttributes());///principal이니 가능하다 이걸하면 authen거기로
