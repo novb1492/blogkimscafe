@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.example.blogkimscafe.config.provider.ioauth2;
+
 import org.hibernate.annotations.CreationTimestamp;
 import lombok.Data;
 
@@ -51,8 +54,18 @@ public class uservo {
     public uservo () {}
 
     public uservo (userdto userdto) {
-        this.setEmail(userdto.getEmail());
-        this.setName(userdto.getName());
-        this.setPwd(userdto.getPwd());  
+        this.email=userdto.getEmail();
+        this.name=userdto.getName();
+        this.pwd=userdto.getPwd();
+    }
+    public uservo (ioauth2 ioauth2,String pwd,String randnum,String role) {
+        this.email=ioauth2.getEmail();
+        this.emailcheck="true";
+        this.name=ioauth2.getName();
+        this.provider=ioauth2.getProvider();
+        this.providerid=ioauth2.getProviderid();
+        this.pwd=pwd;
+        this.randnum=randnum;
+        this.role=role;
     }
 }
