@@ -105,6 +105,28 @@ public class userservice {
         }
         return no;
     }
+    public boolean findEmail(String email) {
+        try {
+            if(userdao.findByEmail(email)==null){
+                return no;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return yes;
+    }
+    @Transactional
+    public boolean updateTempPwd(String email,String randnum8) {
+        try {
+            uservo uservo=userdao.findByEmail(email);
+            BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+            uservo.setPwd(bCryptPasswordEncoder.encode(randnum8));
+            return yes;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return no;
+    }
     
     
     
