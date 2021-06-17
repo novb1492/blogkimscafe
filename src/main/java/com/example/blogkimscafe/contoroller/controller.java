@@ -49,6 +49,10 @@ public class controller {
     public String findpwdpage() {
         return "findpwdpage";
     }
+    @GetMapping("/auth/boardlist")
+    public String boardlist() {
+        return "boardlist";
+    }
 
    
 }
