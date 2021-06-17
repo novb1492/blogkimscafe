@@ -42,7 +42,6 @@ public class boardvo {
 
     public boardvo (){}
     public boardvo (boarddto boarddto) {
-        this.email=boarddto.getEmail();
         this.content=boarddto.getContent();
         this.title=boarddto.getTitle();
     }

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import com.example.blogkimscafe.config.auth.principaldetail;
+import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.user.pwddto;
+import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.userservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class restcontroller {
     private userservice userservice;
     @Autowired
     private emailservice emailservice;
+    @Autowired
+    private boardservice boardservice;
 
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestParam("email")String email ) {
@@ -70,13 +74,16 @@ public class restcontroller {
         
     }
     @PostMapping("/confrimemailcheck")
-    public boolean writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
+    public boolean writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
         if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
             return true;
         }
         return false;
     }
-    
-    
+    @PostMapping("/insertarticle")
+    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto) {
+        
+        return boardservice.insertArticle(principaldetail.getUsername(), boarddto);
+    }
     
 }
