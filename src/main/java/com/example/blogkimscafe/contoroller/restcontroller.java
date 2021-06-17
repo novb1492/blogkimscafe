@@ -7,11 +7,18 @@ package com.example.blogkimscafe.contoroller;
 
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boarddto;
+import com.example.blogkimscafe.model.boardimage.boardimagedao;
+import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.emailservice;
@@ -33,6 +40,8 @@ public class restcontroller {
     private emailservice emailservice;
     @Autowired
     private boardservice boardservice;
+    @Autowired
+    private boardimagedao boardimagedao;
 
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestParam("email")String email ) {
@@ -81,8 +90,40 @@ public class restcontroller {
         return false;
     }
     @PostMapping("/insertarticle")
-    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto) {
-        return boardservice.insertArticle(principaldetail.getUsername(), boarddto);
+    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
+        
+        return boardservice.insertArticle(principaldetail.getUsername(), boarddto,file);
+    }
+  
+    @PostMapping("/test")
+    public String test(@RequestParam("file") List<MultipartFile> file) {
+        System.out.println(file.isEmpty()+"비었나요?");
+        if(file.isEmpty()){
+            for(int i=0;i<file.size();i++)
+            {
+                System.out.println(file.get(i).getOriginalFilename()+"파일이름");
+                System.out.println(file.get(i).getSize()+"파일사이즈");
+                if(file.get(i).getContentType().split("/")[0].equals("image")){
+                    try {
+                        System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
+                        String savename="C:/Users/Administrator/Desktop/img"+"2021"+file.get(i).getOriginalFilename();
+                        file.get(i).transferTo(new File(savename));
+                        boardimagevo boardimagevo=new boardimagevo();
+                        boardimagevo.setBid(1);
+                        boardimagevo.setImagename(savename);
+                        boardimagevo.setTitle("test");
+                        boardimagedao.save(boardimagevo);
+                        System.out.println("사진업로드");
+                        
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return "yes";
+        }
+        
+        return "no";
     }
     
 }

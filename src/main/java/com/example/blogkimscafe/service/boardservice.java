@@ -2,18 +2,20 @@ package com.example.blogkimscafe.service;
 
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
-
+import com.example.blogkimscafe.model.boardimage.boardimagedao;
+import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class boardservice {
@@ -24,12 +26,29 @@ public class boardservice {
 
     @Autowired
     private boarddao boarddao;
+    @Autowired
+    private boardimagedao boardimagedao;
 
-    public boolean insertArticle(String email,boarddto boarddto) {
+    public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
         try {
             boardvo boardvo=new boardvo(boarddto);
             boardvo.setEmail(email);
             boarddao.save(boardvo);
+                for(int i=0;i<file.size();i++)
+                {
+                    System.out.println(file.get(i).getOriginalFilename()+"파일이름");
+                    System.out.println(file.get(i).getSize()+"파일사이즈");
+                    if(file.get(i).getContentType().split("/")[0].equals("image")){
+                            System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
+                            String savename="C:/Users/Administrator/Desktop/img"+"2021"+file.get(i).getOriginalFilename();
+                            file.get(i).transferTo(new File(savename));
+                            boardimagevo boardimagevo=new boardimagevo();
+                            boardimagevo.setBid(boardvo.getBid());
+                            boardimagevo.setImagename(savename);
+                            boardimagevo.setTitle(boardvo.getTitle());
+                            boardimagedao.save(boardimagevo);
+                    }
+                }
             return yes;
         } catch (Exception e) {
            e.printStackTrace();
@@ -75,6 +94,7 @@ public class boardservice {
         }
         return array;
     }
+    
     
     
 }

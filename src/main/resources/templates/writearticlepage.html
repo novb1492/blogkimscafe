@@ -15,6 +15,10 @@
         <br> 
             <textarea cols="100" rows="50" id="content" placeholder="최대 입력글자는 1000자입니다"></textarea>
                 <br>
+                <form id="target" action="/test" method="POST" enctype="multipart/form-data" >
+                        <input multiple="multiple"  type="file" name="file">
+                        <input type="submit" value="전송" id="button">
+                </form>
                     <input type="button" id="insertArticleButton" value="완료">
                     <script src="../static/ajaxlib.js"></script>
                     <script src="../static/wirtearticle.js"></script>
