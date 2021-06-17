@@ -82,7 +82,6 @@ public class restcontroller {
     }
     @PostMapping("/insertarticle")
     public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto) {
-        
         return boardservice.insertArticle(principaldetail.getUsername(), boarddto);
     }
     
