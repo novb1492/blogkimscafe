@@ -71,7 +71,7 @@ public class restcontroller {
     }
     @PostMapping("/confrimemailcheck")
     public boolean writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if(userservice.confrimEmail(principaldetail.getUsername())){
+        if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
             return true;
         }
         return false;

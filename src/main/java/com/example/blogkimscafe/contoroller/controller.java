@@ -53,13 +53,14 @@ public class controller {
     public String boardlist() {
         return "boardlist";
     }
-    @PostMapping("/writearticlepage")
+    @GetMapping("/writearticle")
     public String writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if(userservice.confrimEmail(principaldetail.getUsername())){
+        if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
             return "writearticlepage";
         }
         return "/auth/boardlist";
     }
+
   
 
    
