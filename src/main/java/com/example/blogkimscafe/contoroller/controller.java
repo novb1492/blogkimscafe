@@ -4,6 +4,7 @@ package com.example.blogkimscafe.contoroller;
 
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
+import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.userservice;
@@ -24,6 +25,8 @@ public class controller {
     private userservice userservice;
     @Autowired
     private boardservice boardservice;
+    @Autowired
+    private boardimagedao boardimagedao;
 
 
     @GetMapping("/auth/joinpage")
@@ -62,6 +65,11 @@ public class controller {
         }
         return "/auth/boardlist";
     }
+    @GetMapping("/auth/test")
+    public String test(Model model) {
+        model.addAttribute("url", boardimagedao.findByBid(1).get(0).getImagename());
+        return "test";
+    }
     @GetMapping("/auth/boardlist")
     public String boardList(Model model,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "title",defaultValue = "")String title) {
         if(title.equals("")){
@@ -80,6 +88,7 @@ public class controller {
         }
         return "boardlist";
     }
+
 
    
 

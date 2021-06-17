@@ -106,11 +106,11 @@ public class restcontroller {
                 if(file.get(i).getContentType().split("/")[0].equals("image")){
                     try {
                         System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
-                        String savename="C:/Users/Administrator/Desktop/img"+"2021"+file.get(i).getOriginalFilename();
-                        file.get(i).transferTo(new File(savename));
+                        String savename="2021"+file.get(i).getOriginalFilename();
+                        file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
                         boardimagevo boardimagevo=new boardimagevo();
                         boardimagevo.setBid(1);
-                        boardimagevo.setImagename(savename);
+                        boardimagevo.setImagename("http://localhost:8080/static/images/"+savename);
                         boardimagevo.setTitle("test");
                         boardimagedao.save(boardimagevo);
                         System.out.println("사진업로드");
