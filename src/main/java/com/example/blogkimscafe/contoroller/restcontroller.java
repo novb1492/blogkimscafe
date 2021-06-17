@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boarddto;
+import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.user.pwddto;
@@ -108,10 +109,10 @@ public class restcontroller {
                         System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
                         String savename="2021"+file.get(i).getOriginalFilename();
                         file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
-                        boardimagevo boardimagevo=new boardimagevo();
-                        boardimagevo.setBid(1);
-                        boardimagevo.setImagename("http://localhost:8080/static/images/"+savename);
-                        boardimagevo.setTitle("test");
+                        boardvo boardvo=new boardvo();
+                        boardvo.setBid(1);
+                        boardvo.setTitle("test");
+                        boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
                         boardimagedao.save(boardimagevo);
                         System.out.println("사진업로드");
                         

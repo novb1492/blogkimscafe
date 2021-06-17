@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.example.blogkimscafe.model.board.boardvo;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -35,7 +38,12 @@ public class boardimagevo {
     @CreationTimestamp
     private Timestamp created;
 
-    
+    public boardimagevo(){};
+    public  boardimagevo(boardvo boardvo,String imagename) {
+        this.bid=boardvo.getBid();
+        this.imagename=imagename;
+        this.title=boardvo.getTitle();
+    }
 
  
 

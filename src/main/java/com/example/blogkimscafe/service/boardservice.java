@@ -44,12 +44,9 @@ public class boardservice {
                         System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
                         String savename="2021"+file.get(i).getOriginalFilename();
                         file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
-                        boardimagevo boardimagevo=new boardimagevo();
-                        boardimagevo.setBid(boardvo.getBid());
-                        boardimagevo.setImagename("http://localhost:8080/static/images/"+savename);
-                        boardimagevo.setTitle(boardvo.getTitle());
+                        boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
                         boardimagedao.save(boardimagevo);
-                        System.out.println("사진업로드");   
+                        System.out.println("사진업로드");  
                     }
                 }
             }
