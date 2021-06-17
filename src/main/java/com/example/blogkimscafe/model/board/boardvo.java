@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
+
 @Data
 @Table(name="blogboard")
 @Entity
@@ -28,14 +29,14 @@ public class boardvo {
     @Column(name="content",nullable = false,length = 1000)
     private String content;
 
-    @Column(name = "title",nullable = false,length = 100)
+    @Column(name = "title",nullable = false,length = 30)
     private String title;
 
     @Column(name = "hit",nullable = false)
     @ColumnDefault("0")
     private int hit;
 
-    @Column(name="created",nullable = false)
+    @Column(name="created")
     @CreationTimestamp
     private Timestamp created;
 

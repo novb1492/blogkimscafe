@@ -69,6 +69,13 @@ public class restcontroller {
         return  userservice.updatePwd(principaldetail,pwddto);
         
     }
+    @PostMapping("/confrimemailcheck")
+    public boolean writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
+        if(userservice.confrimEmail(principaldetail.getUsername())){
+            return true;
+        }
+        return false;
+    }
     
     
     

@@ -11,9 +11,6 @@ import lombok.Data;
 @Data
 public class boarddto {
     
-
- 
-
     @NotBlank(message = "로그인후 사용해 주세요")
     @Email(message = "이메일이 올바르지 않습니다")
     private String email;

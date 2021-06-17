@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+</head>
+<body>
+    <a href="/">홈</a>
+        <br>
+            <h1>글을 작성해주세요</h1>
+                <div id="errorcontent2"></div>
+                    <div th:text="'작성자'+'&nbsp'+${#authentication.name}" >
+                        <input type="text">
+                            제목<input type="text" placeholder="30글자 이하로 입력해주세요" id="title"><div id="errortitle"></div>
+                                <br>
+                                    글내용<div id="errorcontent"></div>
+                                    <br> 
+                                        <textarea cols="100" rows="50" id="content" placeholder="최대 입력글자는 1000자입니다"></textarea>
+                                            <br>
+                                                <input type="button" id="insertArticleButton" value="완료">
+
+</body>
+</html>

@@ -53,6 +53,14 @@ public class controller {
     public String boardlist() {
         return "boardlist";
     }
+    @PostMapping("/writearticlepage")
+    public String writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
+        if(userservice.confrimEmail(principaldetail.getUsername())){
+            return "writearticlepage";
+        }
+        return "/auth/boardlist";
+    }
+  
 
    
 }

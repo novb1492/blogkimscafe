@@ -16,7 +16,7 @@
         <div sec:authorize="isAuthenticated()"><!--else문을 모르겠다--><!--이제 세션은 없는건가... 뭔가 알면 편리한데 모르면 한없이 어렵다 학원가서 진짜 집중해서 배워야겠다 20210523-->
             <div sec:authentication="name"></div><!--principaldetail에  getusername을 가져다 쓰는거다-->
             <a href="/mypage">마이페이지</a>
-            <a href="#" id="writeArticleLink">글쓰기</a>
+            <a href="#" id="confrimemailcheck">글쓰기</a>
             <a href="/logout">로그아웃</a><!--링크 앞에 항상 /붙여야함-->
         </div>
 <table>
@@ -68,9 +68,11 @@
                 <div >[[${currentpage}]]/[[${totalpage}]]</div>
             </div>
                 <form action="/auth/search">
-                <input type="text" name="title" placeholder="검색창">
-                <input type="submit" value="검색">
+                    <input type="text" name="title" placeholder="검색창">
+                    <input type="submit" value="검색">
                 </form>
+                <script src="../static/ajaxlib.js"></script>
+                <script src="../static/boardlist.js"></script>
 
 </body>
 </html>
