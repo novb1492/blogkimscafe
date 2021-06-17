@@ -2,6 +2,9 @@ package com.example.blogkimscafe.service;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
@@ -42,5 +45,36 @@ public class boardservice {
         }
         return null;
     }
+    public int getSearchAtBoardCount(String title){
+        int totalpage=0;
+        try {
+            int count=boarddao.countByTitleLikeNative(title);
+            totalpage=count/pagesize;
+            if(count%pagesize>0){
+                totalpage++;
+            }
+            return totalpage;
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return 1;
+    }
+    public List<boardvo> getSearchAtBoard(String title,int page,int totalpage) {
+        List<boardvo>array=new ArrayList<>();
+        try {
+            int fisrt=0,end=0;
+            if(totalpage>1){
+                fisrt=(page-1)*pagesize+1;
+                end=fisrt+pagesize-1; 
+                array=boarddao.findByTitleLikeOrderByBidLimitNative(title,fisrt-1,end-fisrt+1);
+            }else{
+                array=boarddao.findByTitleLikeOrderByBidNative(title);
+            }
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return array;
+    }
+    
     
 }

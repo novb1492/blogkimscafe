@@ -54,14 +54,14 @@
     </div>
         <div th:if="${search==true}">
             <div th:if="${currentpage<totalpage}">
-                <form action="/auth/search">
+                <form action="/auth/boardlist">
                     <input type="hidden" name="title" th:value="${title}">
                     <input type="hidden" name="page" th:value="${currentpage+1}">
                     <input type="submit" value="다음">
                 </form>
             </div>
                 <div th:if="${currentpage>1}">
-                    <form action="/auth/search">
+                    <form action="/auth/boardlist">
                     <input type="hidden" name="title" th:value="${title}">
                     <input type="hidden" name="page" th:value="${currentpage-1}">
                     <input type="submit" value="이전">
@@ -69,7 +69,7 @@
                 </div>
                 <div >[[${currentpage}]]/[[${totalpage}]]</div>
             </div>
-                <form action="/auth/search">
+                <form action="/auth/boardlist">
                     <input type="text" name="title" placeholder="검색창">
                     <input type="submit" value="검색">
                 </form>

@@ -27,7 +27,7 @@ public class controller {
 
 
     @GetMapping("/auth/joinpage")
-    public String joinpage() {
+    public String joinPage() {
         return "joinpage";
     }
     @PostMapping("/auth/insertuser")
@@ -38,39 +38,49 @@ public class controller {
         return "joinpage";
     }
     @GetMapping("/auth/loginpage")
-    public String loginpage() {
+    public String loginPage() {
         return "loginpage";
     }
     @GetMapping("/mypage")
-    public String mypage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
+    public String myPage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
         model.addAttribute("uservo", principaldetail.getUservo());
         return "mypage";
     }
     @GetMapping("/updatepwdpage")
-    public String updatepwdpage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
+    public String updatePwdPage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
         model.addAttribute("uservo", principaldetail.getUservo());
         return "updatepwdpage";
     }
     @GetMapping("/auth/findpwdpage")
-    public String findpwdpage() {
+    public String findPwdPage() {
         return "findpwdpage";
     }
     @GetMapping("/writearticle")
-    public String writearticlepage(@AuthenticationPrincipal principaldetail principaldetail) {
+    public String writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
         if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
             return "writearticlepage";
         }
         return "/auth/boardlist";
     }
     @GetMapping("/auth/boardlist")
-    public String boardlist(Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
-        Page<boardvo>array=boardservice.getBoard(page);
-        model.addAttribute("search", false);
-        model.addAttribute("currentpage", page);
-        model.addAttribute("array", array);
-        model.addAttribute("totalpage", array.getTotalPages());
+    public String boardList(Model model,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "title",defaultValue = "")String title) {
+        if(title.equals("")){
+            Page<boardvo>array=boardservice.getBoard(page);
+            model.addAttribute("search", false);
+            model.addAttribute("currentpage", page);
+            model.addAttribute("array", array);
+            model.addAttribute("totalpage", array.getTotalPages());
+        }else{
+            int totalpage=boardservice.getSearchAtBoardCount(title);
+            model.addAttribute("title", title);
+            model.addAttribute("search", true);
+            model.addAttribute("currentpage", page);
+            model.addAttribute("totalpage", totalpage);
+            model.addAttribute("array", boardservice.getSearchAtBoard(title,page,totalpage));
+        }
         return "boardlist";
     }
+   
 
   
 
