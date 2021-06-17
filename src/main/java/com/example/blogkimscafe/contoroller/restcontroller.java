@@ -97,8 +97,8 @@ public class restcontroller {
   
     @PostMapping("/test")
     public String test(@RequestParam("file") List<MultipartFile> file) {
-        System.out.println(file.isEmpty()+"비었나요?");
-        if(file.isEmpty()){
+        System.out.println(file.get(0).isEmpty()+"비었나요?");
+        if(file.get(0).isEmpty()==false){
             for(int i=0;i<file.size();i++)
             {
                 System.out.println(file.get(i).getOriginalFilename()+"파일이름");

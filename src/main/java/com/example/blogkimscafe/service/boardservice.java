@@ -34,6 +34,8 @@ public class boardservice {
             boardvo boardvo=new boardvo(boarddto);
             boardvo.setEmail(email);
             boarddao.save(boardvo);
+            System.out.println(file+"file");
+            if(file!=null){
                 for(int i=0;i<file.size();i++)
                 {
                     System.out.println(file.get(i).getOriginalFilename()+"파일이름");
@@ -49,6 +51,7 @@ public class boardservice {
                             boardimagedao.save(boardimagevo);
                     }
                 }
+            }
             return yes;
         } catch (Exception e) {
            e.printStackTrace();
