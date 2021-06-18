@@ -110,7 +110,6 @@ function doSendEmailNoLoing(){
                 alert(text);
             }
         }
-  
 }  
 function doSendTempPwdEmail(){
     var confrimrandnum=document.getElementById('confrimrandnum');
