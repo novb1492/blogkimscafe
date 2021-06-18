@@ -18,10 +18,10 @@
         <br>
         <div th:if="${uservo.getEmailcheck()!='true'}">
             <input type="text" th:value="${uservo.getEmail()}" disabled>
-                <input type="button" class="sendemail" value="인증번호전송">
+                <input type="button" onclick="doSendEamil()" value="인증번호전송">
                     <br>
                         <input type="text" id="randnum" placeholder="인증번호를입력해주세요">
-                            <input type="button" id="confrimrandnum" value="제출">
+                            <input type="button" onclick="doConfrimTempnum()" value="제출">
 
         </div>
         <div th:if="${uservo.getEmailcheck()=='true'}">
@@ -32,8 +32,7 @@
                     <br>
                         <a href="/updatepwdpage">비밀번호 변경하러 가기</a>
                             <br>
-        <script src="../static/ajaxlib.js"></script>
-        <script src="../static/mypagelib.js"></script>
+        <script src="../static/doAjax.js"></script>
 
 </body>
 </html>

@@ -22,9 +22,8 @@
                                 <textarea cols="100" rows="50" name="content" id="content" placeholder="최대 입력글자는 1000자입니다"th:text="${boardvo.getContent}" ></textarea>
                                     <input type="hidden" id="bid" th:value="${boardvo.getBid}">
                                             <br>
-                                                <input type="button" onclick="doUpdateArticle()" id="updatearticle" value="완료">    
-                                                <script src="../static/ajaxlib.js"></script>
-                                                <script src="../static/wirtearticle.js"></script>    
+                                                <input type="button" onclick="doUpdateArticle()" id="updatearticle" value="완료">                           
+                                                <script src="../static/doAjax.js"></script>    
 
 </body>
 </html>
