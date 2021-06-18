@@ -10,17 +10,17 @@
 <a href="/">홈</a>home
   <br>
   <form action="/auth/insertuser" method="POST">
-        이메일<input type="email" name="email" id="useremail"  placeholder="이메일을 적어 주세요">                   
+        이메일<input type="email" onkeyup="doConfrimEmail()" name="email" id="useremail"  placeholder="이메일을 적어 주세요">                   
           <div id="emailcheck"></div>
-            비밀번호<input type="password" name="pwd" id="pwd" placeholder="10자 이상으로 입력해주세요">
+            비밀번호<input type="password" onkeyup="confrimPwdLength()" name="pwd" id="pwd" placeholder="10자 이상으로 입력해주세요">
               <div id="passwordlength"></div>
-                이름<input type="text" name="name" id="username" placeholder="이름을 적어주세요">
+                이름<input type="text" onkeyup="confrimNameLength()" name="name" id="username" placeholder="이름을 적어주세요">
                   <div id="namecheck"></div>
                   <br>
           <input type="submit" value="완료">
   </form>
-          <script src="../static/ajaxlib.js"></script>
-          <script src="../static/lib.js"></script>
+          <script src="../static/doAjax.js"></script>
+          <script src="../static/jscss.js"></script>
 
 </body>
 </html>
