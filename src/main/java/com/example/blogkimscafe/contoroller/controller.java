@@ -53,8 +53,7 @@ public class controller {
         return "mypage";
     }
     @GetMapping("/updatepwdpage")
-    public String updatePwdPage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
-        model.addAttribute("uservo", principaldetail.getUservo());
+    public String updatePwdPage() {
         return "updatepwdpage";
     }
     @GetMapping("/auth/findpwdpage")
@@ -72,6 +71,16 @@ public class controller {
     public String name(@RequestParam("bid")int bid,Model model) {
          model.addAttribute("boardvo", boardservice.getArticle(bid));
          return "content";
+    }
+    @GetMapping("/updatearticlepage")
+    public String updateArticlePage(@RequestParam("bid")int bid,@AuthenticationPrincipal principaldetail principaldetail,Model model) {
+        boardvo boardvo=boardservice.getArticle(bid);
+        if(principaldetail.getUsername().equals(boardvo.getEmail())){
+           model.addAttribute("boardvo", boardvo);
+            return "updatearticlepage";
+        }
+        return "boardlist";
+        
     }
     @GetMapping("/auth/test")
     public String test(Model model) {

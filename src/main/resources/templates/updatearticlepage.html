@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/auth/index">홈</a>
+    <br>
+    <h1>글을 수정해주세요</h1>
+    
+    <div th:text="'작성자'+'&nbsp'+${#authentication.name}"></div>
+        <div th:text="'글번호'+'&nbsp'+${boardvo.getBid}"></div>
+            제목<input type="text" name="title" placeholder="30글자 이하로 입력해주세요" id="title" th:value="${boardvo.getTitle}">
+                <br>
+                    <div id="errortitle"></div>
+                        <br>
+                            글내용<div id="errorcontent"></div>
+                            <br> 
+                                <textarea cols="100" rows="50" name="content" id="content" placeholder="최대 입력글자는 1000자입니다"th:text="${boardvo.getContent}" ></textarea>
+                                    <input type="hidden" id="bid" th:value="${boardvo.getBid}">
+                                            <br>
+                                                <input type="button" id="button" value="완료">        
+
+</body>
+</html>

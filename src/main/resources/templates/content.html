@@ -21,8 +21,8 @@
             <div th:text="${'조회수'+'&nbsp'+boardvo.getHit}">조회수</div>
 
             <div th:if="${#authentication.name==boardvo.getEmail}">
-                <form action="/updatecontent">
-                    <input type="hidden" id="bid" name="bid" th:value="${boardvo.getBid}">
+                <form action="/updatearticlepage">
+                    <input type="hidden"  name="bid" th:value="${boardvo.getBid}">
                         <input type="submit" id="update" value="수정">
                             </form>
                                 <input type="button" id="deletearticle" value="삭제">
