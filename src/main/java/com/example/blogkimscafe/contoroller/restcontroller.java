@@ -95,7 +95,10 @@ public class restcontroller {
         
         return boardservice.insertArticle(principaldetail.getUsername(), boarddto,file);
     }
-  
+    @PostMapping("/updatearticle")
+    public boolean updateArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam("bid")int bid) {
+        return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid);
+    }
     @PostMapping("/test")
     public String test(@RequestParam("file") List<MultipartFile> file) {
         System.out.println(file.get(0).isEmpty()+"비었나요?");
