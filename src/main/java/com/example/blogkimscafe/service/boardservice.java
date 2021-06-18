@@ -38,11 +38,12 @@ public class boardservice {
             if(file!=null){
                 for(int i=0;i<file.size();i++)
                 {
-                    System.out.println(file.get(i).getOriginalFilename()+"파일이름");
+                    String filename=file.get(i).getOriginalFilename();
+                    System.out.println(filename+"파일이름");
                     System.out.println(file.get(i).getSize()+"파일사이즈");
                     if(file.get(i).getContentType().split("/")[0].equals("image")){
-                        System.out.println(file.get(i).getOriginalFilename()+"이미지가 맞습니다");
-                        String savename="2021"+file.get(i).getOriginalFilename();
+                        System.out.println(filename+"이미지가 맞습니다");
+                        String savename="2021"+filename;
                         file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
                         boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
                         boardimagedao.save(boardimagevo);
