@@ -144,4 +144,19 @@ function doUpdatePwd(){
         }
     }   
 }
+function doInsertComment(){
+    var bid=document.getElementById('bid').value;
+    var xhr,url='/insertcomment',data='comment='+document.getElementById('comment').value+'&bid='+bid;
+    xhr=doajax(url,data);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            if(xhr.response=='true'){
+                alert("댓글을 등록 했습니다");
+                location.href="/auth/content?bid="+bid;
+            }else{
+                alert("댓글 등록에 실패했습니다");
+            }
+        }
+    }   
+}
     

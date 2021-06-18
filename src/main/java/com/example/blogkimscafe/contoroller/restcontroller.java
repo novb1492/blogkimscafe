@@ -20,8 +20,10 @@ import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
+import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.service.boardservice;
+import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.userservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,8 @@ public class restcontroller {
     private boardservice boardservice;
     @Autowired
     private boardimagedao boardimagedao;
+    @Autowired
+    private commentservice commentservice;
 
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestParam("email")String email ) {
@@ -92,12 +96,19 @@ public class restcontroller {
     }
     @PostMapping("/insertarticle")
     public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
-        
         return boardservice.insertArticle(principaldetail.getUsername(), boarddto,file);
     }
     @PostMapping("/updatearticle")
     public boolean updateArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam("bid")int bid) {
         return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid);
+    }
+    @PostMapping("/insertcomment")
+    public boolean insertComment(@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
+        String email= principaldetail.getUsername();
+        if(userservice.getEmailCheck(email).equals("true")){
+            return commentservice.insertComment(commentdto,email); 
+        }
+        return false;
     }
     @PostMapping("/test")
     public String test(@RequestParam("file") List<MultipartFile> file) {

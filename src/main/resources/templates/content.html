@@ -32,9 +32,12 @@
             <a href="/auth/boardlist">게시판</a>
             <br>
             댓글
+            <div sec:authorize="!isAuthenticated()">
+               댓글 등록을 하려면 로그인 해주세요 
+            </div>
             <div sec:authorize="isAuthenticated()">
                 <input type="text" id="comment" ><!--댓글등록하는곳-->
-                    <input type="button"  class="insertCommentButton" value="완료">
+                    <input type="button"  onclick="doInsertComment()" value="완료">
             </div>
             <div th:each="comment : ${array}"><!--댓글 출력하는곳-->
                 <div th:text="'작성자'+${comment.getEmail}"></div>
@@ -65,5 +68,6 @@
                     </form>
                 </div>
             <div >[[${currentpage}]]/[[${totalpage}]]</div>
+            <script src="../static/doAjax.js"></script>
 </body>
 </html>
