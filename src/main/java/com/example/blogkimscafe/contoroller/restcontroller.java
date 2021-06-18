@@ -112,6 +112,7 @@ public class restcontroller {
                         boardvo boardvo=new boardvo();
                         boardvo.setBid(1);
                         boardvo.setTitle("test");
+                        boardvo.setEmail("올린사람");
                         boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
                         boardimagedao.save(boardimagevo);
                         System.out.println("사진업로드");

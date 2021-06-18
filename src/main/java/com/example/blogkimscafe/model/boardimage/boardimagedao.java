@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface boardimagedao extends JpaRepository<boardimagevo,Integer> {
     
-    public List<boardimagevo> findByBid(int bid);
+    public List<boardimagevo> findByBidOrderById(int bid);
 }

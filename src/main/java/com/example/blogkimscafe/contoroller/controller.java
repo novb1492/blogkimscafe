@@ -2,9 +2,12 @@ package com.example.blogkimscafe.contoroller;
 
 
 
+import java.util.List;
+
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
+import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.userservice;
@@ -67,7 +70,11 @@ public class controller {
     }
     @GetMapping("/auth/test")
     public String test(Model model) {
-        model.addAttribute("url", boardimagedao.findByBid(1).get(0).getImagename());
+        List<boardimagevo>array=boardimagedao.findByBidOrderById(1);
+        for(boardimagevo boardimagevo: array){
+            System.out.println(boardimagevo.getImageurl());
+        }
+        model.addAttribute("array", array);
         return "test";
     }
     @GetMapping("/auth/boardlist")

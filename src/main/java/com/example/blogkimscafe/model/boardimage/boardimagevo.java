@@ -31,18 +31,22 @@ public class boardimagevo {
     @Column(name = "title",nullable = false,length = 30)
     private String title;
 
-    @Column(name = "imagename")
-    private String imagename;
+    @Column(name="email",nullable = false,length = 50)
+    private String email;
+
+    @Column(name = "imageurl")
+    private String imageurl;
 
     @Column(name="created")
     @CreationTimestamp
     private Timestamp created;
 
     public boardimagevo(){};
-    public  boardimagevo(boardvo boardvo,String imagename) {
+    public  boardimagevo(boardvo boardvo,String imageurl) {
         this.bid=boardvo.getBid();
-        this.imagename=imagename;
+        this.imageurl=imageurl;
         this.title=boardvo.getTitle();
+        this.email=boardvo.getEmail();
     }
 
  
