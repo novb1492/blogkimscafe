@@ -31,7 +31,7 @@
     </tr>
     <tr th:each="list : ${array}">
         <td th:text="${list.getBid()}"></td>
-        <td ><a th:href="@{content(bid=${list.getBid})}" th:text="${list.getTitle}"></a></td> 
+        <td ><a th:href="@{/auth/content(bid=${list.getBid})}" th:text="${list.getTitle}"></a></td> 
         <td th:text="${list.getEmail}"></td>
         <td th:text="${list.getCreated}"></td>
         <td th:text="${list.getHit}"></td>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>후기쓰기</title>
+</head>
+<body>
+    <h3>후기쓰기</h3>
+    <a href="/">홈</a>
+        <input type="hidden" id="bid" th:value="${boardvo.getBid}"><!--bid여기-->
+    <br>
+            제목
+            <input type="text" rows="30" cols="1" th:value="${boardvo.getTitle}" disabled>
+            <div th:text="${'작성자'+boardvo.getEmail}">작성자</div>
+            내용
+            <br>
+            <textarea cols="100" rows="50" name="content" id="content" disabled>[[${boardvo.getContent}]]</textarea>
+            <br>
+            <div th:text="${'조회수'+'&nbsp'+boardvo.getHit}">조회수</div>
+
+            <div th:if="${#authentication.name==boardvo.getEmail}">
+                <form action="/updatecontent">
+                    <input type="hidden" id="bid" name="bid" th:value="${boardvo.getBid}">
+                        <input type="submit" id="update" value="수정">
+                            </form>
+                                <input type="button" id="deletearticle" value="삭제">
+            </div>
+            <div id="errorcomment"></div>  
+            <br>
+            <a href="/auth/boardlist">게시판</a>
+            <br>
+            댓글
+            <div sec:authorize="isAuthenticated()">
+                <input type="text" id="comment" ><!--댓글등록하는곳-->
+                    <input type="button"  class="insertCommentButton" value="완료">
+            </div>
+            <div th:each="comment : ${array}"><!--댓글 출력하는곳-->
+                <div th:text="'작성자'+${comment.getEmail}"></div>
+                내용 <input type="text"  th:class="${comment.getCid}+comment" th:value="${comment.getComment}" disabled></input>
+                <div th:if="${#authentication.name==comment.getEmail}">
+                        <input type="button" th:id="${comment.getCid}"  class="updateCommentButton" value="수정">
+                            <input type="button" th:id="${comment.getCid}" class="deleteCommentButton" value="삭제"><!--유레카 버튼마다 각 cid의 번호를 id로 줘버리면 된다 20210609-->    
+                                <input type="button"  th:id="${comment.getCid}+update" class="updateCommnetButton2" value="확인" disabled >
+                                <div th:id="${comment.getCid}+updateArea"></div>
+                </div>    
+                <div sec:authorize="isAuthenticated()">
+                    <a href="#" th:id="${comment.getCid}" class="replyButton">답글</a>
+                    <div th:id="${comment.getCid}+reply"></div>
+                </div>
+            </div>
+            <div th:if="${currentpage<totalpage}">
+                <form action="/auth/content">
+                    <input type="hidden" name="bid" th:value="${boardvo.getBid}">
+                    <input type="hidden" name="page" th:value="${currentpage+1}">
+                    <input type="submit" value="다음">
+                </form>
+           </div>
+                <div th:if="${currentpage>1}">
+                    <form action="/auth/content">
+                        <input type="hidden" name="bid" th:value="${boardvo.getBid}">
+                        <input type="hidden" name="page" th:value="${currentpage-1}">
+                        <input type="submit" value="이전">
+                    </form>
+                </div>
+            <div >[[${currentpage}]]/[[${totalpage}]]</div>
+</body>
+</html>

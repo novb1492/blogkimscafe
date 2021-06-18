@@ -68,6 +68,11 @@ public class controller {
         }
         return "/auth/boardlist";
     }
+    @GetMapping("/auth/content")
+    public String name(@RequestParam("bid")int bid,Model model) {
+         model.addAttribute("boardvo", boardservice.getArticle(bid));
+         return "content";
+    }
     @GetMapping("/auth/test")
     public String test(Model model) {
         List<boardimagevo>array=boardimagedao.findByBidOrderById(1);

@@ -58,6 +58,14 @@ public class boardservice {
         return no;
         
     }
+    public boardvo getArticle(int bid) {
+        try {
+            return boarddao.findById(bid).orElseThrow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public Page<boardvo> getBoard(int page) {
         try {
             return boarddao.findAll(PageRequest.of(page-1, pagesize,Sort.by(Sort.Direction.DESC,"bid")));
@@ -96,6 +104,7 @@ public class boardservice {
         }
         return array;
     }
+
     
     
     
