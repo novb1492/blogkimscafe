@@ -5,6 +5,9 @@ package com.example.blogkimscafe.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.transaction.Transactional;
+
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
@@ -58,9 +61,12 @@ public class boardservice {
         return no;
         
     }
+    @Transactional
     public boardvo getArticle(int bid) {
         try {
-            return boarddao.findById(bid).orElseThrow();
+            boardvo boardvo= boarddao.findById(bid).orElseThrow();
+            boardvo.setHit(boardvo.getHit()+1);
+            return boardvo;
         } catch (Exception e) {
             e.printStackTrace();
         }
