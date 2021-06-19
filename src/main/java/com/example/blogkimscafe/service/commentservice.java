@@ -56,25 +56,6 @@ public class commentservice {
         return no;
         
     }
-
-    public List<commentvo> commentPage(int bid,int currentpage,int totalpages) {
-       List<commentvo>array=new ArrayList<>();
-       try {
-            if(totalpages>0){
-                int fisrt=(currentpage-1)*pagesize+1;
-                int end=fisrt+pagesize-1;
-                array=commentdao.getCommentNative(bid,fisrt-1,end-fisrt+1);
-                }else{
-                    currentpage=0;
-                    totalpages=0;
-                } 
-                return array;
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-     
-        return null;
-    }
     public int totalCommentCount(int bid) {
 
         int count=commentdao.countByBid(bid);
@@ -85,6 +66,24 @@ public class commentservice {
         System.out.println(bid+"글의 총 댓글"+count);
         System.out.println("댓글총페이지"+totalpages);
         return totalpages;
+    }
+    public List<commentvo> getComment(int bid,int page,int totalpages) {
+       List<commentvo>array=new ArrayList<>();
+       int fisrt=0,end=0;
+       try {
+            if(totalpages>1){
+                fisrt=(page-1)*pagesize+1;
+                end=fisrt+pagesize-1; 
+                array=commentdao.getCommentNative(bid,fisrt-1,end-fisrt+1);
+            }else{
+                array=commentdao.findByBidOrderByCid(bid);
+            }
+                return array;
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+     
+        return null;
     }
     public boolean deleteCommentByBid(int bid) {
 

@@ -10,6 +10,7 @@ import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
+import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.userservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class controller {
     private boardservice boardservice;
     @Autowired
     private boardimagedao boardimagedao;
+    @Autowired
+    private commentservice commentservice;
 
 
     @GetMapping("/auth/joinpage")
@@ -68,9 +71,13 @@ public class controller {
         return "/auth/boardlist";
     }
     @GetMapping("/auth/content")
-    public String name(@RequestParam("bid")int bid,Model model) {
-         model.addAttribute("boardvo", boardservice.getArticle(bid));
-         return "content";
+    public String content(@RequestParam("bid")int bid,Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
+        int totalpage=commentservice.totalCommentCount(bid);
+        model.addAttribute("currentpage", page);
+        model.addAttribute("totalpage", totalpage);
+        model.addAttribute("array", commentservice.getComment(bid, page, totalpage));
+        model.addAttribute("boardvo", boardservice.getArticle(bid));
+        return "content";
     }
     @GetMapping("/updatearticlepage")
     public String updateArticlePage(@RequestParam("bid")int bid,@AuthenticationPrincipal principaldetail principaldetail,Model model) {
@@ -81,15 +88,6 @@ public class controller {
         }
         return "boardlist";
         
-    }
-    @GetMapping("/auth/test")
-    public String test(Model model) {
-        List<boardimagevo>array=boardimagedao.findByBidOrderById(1);
-        for(boardimagevo boardimagevo: array){
-            System.out.println(boardimagevo.getImageurl());
-        }
-        model.addAttribute("array", array);
-        return "test";
     }
     @GetMapping("/auth/boardlist")
     public String boardList(Model model,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "title",defaultValue = "")String title) {
@@ -110,6 +108,16 @@ public class controller {
         return "boardlist";
     }
 
+    @GetMapping("/auth/test")
+    public String test(Model model) {
+        List<boardimagevo>array=boardimagedao.findByBidOrderById(1);
+        for(boardimagevo boardimagevo: array){
+            System.out.println(boardimagevo.getImageurl());
+        }
+        model.addAttribute("array", array);
+        return "test";
+    }
+    
 
    
 
