@@ -64,7 +64,7 @@ public class restcontroller {
         return  emailservice.sendEmail(principaldetail.getUsername(),6);
     }
     @PostMapping("/sendemailnologin")
-    public boolean sendEmailnologin(Map<String,Object>map) {
+    public boolean sendEmailnologin(@RequestBody Map<String,Object>map) {
         String email=(String)map.get("email");
         if(userservice.confrimEmail(email)){
             return false;
