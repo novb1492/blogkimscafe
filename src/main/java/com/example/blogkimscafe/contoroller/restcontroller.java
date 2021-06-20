@@ -54,26 +54,9 @@ public class restcontroller {
     @Autowired
     private commentservice commentservice; 
 
-    @PostMapping("/testjson")
-    public JSONObject testJson(@RequestBody userdto userdto) {
-       JSONObject jsonObject=new JSONObject();
-        jsonObject.put("result", true);
-        jsonObject.put("messege", "틀리네요json");
-        jsonObject.put("email", userdto.getEmail());
-        return jsonObject;
-    }
-    @PostMapping("/testmap")
-    public Map<String,Object> testMap(@RequestBody userdto userdto) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("result", true);
-        map.put("messege", "틀리네요map");
-        map.put("email", userdto.getEmail());
-        return map;
-    }
-
     @PostMapping("/auth/emailconfirm")
-    public boolean emailConfrim(@RequestParam("email")String email ) {
-        return userservice.confrimEmail(email);
+    public boolean emailConfrim(@RequestBody userdto userdto ) {
+        return userservice.confrimEmail(userdto.getEmail());
     }
     @PostMapping("/sendemail")
     public boolean sendEmail(@AuthenticationPrincipal principaldetail principaldetail) {
@@ -81,16 +64,18 @@ public class restcontroller {
         return  emailservice.sendEmail(principaldetail.getUsername(),6);
     }
     @PostMapping("/sendemailnologin")
-    public boolean sendEmailnologin(@RequestParam("email")String email) {
+    public boolean sendEmailnologin(Map<String,Object>map) {
+        String email=(String)map.get("email");
         if(userservice.confrimEmail(email)){
             return false;
         }
         return  emailservice.sendEmail(email,6);
     }
     @PostMapping("/confrimrandnum")
-    public boolean confrimRandnum(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("randnum")String randnum) {
+    public boolean confrimRandnum(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody Map<String,Object> randnum) {
+        System.out.println(randnum.get("randnum")+"입력한번호");
         String email=principaldetail.getUsername();
-        if(userservice.confrimRandnum(email,randnum)){
+        if(userservice.confrimRandnum(email,(String)randnum.get("randnum"))){
             principaldetail.getUservo().setEmailcheck(userservice.getEmailCheck(email));
             return true;
         }
@@ -118,7 +103,7 @@ public class restcontroller {
         return false;
     }
     @PostMapping("/insertarticle")
-    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
+    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody @Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
         return boardservice.insertArticle(principaldetail.getUsername(), boarddto,file);
     }
     @PostMapping("/updatearticle")
@@ -164,6 +149,22 @@ public class restcontroller {
         }
         
         return "no";
+    }
+    @PostMapping("/testjson")
+    public JSONObject testJson(@RequestBody userdto userdto) {
+       JSONObject jsonObject=new JSONObject();
+        jsonObject.put("result", true);
+        jsonObject.put("messege", "틀리네요json");
+        jsonObject.put("email", userdto.getEmail());
+        return jsonObject;
+    }
+    @PostMapping("/testmap")
+    public Map<String,Object> testMap(@RequestBody userdto userdto) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("result", true);
+        map.put("messege", "틀리네요map");
+        map.put("email", userdto.getEmail());
+        return map;
     }
     
 }

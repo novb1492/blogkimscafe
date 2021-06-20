@@ -1,14 +1,17 @@
-function doajax(url,data){
+function doajax(url,data,contentType){
     var xhr = new XMLHttpRequest(); //new로 생성
     xhr.open('POST', url, true); //j쿼리 $ajax.({type,url},true가 비동기)
-    xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");////이게없으면 psot전송불가 조금 찾았네
+    xhr.setRequestHeader("Content-Type",contentType);////이게없으면 psot전송불가 조금 찾았네
     xhr.send(data); /// ajax data부분
     return xhr;
 }
 function doConfrimEmail(){
     var emailconfrim=document.getElementById("useremail");
-    var xhr,url='/auth/emailconfirm',data='email='+emailconfrim.value;
-    xhr=doajax(url,data);
+    var xhr; 
+    var url='/auth/emailconfirm';
+    var data=JSON.stringify({"email":""+emailconfrim.value+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
     var color,text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
@@ -23,8 +26,11 @@ function doConfrimEmail(){
     }  
 }
 function doInsertArticle(){
-        var xhr,url='/insertarticle',data='title='+document.getElementById('title').value+'&content='+document.getElementById('content').value;
-        xhr=doajax(url,data);
+        var xhr; 
+        var url='/insertarticle';
+        var data=JSON.stringify({"title":""+document.getElementById('title').value+"","content":""+document.getElementById('content').value+""});
+        var contentType="application/json";
+        xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
                 if(xhr.response=='true'){
@@ -38,8 +44,11 @@ function doInsertArticle(){
 }
 function doUpdateArticle(){
         var  bid=document.getElementById('bid').value;
-        var xhr,url='/updatearticle',data='title='+document.getElementById('title').value+'&content='+document.getElementById('content').value+'&bid='+bid;
-        xhr=doajax(url,data);
+        var xhr;
+        var url='/updatearticle';
+        var data="bid="+bid+"&title="+document.getElementById('title').value+"&content="+document.getElementById('content').value;
+        var contentType="application/x-www-form-urlencoded";
+        xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
                 if(xhr.response=='true'){
@@ -53,7 +62,8 @@ function doUpdateArticle(){
 }   
 function doCheckEmailauthentication(){
         var xhr,url='/confrimemailcheck',data=null;
-        xhr=doajax(url,data);
+        var contentType="application/json";
+        xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
                 if(xhr.response=='true'){
@@ -66,7 +76,8 @@ function doCheckEmailauthentication(){
 }  
 function doSendEamil(){
         var xhr,url='/sendemail',data=null;
-        xhr=doajax(url,data);
+        var contentType="application/json";
+        xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             var text;
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
@@ -80,8 +91,9 @@ function doSendEamil(){
         }  
 }
 function doConfrimTempnum(){
-    var xhr,url='/confrimrandnum',data='randnum='+document.getElementById('randnum').value;
-    xhr=doajax(url,data);
+    var xhr,url='/confrimrandnum',data=JSON.stringify({"randnum":""+document.getElementById('randnum').value+""});//'randnum='+document.getElementById('randnum').value;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         var text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
@@ -96,8 +108,10 @@ function doConfrimTempnum(){
     }    
 }
 function doSendEmailNoLoing(){
-    var xhr,url='/sendemailnologin',data='email='+document.getElementById('email').value;
-        xhr=doajax(url,data);
+    alert(document.getElementById('email').value);
+    var xhr,url='/sendemailnologin',data=JSON.stringify({"email":""+document.getElementById('email').value+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             var text;
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
@@ -159,4 +173,9 @@ function doInsertComment(){
         }
     }   
 }
+function doDeleteComment(cid){
+    alert(cid);
+}
+
+
     

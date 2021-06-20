@@ -7,7 +7,7 @@
     <title>후기쓰기</title>
 </head>
 <body>
-    <h3>후기쓰기</h3>
+    <h3>후기쓰기</h3>33
     <a href="/">홈</a>
         <input type="hidden" id="bid" th:value="${boardvo.getBid}"><!--bid여기-->
     <br>
@@ -43,8 +43,8 @@
                 <div th:text="'작성자'+${comment.getEmail}"></div>
                 내용 <input type="text"  th:class="${comment.getCid}+comment" th:value="${comment.getComment}" disabled></input>
                 <div th:if="${#authentication.name==comment.getEmail}">
-                        <input type="button" th:id="${comment.getCid}"  class="updateCommentButton" value="수정">
-                            <input type="button" th:id="${comment.getCid}" class="deleteCommentButton" value="삭제"><!--유레카 버튼마다 각 cid의 번호를 id로 줘버리면 된다 20210609-->    
+                        <input type="button" th:id="${comment.getCid}" class="updateCommentButton" value="수정">
+                            <input type="button" th:id="${comment.getCid}" th:onclick="doDeleteComment([[${comment.getCid}]])"   class="deleteCommentButton" value="삭제"><!--유레카 버튼마다 각 cid의 번호를 id로 줘버리면 된다 20210609-->    
                                 <input type="button"  th:id="${comment.getCid}+update" class="updateCommnetButton2" value="확인" disabled >
                                 <div th:id="${comment.getCid}+updateArea"></div>
                 </div>    
