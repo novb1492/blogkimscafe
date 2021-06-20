@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -22,13 +24,17 @@ import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.user.pwddto;
+import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.userservice;
+import com.nimbusds.jose.shaded.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -46,7 +52,24 @@ public class restcontroller {
     @Autowired
     private boardimagedao boardimagedao;
     @Autowired
-    private commentservice commentservice;
+    private commentservice commentservice; 
+
+    @PostMapping("/testjson")
+    public JSONObject testJson(@RequestBody userdto userdto) {
+       JSONObject jsonObject=new JSONObject();
+        jsonObject.put("result", true);
+        jsonObject.put("messege", "틀리네요json");
+        jsonObject.put("email", userdto.getEmail());
+        return jsonObject;
+    }
+    @PostMapping("/testmap")
+    public Map<String,Object> testMap(@RequestBody userdto userdto) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("result", true);
+        map.put("messege", "틀리네요map");
+        map.put("email", userdto.getEmail());
+        return map;
+    }
 
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestParam("email")String email ) {
