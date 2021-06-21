@@ -33,29 +33,42 @@ public class boardservice {
     private boardimagedao boardimagedao;
 
     public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
+        System.out.println(file.get(0).isEmpty()+"비었나요?");
+        String filename=null;
+        int bid=0;
+        boolean emthy=file.get(0).isEmpty();
         try {
-            boardvo boardvo=new boardvo(boarddto);
-            boardvo.setEmail(email);
-            boarddao.save(boardvo);
-            System.out.println(file+"file");
-            if(file!=null){
-                for(int i=0;i<file.size();i++)
-                {
-                    String filename=file.get(i).getOriginalFilename();
-                    System.out.println(filename+"파일이름");
-                    System.out.println(file.get(i).getSize()+"파일사이즈");
+            if(emthy==false){
+                for(int i=0;i<file.size();i++){
+                    filename=file.get(i).getOriginalFilename();
                     if(file.get(i).getContentType().split("/")[0].equals("image")){
                         System.out.println(filename+"이미지가 맞습니다");
-                        String savename="2021"+filename;
-                        file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
-                        boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
-                        boardimagedao.save(boardimagevo);
-                        System.out.println("사진업로드");  
+                    }else{
+                        System.out.println("imgage가아닌걸 발견함");
+                        throw new Exception("imgage가아닌걸 발견함");
                     }
                 }
             }
+            boardvo boardvo=new boardvo(boarddto);
+            boardvo.setEmail(email);
+            boarddao.save(boardvo);
+            bid=boardvo.getBid();
+            if(emthy==false){
+                for(int i=0;i<file.size();i++){
+                    filename=file.get(i).getOriginalFilename();
+                    String savename="2021"+filename;
+                    file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
+                    boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
+                    boardimagedao.save(boardimagevo);
+                    System.out.println("사진업로드");  
+                    System.out.println(file+"file");
+                }
+            }
+            System.out.println(boardvo.getBid()+"게시글번호");
             return yes;
         } catch (Exception e) {
+            System.out.println("등록중 예외발생");
+            boarddao.deleteById(bid);
            e.printStackTrace();
         }
         return no;

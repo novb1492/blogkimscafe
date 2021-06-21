@@ -108,7 +108,6 @@ function doConfrimTempnum(){
     }    
 }
 function doSendEmailNoLoing(){
-    alert(document.getElementById('email').value);
     var xhr,url='/sendemailnologin',data=JSON.stringify({"email":""+document.getElementById('email').value+""});
     var contentType="application/json";
     xhr=doajax(url,data,contentType);

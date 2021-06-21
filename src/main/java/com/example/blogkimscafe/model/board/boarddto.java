@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class boarddto {
     
-  
+    
     @Size(min = 1, max = 1000, message = "1000글자 이하로 입력해주세요")
     private String content;
 
