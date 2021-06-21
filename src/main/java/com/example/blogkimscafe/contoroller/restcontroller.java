@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 
-
+@ControllerAdvice
 @RestController
 public class restcontroller {
 
