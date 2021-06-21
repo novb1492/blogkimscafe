@@ -5,7 +5,6 @@ package com.example.blogkimscafe.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -29,6 +29,7 @@ public class boardservice {
     @Autowired
     private uploadimageservice uploadimageservice;
 
+    @Transactional(rollbackFor = {Exception.class})
     public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
         System.out.println(file.get(0).isEmpty()+"비었나요?");
         boolean emthy=file.get(0).isEmpty();

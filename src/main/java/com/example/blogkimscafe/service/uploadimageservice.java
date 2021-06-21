@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.blogkimscafe.model.board.boarddao;
+
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -21,8 +21,6 @@ public class uploadimageservice {
     
     @Autowired
     private boardimagedao boardimagedao;
-    @Autowired
-    private boarddao boarddao;
     @Autowired
     private utilservice utilservice;
  
@@ -54,6 +52,8 @@ public class uploadimageservice {
         }
         return null;
     }
+
+    @Transactional(rollbackFor = {Exception.class})
     public boolean insertImageToDb(List<boardimagevo>array,int bid) {
         try {
             for(boardimagevo b:array){
@@ -62,9 +62,8 @@ public class uploadimageservice {
             }
             return true;
         } catch (Exception e) {
-           e.printStackTrace();
+            System.out.println("예외발생");
+           throw new RuntimeException();
         }
-        boarddao.deleteById(bid);
-        return false;
     }
 }
