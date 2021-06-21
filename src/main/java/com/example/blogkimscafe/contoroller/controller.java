@@ -73,6 +73,7 @@ public class controller {
     @GetMapping("/auth/content")
     public String content(@RequestParam("bid")int bid,Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
         int totalpage=commentservice.totalCommentCount(bid);
+        model.addAttribute("imagearray", boardimagedao.findByBidOrderById(bid));
         model.addAttribute("currentpage", page);
         model.addAttribute("totalpage", totalpage);
         model.addAttribute("array", commentservice.getComment(bid, page, totalpage));

@@ -7,7 +7,7 @@
     <title>후기쓰기</title>
 </head>
 <body>
-    <h3>후기쓰기</h3>33
+    <h3>후기쓰기</h3>
     <a href="/">홈</a>
         <input type="hidden" id="bid" th:value="${boardvo.getBid}"><!--bid여기-->
     <br>
@@ -16,7 +16,12 @@
             <div th:text="${'작성자'+boardvo.getEmail}">작성자</div>
             내용
             <br>
-            <textarea cols="100" rows="50" name="content" id="content" disabled>[[${boardvo.getContent}]]</textarea>
+            <div contentEditable="false" cols="100" rows="50" name="content" id="content" >
+                [[${boardvo.getContent}]]
+                    <div th:each="url:${imagearray}">
+                        <img th:src="${url.getImageurl()}">
+                            </div>
+            </div>
             <br>
             <div th:text="${'조회수'+'&nbsp'+boardvo.getHit}">조회수</div>
 
