@@ -9,7 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.example.blogkimscafe.model.board.boardvo;
+import com.example.blogkimscafe.model.board.boarddto;
+
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -42,12 +43,12 @@ public class boardimagevo {
     private Timestamp created;
 
     public boardimagevo(){};
-    public  boardimagevo(boardvo boardvo,String imageurl) {
-        this.bid=boardvo.getBid();
+    public  boardimagevo(boarddto boarddto,String email,String imageurl) {
         this.imageurl=imageurl;
-        this.title=boardvo.getTitle();
-        this.email=boardvo.getEmail();
+        this.title=boarddto.getTitle();
+        this.email=email;
     }
+    
 
  
 

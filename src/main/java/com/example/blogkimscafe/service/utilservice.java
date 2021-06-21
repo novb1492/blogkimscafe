@@ -1,6 +1,7 @@
 package com.example.blogkimscafe.service;
 
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,10 @@ public class utilservice {
             num+=Integer.toString(random.nextInt(10));
         }
         return num;
+    }
+    public String getUUID(){
+        String uuid = UUID.randomUUID().toString();
+        return uuid;
     }
     
 }

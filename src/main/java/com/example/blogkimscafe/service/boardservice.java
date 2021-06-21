@@ -2,16 +2,13 @@ package com.example.blogkimscafe.service;
 
 
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
-import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,52 +20,38 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class boardservice {
 
-    private boolean yes=true;
-    private boolean no=false;
+    private final boolean yes=true;
+    private final boolean no=false;
     private final int pagesize=3;
 
     @Autowired
     private boarddao boarddao;
     @Autowired
-    private boardimagedao boardimagedao;
+    private uploagimageservice uploagimageservice;
 
     public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
         System.out.println(file.get(0).isEmpty()+"비었나요?");
-        String filename=null;
-        int bid=0;
         boolean emthy=file.get(0).isEmpty();
+        List<boardimagevo>array=new ArrayList<>();
+        boardvo boardvo=new boardvo(boarddto);
         try {
-            if(emthy==false){
-                for(int i=0;i<file.size();i++){
-                    filename=file.get(i).getOriginalFilename();
-                    if(file.get(i).getContentType().split("/")[0].equals("image")){
-                        System.out.println(filename+"이미지가 맞습니다");
-                    }else{
-                        System.out.println("imgage가아닌걸 발견함");
-                        throw new Exception("imgage가아닌걸 발견함");
-                    }
-                }
+            if(emthy==false&&uploagimageservice.confrimOnlyImage(file)==false){
+                System.out.println("imgage가아닌걸 발견함 등록");
+                return no;   
+            }else{
+               array=uploagimageservice.uploadImage(file, boarddto, email);
+               if(array==null){
+                   return no;
+               }
             }
-            boardvo boardvo=new boardvo(boarddto);
             boardvo.setEmail(email);
             boarddao.save(boardvo);
-            bid=boardvo.getBid();
             if(emthy==false){
-                for(int i=0;i<file.size();i++){
-                    filename=file.get(i).getOriginalFilename();
-                    String savename="2021"+filename;
-                    file.get(i).transferTo(new File("C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/"+savename));
-                    boardimagevo boardimagevo=new boardimagevo(boardvo,"http://localhost:8080/static/images/"+savename);
-                    boardimagedao.save(boardimagevo);
-                    System.out.println("사진업로드");  
-                    System.out.println(file+"file");
-                }
+                uploagimageservice.insertImageToDb(array, boardvo.getBid());
             }
             System.out.println(boardvo.getBid()+"게시글번호");
             return yes;
         } catch (Exception e) {
-            System.out.println("등록중 예외발생");
-            boarddao.deleteById(bid);
            e.printStackTrace();
         }
         return no;
