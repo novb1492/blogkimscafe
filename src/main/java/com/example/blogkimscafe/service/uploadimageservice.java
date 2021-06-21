@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class uploagimageservice {
+public class uploadimageservice {
 
     private final String saveUrl="C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/";
     private final String saveDbName="http://localhost:8080/static/images/";

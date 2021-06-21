@@ -17,8 +17,7 @@ public class utilservice {
         return num;
     }
     public String getUUID(){
-        String uuid = UUID.randomUUID().toString();
-        return uuid;
+        return UUID.randomUUID().toString();
     }
     
 }
