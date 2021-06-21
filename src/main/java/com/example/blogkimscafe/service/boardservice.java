@@ -27,7 +27,7 @@ public class boardservice {
     @Autowired
     private boarddao boarddao;
     @Autowired
-    private uploagimageservice uploagimageservice;
+    private uploadimageservice uploadimageservice;
 
     public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
         System.out.println(file.get(0).isEmpty()+"비었나요?");
@@ -35,11 +35,11 @@ public class boardservice {
         List<boardimagevo>array=new ArrayList<>();
         boardvo boardvo=new boardvo(boarddto);
         try {
-            if(emthy==false&&uploagimageservice.confrimOnlyImage(file)==false){
+            if(emthy==false&&uploadimageservice.confrimOnlyImage(file)==false){
                 System.out.println("imgage가아닌걸 발견함 등록");
                 return no;   
             }else{
-               array=uploagimageservice.uploadImage(file, boarddto, email);
+               array=uploadimageservice.uploadImage(file, boarddto, email);
                if(array==null){
                    return no;
                }
@@ -47,7 +47,7 @@ public class boardservice {
             boardvo.setEmail(email);
             boarddao.save(boardvo);
             if(emthy==false){
-                uploagimageservice.insertImageToDb(array, boardvo.getBid());
+                uploadimageservice.insertImageToDb(array, boardvo.getBid());
             }
             System.out.println(boardvo.getBid()+"게시글번호");
             return yes;
