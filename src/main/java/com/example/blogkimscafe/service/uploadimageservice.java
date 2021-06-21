@@ -59,11 +59,12 @@ public class uploadimageservice {
             for(boardimagevo b:array){
                 b.setBid(bid);
                 boardimagedao.save(b);
+                throw new Exception();
             }
             return true;
         } catch (Exception e) {
             System.out.println("예외발생");
-           throw new RuntimeException();
+           throw new RuntimeException("사진저장중 예외발생");
         }
     }
 }

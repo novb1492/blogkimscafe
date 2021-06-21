@@ -28,6 +28,8 @@ import com.example.blogkimscafe.service.userservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +48,24 @@ public class restcontroller {
     private boardservice boardservice;
     @Autowired
     private commentservice commentservice; 
-
+    
+    @ExceptionHandler(value = Exception.class)
+    public Map<String,String> globalHandler(Exception e) {
+        Map<String,String>map=new HashMap<>();
+        map.put("errmsg", e.getMessage());
+        return  map;
+    }
+    @PostMapping(value="/testex")
+    public Exception postMethodName() {
+        
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            throw new RuntimeException("사진저장중 예외발생");
+        }
+       
+    }
+    
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestBody userdto userdto ) {
         return userservice.confrimEmail(userdto.getEmail());
