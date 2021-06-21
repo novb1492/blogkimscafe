@@ -46,15 +46,16 @@ public class commentservice {
         }
         return no;
     }
-    public boolean deleteCommentByCid(int cid) {
+    public boolean deleteCommentByCid(int cid,String email) {
         try {
-            commentdao.deleteById(cid);
-            return yes;
+            if(commentdao.findById(cid).orElseThrow().getEmail().equals(email)){
+                commentdao.deleteById(cid);
+                return yes;
+            }
         } catch (Exception e) {
            e.printStackTrace();
         }
-        return no;
-        
+        return no;   
     }
     public int totalCommentCount(int bid) {
 
@@ -95,14 +96,5 @@ public class commentservice {
         }
         return no;
     }
-    public boolean eqalsEmail(String email,int cid) {
-        try {
-            if(email.equals(commentdao.findById(cid).get().getEmail()))
-            return yes;
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-        return no;
-        
-    }
+    
 }

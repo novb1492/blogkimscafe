@@ -162,7 +162,22 @@ function doInsertComment(){
     }   
 }
 function doDeleteComment(cid){
-    alert(cid);
+    var xhr;
+    var bid=document.getElementById('bid').value;
+    var url='/deletecomment'; 
+    var data='cid='+cid;
+    var contentType="application/x-www-form-urlencoded";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            if(xhr.response=='true'){
+                alert("댓글을 삭제 했습니다");
+                location.href="/auth/content?bid="+bid;
+            }else{
+                alert("삭제에 실패했습니다");
+            }
+        }
+    }   
 }
 
 

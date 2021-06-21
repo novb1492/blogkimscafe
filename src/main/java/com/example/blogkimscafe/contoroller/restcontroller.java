@@ -111,6 +111,10 @@ public class restcontroller {
         }
         return false;
     }
+    @PostMapping("/deletecomment")
+    public boolean deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
+        return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
+    }
     @PostMapping("/testjson")
     public JSONObject testJson(@RequestBody userdto userdto) {
        JSONObject jsonObject=new JSONObject();
