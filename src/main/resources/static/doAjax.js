@@ -25,23 +25,6 @@ function doConfrimEmail(){
         }
     }  
 }
-function doInsertArticle(){
-        var xhr; 
-        var url='/insertarticle';
-        var data=JSON.stringify({"title":""+document.getElementById('title').value+"","content":""+document.getElementById('content').value+""});
-        var contentType="application/json";
-        xhr=doajax(url,data,contentType);
-        xhr.onload = function() { 
-            if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-                if(xhr.response=='true'){
-                    alert('등록성공')
-                    location.href="/auth/boardlist";
-                }else{
-                    alert("등록에 실패하였습니다");
-                }
-            }
-        }
-}
 function doUpdateArticle(){
         var  bid=document.getElementById('bid').value;
         var xhr;
@@ -128,7 +111,8 @@ function doSendTempPwdEmail(){
     var confrimrandnum=document.getElementById('confrimrandnum');
     confrimrandnum.disabled=true;
     var xhr,url='/sendtemppwd',data='email='+document.getElementById('email').value+'&randnum='+document.getElementById('randnum').value;
-    xhr=doajax(url,data);
+    var contentType="application/x-www-form-urlencoded";
+    xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
             if(xhr.response=='true'){
@@ -142,8 +126,10 @@ function doSendTempPwdEmail(){
     }
 }     
 function doUpdatePwd(){
-    var xhr,url='/updatepwd',data='pwd='+document.getElementById('pwd').value+'&npwd='+document.getElementById('npwd').value+'&npwd2='+document.getElementById('npwd2').value;
-    xhr=doajax(url,data);
+    var xhr,url='/updatepwd';
+    var data=JSON.stringify({"pwd":""+document.getElementById('pwd').value+"","npwd":""+document.getElementById('npwd').value+"","npwd2":""+document.getElementById('npwd2').value+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         var text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
@@ -159,8 +145,11 @@ function doUpdatePwd(){
 }
 function doInsertComment(){
     var bid=document.getElementById('bid').value;
-    var xhr,url='/insertcomment',data='comment='+document.getElementById('comment').value+'&bid='+bid;
-    xhr=doajax(url,data);
+    var xhr;
+    var url='/insertcomment'; 
+    var data=JSON.stringify({"comment":""+document.getElementById('comment').value+"","bid":""+bid+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
             if(xhr.response=='true'){

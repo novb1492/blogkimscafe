@@ -83,7 +83,7 @@ public class restcontroller {
         return false;
     }   
     @PostMapping("/updatepwd")
-    public boolean updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@Valid pwddto pwddto) {
+    public boolean updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody@Valid pwddto pwddto) {
 
         return  userservice.updatePwd(principaldetail,pwddto);
         
@@ -104,7 +104,7 @@ public class restcontroller {
         return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid);
     }
     @PostMapping("/insertcomment")
-    public boolean insertComment(@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
+    public boolean insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
         String email= principaldetail.getUsername();
         if(userservice.getEmailCheck(email).equals("true")){
             return commentservice.insertComment(commentdto,email); 
