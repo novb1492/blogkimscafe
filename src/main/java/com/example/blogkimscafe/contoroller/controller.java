@@ -2,17 +2,15 @@ package com.example.blogkimscafe.contoroller;
 
 
 
-import java.util.List;
+
 
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
-import com.example.blogkimscafe.model.boardimage.boardimagevo;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.userservice;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -84,6 +82,7 @@ public class controller {
     public String updateArticlePage(@RequestParam("bid")int bid,@AuthenticationPrincipal principaldetail principaldetail,Model model) {
         boardvo boardvo=boardservice.getArticle(bid);
         if(principaldetail.getUsername().equals(boardvo.getEmail())){
+           model.addAttribute("imagearray",boardimagedao.findByBidOrderById(bid));
            model.addAttribute("boardvo", boardvo);
             return "updatearticlepage";
         }
@@ -107,16 +106,6 @@ public class controller {
             model.addAttribute("array", boardservice.getSearchAtBoard(title,page,totalpage));
         }
         return "boardlist";
-    }
-
-    @GetMapping("/auth/test")
-    public String test(Model model) {
-        List<boardimagevo>array=boardimagedao.findByBidOrderById(1);
-        for(boardimagevo boardimagevo: array){
-            System.out.println(boardimagevo.getImageurl());
-        }
-        model.addAttribute("array", array);
-        return "test";
     }
     
 

@@ -58,14 +58,17 @@ public class boardservice {
         return no;
         
     }
-    @Transactional
-    public boolean updateArticle(String email,boarddto boarddto,int bid) {
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file) {
 
         try {
+           
             boardvo boardvo=boarddao.findById(bid).orElseThrow();
             if(email.equals(boardvo.getEmail())){
                 boardvo.setTitle(boarddto.getTitle());
                 boardvo.setContent(boarddto.getContent());
+               
+
                 return yes;
             }
         } catch (Exception e) {

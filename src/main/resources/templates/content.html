@@ -8,7 +8,7 @@
 </head>
 <body>
     <h3>후기쓰기</h3>
-    <a href="/">홈</a>
+    <a href="/">홈</a>2
         <input type="hidden" id="bid" th:value="${boardvo.getBid}"><!--bid여기-->
     <br>
             제목
@@ -16,7 +16,7 @@
             <div th:text="${'작성자'+boardvo.getEmail}">작성자</div>
             내용
             <br>
-            <div contentEditable="false" cols="100" rows="50" name="content" id="content" >
+            <div contentEditable="false"id="content" >
                 [[${boardvo.getContent}]]
                     <div th:each="url:${imagearray}">
                         <img th:src="${url.getImageurl()}">

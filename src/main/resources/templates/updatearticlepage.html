@@ -7,23 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="/auth/index">홈</a>
+    <a href="/">홈</a>
     <br>
     <h1>글을 수정해주세요</h1>
     
     <div th:text="'작성자'+'&nbsp'+${#authentication.name}"></div>
         <div th:text="'글번호'+'&nbsp'+${boardvo.getBid}"></div>
+        <form id="form">
             제목<input type="text" name="title" placeholder="30글자 이하로 입력해주세요" id="title" th:value="${boardvo.getTitle}">
                 <br>
                     <div id="errortitle"></div>
                         <br>
                             글내용<div id="errorcontent"></div>
                             <br> 
-                                <textarea cols="100" rows="50" name="content" id="content" placeholder="최대 입력글자는 1000자입니다"th:text="${boardvo.getContent}" ></textarea>
-                                    <input type="hidden" id="bid" th:value="${boardvo.getBid}">
+                            <div contentEditable="true" style="width: 20%;" id='contentEditable' >
+                                [[${boardvo.getContent}]]
+                                    <div th:each="url:${imagearray}">
+                                        <img th:id="${url.getId()}" class="image" th:src="${url.getImageurl()}">
+                                            </div>
+                            </div>
+                                    <input type="hidden" name="bid" th:value="${boardvo.getBid}">
                                             <br>
-                                                <input type="button" onclick="doUpdateArticle()" id="updatearticle" value="완료">                           
-                                                <script src="../static/doAjax.js"></script>    
+                                                <input type="button" onclick="doUpdateArticle()"  value="완료">  
+                                                    </form>                         
+                                                <script src="../static/writearticle.js"></script>    
 
 </body>
 </html>

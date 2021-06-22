@@ -35,6 +35,7 @@ public class uploadimageservice {
         }
             return true;   
     }
+    @Transactional(rollbackFor = {Exception.class})
     public List<boardimagevo> uploadImage(List<MultipartFile> file,boarddto boarddto,String email) {
         try {
             List<boardimagevo>array=new ArrayList<>();
@@ -42,28 +43,36 @@ public class uploadimageservice {
                 String filename=f.getOriginalFilename();
                 String savename=utilservice.getUUID()+filename;
                 f.transferTo(new File(saveUrl+savename));
-                boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename);
+                boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename,savename);
                 array.add(boardimagevo);
             }
             return array;
           
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception e) {
+            throw new RuntimeException("사진 로컬에 저장중 예외발생");
         }
-        return null;
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public boolean insertImageToDb(List<boardimagevo>array,int bid) {
+    public void insertImageToDb(List<boardimagevo>array,int bid) {
         try {
             for(boardimagevo b:array){
                 b.setBid(bid);
                 boardimagedao.save(b);
-            }
-            return true;
+            } 
         } catch (Exception e) {
-            System.out.println("예외발생");
-           throw new RuntimeException("사진저장중 예외발생");
+           throw new RuntimeException("사진 db에 저장중 예외발생");
         }
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    public void deleteImage(List<Integer>deleteimages) {
+        try {
+            for(int i=0;i<deleteimages.size();i++){
+                boardimagedao.deleteById(deleteimages.get(i));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("사진 db에 삭제중 예외발생");
+        }
+        
     }
 }
