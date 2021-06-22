@@ -59,7 +59,6 @@ public class uploadimageservice {
             for(boardimagevo b:array){
                 b.setBid(bid);
                 boardimagedao.save(b);
-                throw new Exception();
             }
             return true;
         } catch (Exception e) {
