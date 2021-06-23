@@ -101,8 +101,8 @@ public class restcontroller {
     }
     @PostMapping("/updatearticle")
     public boolean updateArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam("bid")int bid,@RequestParam(value = "file", required = false)List<MultipartFile> file,@RequestParam(value =  "alreadyimages", required = false)List<Integer>alreadyimages) {
-       System.out.println(alreadyimages.isEmpty()+"비웠나요");
-        return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid,file);
+       System.out.println(alreadyimages.isEmpty()+"비웠나요"+alreadyimages);
+        return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid,file,alreadyimages);
     }
     @PostMapping("/insertcomment")
     public boolean insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {

@@ -26,7 +26,7 @@ public class boardvo {
     @Column(name="email",nullable = false,length = 50)
     private String email;
 
-    @Column(name="content",nullable = false,length = 1000)
+    @Column(name="content",nullable = false)
     private String content;
 
     @Column(name = "title",nullable = false,length = 30)

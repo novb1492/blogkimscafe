@@ -25,12 +25,16 @@ function doInsertArticle(){
     }  
  }
  function doUpdateArticle() {
-    var alreayimages= document.getElementsByClassName('image')[0];
+    var alreadyimagesarray=[]; 
+    var alreayimages= document.getElementsByTagName('img');
+    for(var i=0;i<alreayimages.length;i++){
+        alreadyimagesarray.push(alreayimages[i].id);
+    }
     var form= document.getElementById('form');
     var formData = new FormData(form);
     formData.append('content',document.getElementById('contentEditable').textContent);
     if(alreayimages!=undefined){
-        formData.append('alreadyimages',alreayimages.id);
+        formData.append('alreadyimages',alreadyimagesarray);
     }
     var xhr = new XMLHttpRequest();
     xhr.open("POST" , "/updatearticle" , true);

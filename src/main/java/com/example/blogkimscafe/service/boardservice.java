@@ -59,10 +59,10 @@ public class boardservice {
         
     }
     @Transactional(rollbackFor = {Exception.class})
-    public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file) {
+    public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file,List<Integer>alreadyimages) {
 
         try {
-           
+            uploadimageservice.deleteImage(alreadyimages, bid);
             boardvo boardvo=boarddao.findById(bid).orElseThrow();
             if(email.equals(boardvo.getEmail())){
                 boardvo.setTitle(boarddto.getTitle());

@@ -64,13 +64,25 @@ public class uploadimageservice {
            throw new RuntimeException("사진 db에 저장중 예외발생");
         }
     }
-    @Transactional(rollbackFor = {Exception.class})
-    public void deleteImage(List<Integer>deleteimages) {
+   
+    public void deleteImage(List<Integer>alreadyimages,int bid) {
         try {
-            for(int i=0;i<deleteimages.size();i++){
-                boardimagedao.deleteById(deleteimages.get(i));
+         
+            List<Integer>array=boardimagedao.findByBidIdNative(bid);
+            for(int i=0;i<alreadyimages.size();i++){
+                System.out.println(array.contains(alreadyimages.get(i))+"존재함");
+                if(array.contains(alreadyimages.get(i))){
+                    array.remove(alreadyimages.get(i));
+                }
             }
+          
+            System.out.println("삭제예정"+array);
+            for(int i=0;i<array.size();i++){
+                boardimagedao.deleteById(array.get(i));
+            }
+
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("사진 db에 삭제중 예외발생");
         }
         
