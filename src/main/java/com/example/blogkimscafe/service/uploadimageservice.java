@@ -65,44 +65,51 @@ public class uploadimageservice {
            throw new RuntimeException("사진 db에 저장중 예외발생");
         }
     }
-    public void deleteImage(List<Integer>alreadyimages,int bid) {
+    public List<boardimagevo> selectDeleteImage(List<Integer>alreadyimages,int bid) {
         try {
-            if(alreadyimages.isEmpty()){
-                boardimagedao.deleteAllByBidNative(bid);
-            }
-            List<boardimagevo>deleteimages=new ArrayList<>();
+            List<boardimagevo>deleteImages=new ArrayList<>();
             List<boardimagevo>dbImages=boardimagedao.findByBid(bid);
-        
+            if(alreadyimages.isEmpty()){
+                return dbImages;
+            }
                 for(int i=0;i<dbImages.size();i++){
                     for(int ii=0;ii<alreadyimages.size();ii++){ 
                         if(dbImages.get(i).getId()!=alreadyimages.get(ii)){
                             if(ii==alreadyimages.size()-1){
-                                System.out.println(1+"체크");
-                                deleteimages.add(dbImages.get(i));
-                            }
+                                    System.out.println(1+"체크");
+                                    deleteImages.add(dbImages.get(i));
+                             }
                         }else{
                             break;
                         }
-                        
+                            
                     }
                 }
-            if(deleteimages.isEmpty()==false){
-               for(boardimagevo b:deleteimages){
-                   boardimagedao.deleteById(b.getId());
-                   deleteLocalFile(b.getImagelocal());
-               }
-            }
-          
-
+                return deleteImages;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public void deleteImage(List<Integer>alreadyimages,int bid) {
+        try {
+               List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
+                if(deleteImages.isEmpty()==false){
+                   for(boardimagevo b:deleteImages){
+                       boardimagedao.deleteById(b.getId());
+                       deleteLocalFile(b.getImagelocal());
+                   }
+                }
+            
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("사진 삭제중 예외발생");
         }
         
     }
-    public void deleteLocalFile(String url) {
-        System.out.println(url+"삭제경로");
-        File file=new File(url);
+    public void deleteLocalFile(String localLocation) {
+        System.out.println(localLocation+"삭제경로");
+        File file=new File(localLocation);
         try {
             if(file.exists()){
                 file.delete();
