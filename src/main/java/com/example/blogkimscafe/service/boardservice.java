@@ -62,13 +62,12 @@ public class boardservice {
     public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file,List<Integer>alreadyimages) {
 
         try {
-            uploadimageservice.deleteImage(alreadyimages, bid);
+           
             boardvo boardvo=boarddao.findById(bid).orElseThrow();
             if(email.equals(boardvo.getEmail())){
+                uploadimageservice.deleteImage(alreadyimages, bid);
                 boardvo.setTitle(boarddto.getTitle());
                 boardvo.setContent(boarddto.getContent());
-               
-
                 return yes;
             }
         } catch (Exception e) {

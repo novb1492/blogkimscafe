@@ -41,16 +41,20 @@ public class boardimagevo {
     @Column(name = "imagename",nullable = false)
     private String imagename;
 
+    @Column(name = "imagelocal",nullable = false)
+    private String imagelocal;
+
     @Column(name="created")
     @CreationTimestamp
     private Timestamp created;
 
     public boardimagevo(){};
-    public  boardimagevo(boarddto boarddto,String email,String imageurl,String imagename) {
+    public  boardimagevo(boarddto boarddto,String email,String imageurl,String imagename,String imagelocal) {
         this.imageurl=imageurl;
         this.title=boarddto.getTitle();
         this.email=email;
         this.imagename=imagename;
+        this.imagelocal=imagelocal;
     }
     
 

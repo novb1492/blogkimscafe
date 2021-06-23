@@ -42,8 +42,9 @@ public class uploadimageservice {
             for(MultipartFile f:file){
                 String filename=f.getOriginalFilename();
                 String savename=utilservice.getUUID()+filename;
-                f.transferTo(new File(saveUrl+savename));
-                boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename,savename);
+                String localLocation=saveUrl+savename;
+                f.transferTo(new File(localLocation));
+                boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename,savename,localLocation);
                 array.add(boardimagevo);
             }
             return array;
@@ -64,27 +65,52 @@ public class uploadimageservice {
            throw new RuntimeException("사진 db에 저장중 예외발생");
         }
     }
-   
     public void deleteImage(List<Integer>alreadyimages,int bid) {
         try {
-         
-            List<Integer>array=boardimagedao.findByBidIdNative(bid);
-            for(int i=0;i<alreadyimages.size();i++){
-                System.out.println(array.contains(alreadyimages.get(i))+"존재함");
-                if(array.contains(alreadyimages.get(i))){
-                    array.remove(alreadyimages.get(i));
+            if(alreadyimages.isEmpty()){
+                boardimagedao.deleteAllByBidNative(bid);
+            }
+            List<boardimagevo>deleteimages=new ArrayList<>();
+            List<boardimagevo>dbImages=boardimagedao.findByBid(bid);
+        
+                for(int i=0;i<dbImages.size();i++){
+                    for(int ii=0;ii<alreadyimages.size();ii++){ 
+                        if(dbImages.get(i).getId()!=alreadyimages.get(ii)){
+                            if(ii==alreadyimages.size()-1){
+                                System.out.println(1+"체크");
+                                deleteimages.add(dbImages.get(i));
+                            }
+                        }else{
+                            break;
+                        }
+                        
+                    }
                 }
+            if(deleteimages.isEmpty()==false){
+               for(boardimagevo b:deleteimages){
+                   boardimagedao.deleteById(b.getId());
+                   deleteLocalFile(b.getImagelocal());
+               }
             }
           
-            System.out.println("삭제예정"+array);
-            for(int i=0;i<array.size();i++){
-                boardimagedao.deleteById(array.get(i));
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("사진 db에 삭제중 예외발생");
+            throw new RuntimeException("사진 삭제중 예외발생");
         }
         
     }
+    public void deleteLocalFile(String url) {
+        System.out.println(url+"삭제경로");
+        File file=new File(url);
+        try {
+            if(file.exists()){
+                file.delete();
+            }
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+            
+    }
 }
+
