@@ -18,11 +18,13 @@ public class principalservice implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
        try {
         uservo uservo=userdao.findByEmail(username);
-        return new principaldetail(uservo);
+        if(uservo!=null){
+            return new principaldetail(uservo);
+        }
        } catch (Exception e) {
-           e.printStackTrace();
-           return null;
+            e.printStackTrace();
        }
+       return null;
     }
     
 }
