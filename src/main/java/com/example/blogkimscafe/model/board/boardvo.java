@@ -1,5 +1,6 @@
 package com.example.blogkimscafe.model.board;
 
+import java.sql.Blob;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ public class boardvo {
     private String email;
 
     @Column(name="content",nullable = false)
-    private String content;
+    private Blob content;
 
     @Column(name = "title",nullable = false,length = 30)
     private String title;
@@ -41,9 +42,9 @@ public class boardvo {
     private Timestamp created;
 
     public boardvo (){}
-    public boardvo (boarddto boarddto) {
-        this.content=boarddto.getContent();
-        this.title=boarddto.getTitle();
+    public boardvo (String title,Blob content) {
+        this.content=content;
+        this.title=title;
     }
 
  

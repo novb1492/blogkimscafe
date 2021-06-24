@@ -3,8 +3,12 @@ package com.example.blogkimscafe.service;
 
 
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.rowset.serial.SerialBlob;
+
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
@@ -31,19 +35,22 @@ public class boardservice {
 
     @Transactional(rollbackFor = {Exception.class})
     public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
-        System.out.println(file.get(0).isEmpty()+"비었나요?");
         boolean emthy=file.get(0).isEmpty();
+        System.out.println(emthy+"비었나요?");
         List<boardimagevo>array=new ArrayList<>();
-        boardvo boardvo=new boardvo(boarddto);
+        boardvo boardvo=new boardvo(boarddto.getTitle(),stringToBlob(boarddto.getContent()));
         try {
-            if(emthy==false&&uploadimageservice.confrimOnlyImage(file)==false){
-                System.out.println("imgage가아닌걸 발견함 등록");
-                return no;   
-            }else{
-               array=uploadimageservice.insertImageLocal(file, boarddto, email);
-               if(array==null){
-                   return no;
-               }
+            if(emthy==false){
+                if(uploadimageservice.confrimOnlyImage(file)){
+                    System.out.println("imgage가아닌걸 발견함 등록");
+                    return no;   
+                }else{
+                    System.out.println("사진 저장 시작");
+                   array=uploadimageservice.insertImageLocal(file, boarddto, email);
+                   if(array==null){
+                       return no;
+                   }
+                }
             }
             boardvo.setEmail(email);
             boarddao.save(boardvo);
@@ -68,7 +75,7 @@ public class boardservice {
                     uploadimageservice.insertImageToDb(array, bid);
                 }
                 boardvo.setTitle(boarddto.getTitle());
-                boardvo.setContent(boarddto.getContent());
+                boardvo.setContent(stringToBlob(boarddto.getContent()));
             }
             return yes;
         } catch (Exception e) {
@@ -125,6 +132,21 @@ public class boardservice {
            e.printStackTrace();
         }
         return array;
+    }
+    
+    public String blobToString(Blob content) {
+        try {
+            return new String(content.getBytes(1, (int) content.length()));
+        } catch (Exception e) {
+            throw new RuntimeException("blobToString중 예외발생");
+        }
+    }
+    private Blob stringToBlob(String content){
+        try {
+            return new SerialBlob(content.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException("stringToBlob중 예외발생");
+        }
     }
 
     

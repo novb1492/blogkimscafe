@@ -71,11 +71,13 @@ public class controller {
     @GetMapping("/auth/content")
     public String content(@RequestParam("bid")int bid,Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
         int totalpage=commentservice.totalCommentCount(bid);
+        boardvo boardvo=boardservice.getArticle(bid);
         model.addAttribute("imagearray", boardimagedao.findByBidOrderById(bid));
         model.addAttribute("currentpage", page);
         model.addAttribute("totalpage", totalpage);
         model.addAttribute("array", commentservice.getComment(bid, page, totalpage));
-        model.addAttribute("boardvo", boardservice.getArticle(bid));
+        model.addAttribute("boardvo", boardvo);
+        model.addAttribute("content", boardservice.blobToString(boardvo.getContent()));
         return "content";
     }
     @GetMapping("/updatearticlepage")
@@ -83,6 +85,7 @@ public class controller {
         boardvo boardvo=boardservice.getArticle(bid);
         if(principaldetail.getUsername().equals(boardvo.getEmail())){
            model.addAttribute("imagearray",boardimagedao.findByBidOrderById(bid));
+           model.addAttribute("content", boardservice.blobToString(boardvo.getContent()));
            model.addAttribute("boardvo", boardvo);
             return "updatearticlepage";
         }

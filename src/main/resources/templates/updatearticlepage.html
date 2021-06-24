@@ -24,7 +24,7 @@
                             글내용<div id="errorcontent"></div>
                             <br> 
                             <div contentEditable="true" style="width: 40%;" id='contentEditable' >
-                                [[${boardvo.getContent}]]
+                                [[${content}]]
                                     <div th:each="url:${imagearray}">
                                         <img th:id="${url.getId()}" class="image" th:src="${url.getImageurl()}">
                                             </div>

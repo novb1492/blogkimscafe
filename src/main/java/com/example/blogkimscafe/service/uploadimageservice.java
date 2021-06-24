@@ -29,11 +29,13 @@ public class uploadimageservice {
             String filename=file.get(i).getOriginalFilename();
             if(file.get(i).getContentType().split("/")[0].equals("image")){
                 System.out.println(filename+"이미지가 맞습니다");
+               
             }else{
-                return false;
+                return true;
+
             }
         }
-            return true;   
+        return false;  
     }
     @Transactional(rollbackFor = {Exception.class})
     public List<boardimagevo> insertImageLocal(List<MultipartFile> file,boarddto boarddto,String email) {

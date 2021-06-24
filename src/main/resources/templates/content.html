@@ -20,7 +20,7 @@
             내용
             <br>
             <div contentEditable="false"id="content"  style="width: 40%;" >
-                [[${boardvo.getContent}]]
+                [[${content}]]
                     <div th:each="url:${imagearray}">
                         <img th:src="${url.getImageurl()}">
                             </div>
