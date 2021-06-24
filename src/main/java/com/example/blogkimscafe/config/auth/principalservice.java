@@ -16,9 +16,10 @@ public class principalservice implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println(username);
         uservo uservo=userdao.findByEmail(username);
         if(uservo==null){
-            new UsernameNotFoundException("존재하지 않습니다");
+           throw new UsernameNotFoundException("존재하지 않습니다");
         }
        return new principaldetail(uservo);
     }
