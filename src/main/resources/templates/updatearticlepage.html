@@ -9,7 +9,7 @@
 <body>
     <a href="/">홈</a>
     <br>
-    <h1>글을 수정해주세요</h1>
+    <h1>글을 수정해주세요</h1>2
     
     <div th:text="'작성자'+'&nbsp'+${#authentication.name}"></div>
         <div th:text="'글번호'+'&nbsp'+${boardvo.getBid}"></div>
@@ -26,10 +26,11 @@
                                         <img th:id="${url.getId()}" class="image" th:src="${url.getImageurl()}">
                                             </div>
                             </div>
-                                    <input type="hidden" name="bid" th:value="${boardvo.getBid}">
-                                            <br>
-                                                <input type="button" onclick="doUpdateArticle()"  value="완료">  
-                                                    </form>                         
+                                <input type="hidden" name="bid" th:value="${boardvo.getBid}">
+                                        <br>
+                                            <input multiple="multiple"  type="file" name="file"> 
+                                                </form>
+                                                    <input type="button" onclick="doUpdateArticle()"  value="완료">                          
                                                 <script src="../static/writearticle.js"></script>    
 
 </body>

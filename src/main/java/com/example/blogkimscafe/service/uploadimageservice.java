@@ -36,7 +36,7 @@ public class uploadimageservice {
             return true;   
     }
     @Transactional(rollbackFor = {Exception.class})
-    public List<boardimagevo> uploadImage(List<MultipartFile> file,boarddto boarddto,String email) {
+    public List<boardimagevo> insertImageLocal(List<MultipartFile> file,boarddto boarddto,String email) {
         try {
             List<boardimagevo>array=new ArrayList<>();
             for(MultipartFile f:file){
@@ -87,9 +87,8 @@ public class uploadimageservice {
                 }
                 return deleteImages;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("selectDeleteImage 예외발생");
         }
-        return null;
     }
     public void deleteImage(List<Integer>alreadyimages,int bid) {
         try {
@@ -115,7 +114,7 @@ public class uploadimageservice {
                 file.delete();
             }
         } catch (Exception e) {
-           e.printStackTrace();
+            throw new RuntimeException("deleteLocalFile 예외발생");
         }
             
     }

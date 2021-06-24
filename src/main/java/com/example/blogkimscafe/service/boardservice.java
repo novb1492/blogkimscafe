@@ -40,7 +40,7 @@ public class boardservice {
                 System.out.println("imgage가아닌걸 발견함 등록");
                 return no;   
             }else{
-               array=uploadimageservice.uploadImage(file, boarddto, email);
+               array=uploadimageservice.insertImageLocal(file, boarddto, email);
                if(array==null){
                    return no;
                }
@@ -53,28 +53,29 @@ public class boardservice {
             System.out.println(boardvo.getBid()+"게시글번호");
             return yes;
         } catch (Exception e) {
-           e.printStackTrace();
-        }
-        return no;
-        
+            throw new RuntimeException("글 등록중 예외발생");
+        }      
     }
     @Transactional(rollbackFor = {Exception.class})
     public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file,List<Integer>alreadyimages) {
-
         try {
-           
             boardvo boardvo=boarddao.findById(bid).orElseThrow();
             if(email.equals(boardvo.getEmail())){
                 uploadimageservice.deleteImage(alreadyimages, bid);
+                if(file.get(0).isEmpty()==false){
+                    boarddto.setBid(bid);
+                    List<boardimagevo>array=uploadimageservice.insertImageLocal(file, boarddto,email);
+                    uploadimageservice.insertImageToDb(array, bid);
+                }
                 boardvo.setTitle(boarddto.getTitle());
                 boardvo.setContent(boarddto.getContent());
-                return yes;
             }
+            return yes;
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return no;
-        
+          
+            throw new RuntimeException("글 수정중 예외발생");
+        }  
+
     }
     @Transactional
     public boardvo getArticle(int bid) {

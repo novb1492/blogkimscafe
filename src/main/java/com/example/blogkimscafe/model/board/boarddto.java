@@ -9,7 +9,8 @@ import lombok.Data;
 @Data
 public class boarddto {
     
-    
+    private int bid;
+
     @Size(min = 1, message = "1000글자 이하로 입력해주세요")
     private String content;
 
