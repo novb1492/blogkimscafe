@@ -5,10 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>후기쓰기</title>
+    <style>
+         #content img { max-width: 100%; }
+    </style>
 </head>
 <body>
     <h3>후기쓰기</h3>
-    <a href="/">홈</a>2
+    <a href="/">홈</a>
         <input type="hidden" id="bid" th:value="${boardvo.getBid}"><!--bid여기-->
     <br>
             제목
@@ -16,7 +19,7 @@
             <div th:text="${'작성자'+boardvo.getEmail}">작성자</div>
             내용
             <br>
-            <div contentEditable="false"id="content" >
+            <div contentEditable="false"id="content"  style="width: 40%;" >
                 [[${boardvo.getContent}]]
                     <div th:each="url:${imagearray}">
                         <img th:src="${url.getImageurl()}">

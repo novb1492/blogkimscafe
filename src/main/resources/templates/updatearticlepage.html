@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #contentEditable img { max-width: 100%; }
+    </style>
     <title>Document</title>
 </head>
 <body>
     <a href="/">홈</a>
     <br>
-    <h1>글을 수정해주세요</h1>2
+    <h1>글을 수정해주세요</h1>
     
     <div th:text="'작성자'+'&nbsp'+${#authentication.name}"></div>
         <div th:text="'글번호'+'&nbsp'+${boardvo.getBid}"></div>
@@ -20,7 +23,7 @@
                         <br>
                             글내용<div id="errorcontent"></div>
                             <br> 
-                            <div contentEditable="true" style="width: 20%;" id='contentEditable' >
+                            <div contentEditable="true" style="width: 40%;" id='contentEditable' >
                                 [[${boardvo.getContent}]]
                                     <div th:each="url:${imagearray}">
                                         <img th:id="${url.getId()}" class="image" th:src="${url.getImageurl()}">
