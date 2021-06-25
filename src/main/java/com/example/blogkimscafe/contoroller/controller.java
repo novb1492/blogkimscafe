@@ -4,10 +4,11 @@ package com.example.blogkimscafe.contoroller;
 
 
 
+
+
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
-import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.userservice;
@@ -17,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -35,13 +35,6 @@ public class controller {
 
     @GetMapping("/auth/joinpage")
     public String joinPage() {
-        return "joinpage";
-    }
-    @PostMapping("/auth/insertuser")
-    public String insertUser(userdto userdto) {
-        if(userservice.insertUser(userdto)){
-            return "loginpage";
-        }
         return "joinpage";
     }
     @GetMapping("/auth/loginpage")

@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class restExceptionHandler {
 
-    @ExceptionHandler(value = Exception.class)
-    public Map<String,String> globalHandler(Exception e) {
-        Map<String,String>map=new HashMap<>();
-        map.put("errmsg", e.getMessage());
+    @ExceptionHandler(value = RuntimeException.class)
+    public Map<String,Object> globalHandler(RuntimeException e) {
+        Map<String,Object>map=new HashMap<>();
+        map.put("result",false);
+        map.put("messege", e.getMessage());
         return  map;
     }
     

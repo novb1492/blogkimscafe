@@ -5,15 +5,21 @@ function doajax(url,data,contentType){
     xhr.send(data); /// ajax data부분
     return xhr;
 }
-function doLogin(){
+function doInsertUser(){
     var form= document.getElementById('form');
     var formData = new FormData(form);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST" , "/auth/loginprocess" , true);
+    xhr.open("POST" , "/auth/insertuser" , true);
     xhr.send(formData);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            alert(xhr.response);
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/loginpage';
+            }else{
+                alert(result.messege);
+            }
         }
     }  
 }
@@ -27,8 +33,8 @@ function doConfrimEmail(){
     xhr.onload = function() { 
     var color,text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                color='blue',text="";
+            if(xhr.response=='false'){
+                color='blue',text='';
             }else{
                 color='red',text='중복된 아이디 입니다';
             }

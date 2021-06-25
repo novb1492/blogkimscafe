@@ -3,17 +3,22 @@ package com.example.blogkimscafe.service;
 
 
 
-import javax.transaction.Transactional;
+
+
+
 
 import com.example.blogkimscafe.config.security;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.Role;
+import com.example.blogkimscafe.enums.responToFront;
 import com.example.blogkimscafe.model.user.*;
-
+import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 
 @Service
@@ -31,31 +36,30 @@ public class userservice {
   
     
     public boolean confrimEmail(String email) {
-
         System.out.println(email+"중복검사");
-       uservo vo=userdao.findByEmail(email);
-        if(vo==null)
-        {
-             return yes;
-        }
-     return no;
+        return userdao.existsByEmail(email);
     }
-    public boolean insertUser(userdto userdto) {
+    @Transactional(rollbackFor = {Exception.class}) 
+    public JSONObject insertUser(userdto userdto) {
 
         try {
-            System.out.println("회원가입 이메일"+ userdto.getEmail());
+    
+           System.out.println("회원가입 이메일"+ userdto.getEmail());
+           if(userdao.existsByEmail(userdto.getEmail())){
+                throw new RuntimeException();
+           }
             uservo uservo=new uservo(userdto);
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
             uservo.setPwd(bCryptPasswordEncoder.encode(uservo.getPwd()));
             uservo.setRole(Role.USER.getValue());
             uservo.setRandnum(utilservice.GetRandomNum(6));
             uservo.setEmailcheck("false");
-            userdao.save(uservo);
-            return yes;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return no;
+           userdao.save(uservo);
+            return utilservice.makeJson(responToFront.successSingUp.getBool(), responToFront.successSingUp.getMessege());
+        
+        } catch (RuntimeException e) {
+            throw new RuntimeException("이미 존재하는 이메일입니다 ");  
+        } 
     }
     @Transactional
     public boolean updateRandnum(String email,String randnum) {

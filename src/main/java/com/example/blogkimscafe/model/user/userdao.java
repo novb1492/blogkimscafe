@@ -17,6 +17,7 @@ public interface userdao extends JpaRepository<uservo,Integer> {///얘는 인터
     @Query(value = "select emailcheck from blogusers where email=?1",nativeQuery = true)
     public String getEmailCheckfindByEmail(String email); 
 
+    public boolean existsByEmail(String email);
     
     @Modifying 
     @Transactional

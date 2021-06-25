@@ -47,6 +47,10 @@ public class restcontroller {
     @Autowired
     private commentservice commentservice; 
     
+    @PostMapping("/auth/insertuser")
+    public JSONObject insertUser(@Valid userdto userdto) {
+        return userservice.insertUser(userdto);
+    }
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestBody userdto userdto ) {
         return userservice.confrimEmail(userdto.getEmail());

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import com.example.blogkimscafe.model.comment.commentdao;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.comment.commentvo;
@@ -16,21 +17,23 @@ public class commentservice {
 
     private final int pagesize=3;
     private final boolean yes=true;
-    private final boolean no=false;
+
 
     @Autowired
     private commentdao commentdao;
 
+    @Transactional(rollbackFor = {Exception.class}) 
     public boolean insertComment(commentdto commentdto,String email) {
 
         try {
+
             commentvo commentvo=new commentvo(commentdto,email);
             commentdao.save(commentvo);
             return yes;
         } catch (Exception e) {
-           e.printStackTrace();
+            throw new RuntimeException("등록중 문제가 생겼습니다");
         }
-        return no;
+     
     }
     @Transactional(rollbackFor = {Exception.class}) 
     public boolean updateComment(commentdto commentdto,String email) {
@@ -47,16 +50,17 @@ public class commentservice {
             throw new RuntimeException("댓글 수정중 예외발생");
         }
     }
+    @Transactional(rollbackFor = {Exception.class}) 
     public boolean deleteCommentByCid(int cid,String email) {
         try {
-            if(commentdao.findById(cid).orElseThrow().getEmail().equals(email)){
+            if(commentdao.findById(cid).orElseThrow(()->new Exception("존재하지 않는 댓글입니다")).getEmail().equals(email)){
                 commentdao.deleteById(cid);
                 return yes;
             }
+            return yes;
         } catch (Exception e) {
-           e.printStackTrace();
-        }
-        return no;   
+           throw new RuntimeException("삭제중 문제가 생겼습니다");
+        }  
     }
     public int totalCommentCount(int bid) {
 
@@ -87,15 +91,15 @@ public class commentservice {
      
         return null;
     }
+    @Transactional(rollbackFor = {Exception.class}) 
     public boolean deleteCommentByBid(int bid) {
 
         try {
             commentdao.deleteBybidNative(bid);
             return yes;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("삭제중 문제가 생겼습니다");
         }
-        return no;
     }
     
 }

@@ -3,6 +3,8 @@ package com.example.blogkimscafe.service;
 import java.util.Random;
 import java.util.UUID;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +20,12 @@ public class utilservice {
     }
     public String getUUID(){
         return UUID.randomUUID().toString();
+    }
+    public JSONObject makeJson(boolean result,String messege) {
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("result",result);
+        jsonObject.put("messege", messege);
+        return jsonObject;
     }
     
 }
