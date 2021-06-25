@@ -3,14 +3,13 @@ package com.example.blogkimscafe.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
 
 import com.example.blogkimscafe.model.comment.commentdao;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.comment.commentvo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class commentservice {
@@ -33,18 +32,20 @@ public class commentservice {
         }
         return no;
     }
-    @Transactional
-    public boolean updateComment(commentdto commentdto) {
+    @Transactional(rollbackFor = {Exception.class}) 
+    public boolean updateComment(commentdto commentdto,String email) {
 
         try {
-            commentvo commentvo=commentdao.findByCid(commentdto.getCid());
-            commentvo.setComment(commentdto.getComment());
-            commentdao.save(commentvo);
-            return yes;
+            commentvo commentvo=commentdao.findById(commentdto.getCid()).orElseThrow(()->new Exception("존재 하지 않은 댓글입니다"));
+            if(email.equals(commentvo.getEmail())){
+                commentvo.setComment(commentdto.getComment());
+                commentdao.save(commentvo);
+                return yes;
+            }
+            throw new Exception();
         } catch (Exception e) {
-           e.printStackTrace();
+            throw new RuntimeException("댓글 수정중 예외발생");
         }
-        return no;
     }
     public boolean deleteCommentByCid(int cid,String email) {
         try {
