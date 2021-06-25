@@ -191,6 +191,52 @@ function doDeleteComment(cid){
         }
     }   
 }
+function doUpdateComment(cid){
+    var xhr;
+    var bid=document.getElementById('bid').value;
+    var url='/updatecomment'; 
+    var data=JSON.stringify({"cid":""+cid+"","comment":""+document.getElementById(cid+'comment').value+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            if(xhr.response=='true'){
+                alert("댓글을 수정 했습니다");
+                location.href="/auth/content?bid="+bid;
+            }else{
+                alert("수정에 실패했습니다");
+            }
+        }
+    }   
+}
+var click=true;
+var beforeClickUpdateID;
+function clickUpdateButton(cid){
+   
+    if(click){
+        disabedTrue(beforeClickUpdateID,'update');
+        disabedTrue(beforeClickUpdateID,'comment');
+        disabedFalse(cid,'comment');
+        disabedFalse(cid,'update');
+        beforeClickUpdateID=cid;
+        click=false;
+    }else{
+        disabedTrue(beforeClickUpdateID,'update');
+        disabedTrue(beforeClickUpdateID,'comment');
+        disabedFalse(cid,'comment');
+        disabedFalse(cid,'update')
+        beforeClickUpdateID=cid;
+        click=true;
+    }
+}
+function disabedFalse(cid,name){
+    document.getElementById(cid+name).disabled=false;
+}
+function disabedTrue(beforeClickUpdateID,name){
+    if(beforeClickUpdateID!=null){
+        document.getElementById(beforeClickUpdateID+name).disabled=true;  
+    }
+}
 
 
     

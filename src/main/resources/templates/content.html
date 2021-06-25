@@ -19,12 +19,9 @@
             <div th:text="${'작성자'+boardvo.getEmail}">작성자</div>
             내용
             <br>
-            <div contentEditable="false"id="content"  style="width: 40%;" >
-                [[${content}]]
-                    <div th:each="url:${imagearray}">
-                        <img th:src="${url.getImageurl()}">
-                            </div>
+            <div contentEditable="false"id="content"  style="width: 40%;" >[[${boardvo.getContent}]]
             </div>
+            <div th:each="url:${imagearray}"><img th:src="${url.getImageurl()}"></div>
             <br>
             <div th:text="${'조회수'+'&nbsp'+boardvo.getHit}">조회수</div>
 
@@ -49,11 +46,11 @@
             </div>
             <div th:each="comment : ${array}"><!--댓글 출력하는곳-->
                 <div th:text="'작성자'+${comment.getEmail}"></div>
-                내용 <input type="text"  th:class="${comment.getCid}+comment" th:value="${comment.getComment}" disabled></input>
+                내용 <input type="text"  th:id="${comment.getCid}+comment" th:value="${comment.getComment}" disabled></input>
                 <div th:if="${#authentication.name==comment.getEmail}">
-                        <input type="button" th:id="${comment.getCid}" class="updateCommentButton" value="수정">
-                            <input type="button" th:id="${comment.getCid}" th:onclick="doDeleteComment([[${comment.getCid}]])"   class="deleteCommentButton" value="삭제"><!--유레카 버튼마다 각 cid의 번호를 id로 줘버리면 된다 20210609-->    
-                                <input type="button"  th:id="${comment.getCid}+update" class="updateCommnetButton2" value="확인" disabled >
+                        <input type="button" th:id="${comment.getCid}"  th:onclick="clickUpdateButton([[${comment.getCid}]])" value="수정">
+                            <input type="button" th:id="${comment.getCid}" th:onclick="doDeleteComment([[${comment.getCid}]])"   value="삭제"><!--유레카 버튼마다 각 cid의 번호를 id로 줘버리면 된다 20210609-->    
+                                <input type="button"  th:id="${comment.getCid}+update" th:onclick="doUpdateComment([[${comment.getCid}]])" value="확인" disabled >
                                 <div th:id="${comment.getCid}+updateArea"></div>
                 </div>    
                 <div sec:authorize="isAuthenticated()">

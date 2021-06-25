@@ -77,7 +77,6 @@ public class controller {
         model.addAttribute("totalpage", totalpage);
         model.addAttribute("array", commentservice.getComment(bid, page, totalpage));
         model.addAttribute("boardvo", boardvo);
-        model.addAttribute("content", boardservice.blobToString(boardvo.getContent()));
         return "content";
     }
     @GetMapping("/updatearticlepage")
@@ -85,7 +84,6 @@ public class controller {
         boardvo boardvo=boardservice.getArticle(bid);
         if(principaldetail.getUsername().equals(boardvo.getEmail())){
            model.addAttribute("imagearray",boardimagedao.findByBidOrderById(bid));
-           model.addAttribute("content", boardservice.blobToString(boardvo.getContent()));
            model.addAttribute("boardvo", boardvo);
             return "updatearticlepage";
         }

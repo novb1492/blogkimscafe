@@ -1,13 +1,13 @@
 package com.example.blogkimscafe.model.board;
 
-import java.sql.Blob;
-import java.sql.Timestamp;
 
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,8 +27,9 @@ public class boardvo {
     @Column(name="email",nullable = false,length = 50)
     private String email;
 
+    @Lob
     @Column(name="content",nullable = false)
-    private Blob content;
+    private String content;
 
     @Column(name = "title",nullable = false,length = 30)
     private String title;
@@ -42,9 +43,9 @@ public class boardvo {
     private Timestamp created;
 
     public boardvo (){}
-    public boardvo (String title,Blob content) {
-        this.content=content;
-        this.title=title;
+    public boardvo (boarddto boarddto) {
+        this.content=boarddto.getContent();
+        this.title=boarddto.getTitle();
     }
 
  

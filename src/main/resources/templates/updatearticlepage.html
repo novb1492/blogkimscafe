@@ -12,7 +12,7 @@
 <body>
     <a href="/">홈</a>
     <br>
-    <h1>글을 수정해주세요</h1>
+    <h1>글을 수정해주세요</h1>2
     
     <div th:text="'작성자'+'&nbsp'+${#authentication.name}"></div>
         <div th:text="'글번호'+'&nbsp'+${boardvo.getBid}"></div>
@@ -23,12 +23,12 @@
                         <br>
                             글내용<div id="errorcontent"></div>
                             <br> 
-                            <div contentEditable="true" style="width: 40%;" id='contentEditable' >
-                                [[${content}]]
+                            <div contentEditable="true" style="width: 40%;" id='contentEditable' >[[${boardvo.getContent}]] 
+                                    </div>
                                     <div th:each="url:${imagearray}">
                                         <img th:id="${url.getId()}" class="image" th:src="${url.getImageurl()}">
                                             </div>
-                            </div>
+                          
                                 <input type="hidden" name="bid" th:value="${boardvo.getBid}">
                                         <br>
                                             <input multiple="multiple"  type="file" name="file"> 

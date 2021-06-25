@@ -3,12 +3,9 @@ package com.example.blogkimscafe.service;
 
 
 
-import java.sql.Blob;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
-
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
@@ -38,7 +35,7 @@ public class boardservice {
         boolean emthy=file.get(0).isEmpty();
         System.out.println(emthy+"비었나요?");
         List<boardimagevo>array=new ArrayList<>();
-        boardvo boardvo=new boardvo(boarddto.getTitle(),stringToBlob(boarddto.getContent()));
+        boardvo boardvo=new boardvo(boarddto);
         try {
             if(emthy==false){
                 if(uploadimageservice.confrimOnlyImage(file)){
@@ -75,7 +72,7 @@ public class boardservice {
                     uploadimageservice.insertImageToDb(array, bid);
                 }
                 boardvo.setTitle(boarddto.getTitle());
-                boardvo.setContent(stringToBlob(boarddto.getContent()));
+                boardvo.setContent(boarddto.getContent());
             }
             return yes;
         } catch (Exception e) {
@@ -134,7 +131,7 @@ public class boardservice {
         return array;
     }
     
-    public String blobToString(Blob content) {
+   /* public String blobToString(Blob content) {
         try {
             return new String(content.getBytes(1, (int) content.length()));
         } catch (Exception e) {
@@ -147,7 +144,7 @@ public class boardservice {
         } catch (Exception e) {
             throw new RuntimeException("stringToBlob중 예외발생");
         }
-    }
+    }*/
 
     
     

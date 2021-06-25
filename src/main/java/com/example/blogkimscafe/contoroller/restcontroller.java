@@ -112,6 +112,12 @@ public class restcontroller {
         }
         return false;
     }
+    @PostMapping("/updatecomment")
+    public Boolean updateComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
+
+        return commentservice.updateComment(commentdto, principaldetail.getUsername());
+        
+    }
     @PostMapping("/deletecomment")
     public boolean deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
