@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import com.example.blogkimscafe.config.auth.principaldetail;
+import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.user.pwddto;
@@ -25,6 +26,7 @@ import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.userservice;
+import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,10 +48,13 @@ public class restcontroller {
     private boardservice boardservice;
     @Autowired
     private commentservice commentservice; 
+    @Autowired
+    private utilservice utilservice;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
-        return userservice.insertUser(userdto);
+        String text=userservice.insertUser(userdto);
+        return responToFront(text);
     }
     @PostMapping("/auth/emailconfirm")
     public boolean emailConfrim(@RequestBody userdto userdto ) {
@@ -135,6 +140,10 @@ public class restcontroller {
         map.put("messege", "틀리네요map");
         map.put("email", userdto.getEmail());
         return map;
+    }
+    private JSONObject responToFront(String text) {
+        
+        return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
     
 }

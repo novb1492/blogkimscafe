@@ -36,17 +36,16 @@ public class userservice {
   
     
     public boolean confrimEmail(String email) {
-        System.out.println(email+"중복검사");
+        System.out.println(email+"이메일 조회");
         return userdao.existsByEmail(email);
     }
     @Transactional(rollbackFor = {Exception.class}) 
-    public JSONObject insertUser(userdto userdto) {
+    public String insertUser(userdto userdto) {
 
         try {
-    
            System.out.println("회원가입 이메일"+ userdto.getEmail());
            if(userdao.existsByEmail(userdto.getEmail())){
-                return utilservice.makeJson(responResultEnum.alreadyEmail.getBool(), responResultEnum.alreadyEmail.getMessege());
+                return "alreadyEmail"; 
            }
             uservo uservo=new uservo(userdto);
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
@@ -55,8 +54,7 @@ public class userservice {
             uservo.setRandnum(utilservice.GetRandomNum(6));
             uservo.setEmailcheck("false");
            userdao.save(uservo);
-            return utilservice.makeJson(responResultEnum.sucSingUp.getBool(), responResultEnum.sucSingUp.getMessege());
-        
+            return "sucSingUp";
         } catch (RuntimeException e) {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");  
         } 
