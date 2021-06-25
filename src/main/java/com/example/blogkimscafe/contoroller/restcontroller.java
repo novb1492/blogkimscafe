@@ -56,27 +56,24 @@ public class restcontroller {
         return userservice.confrimEmail(userdto.getEmail());
     }
     @PostMapping("/sendemail")
-    public boolean sendEmail(@AuthenticationPrincipal principaldetail principaldetail) {
+    public JSONObject sendEmail(@AuthenticationPrincipal principaldetail principaldetail) {
   
         return  emailservice.sendEmail(principaldetail.getUsername(),6);
     }
     @PostMapping("/sendemailnologin")
-    public boolean sendEmailnologin(@RequestBody Map<String,Object>map) {
+    public JSONObject sendEmailnologin(@RequestBody Map<String,Object>map) {
         String email=(String)map.get("email");
-        if(userservice.confrimEmail(email)){
-            return false;
-        }
         return  emailservice.sendEmail(email,6);
     }
     @PostMapping("/confrimrandnum")
-    public boolean confrimRandnum(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody Map<String,Object> randnum) {
+    public JSONObject confrimRandnum(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody Map<String,Object> randnum) {
         System.out.println(randnum.get("randnum")+"입력한번호");
         String email=principaldetail.getUsername();
-        if(userservice.confrimRandnum(email,(String)randnum.get("randnum"))){
-            principaldetail.getUservo().setEmailcheck(userservice.getEmailCheck(email));
-            return true;
+        JSONObject jsonObject=userservice.confrimRandnum(email, (String)randnum.get("randnum"));
+        if((boolean) jsonObject.get("result")){
+            principaldetail.getUservo().setEmailcheck("true");
         }
-        return false;
+        return jsonObject;
         
     }
     @PostMapping("/sendtemppwd")
@@ -87,17 +84,14 @@ public class restcontroller {
         return false;
     }   
     @PostMapping("/updatepwd")
-    public boolean updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody@Valid pwddto pwddto) {
+    public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody@Valid pwddto pwddto) {
 
         return  userservice.updatePwd(principaldetail,pwddto);
         
     }
     @PostMapping("/confrimemailcheck")
-    public boolean writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
-            return true;
-        }
-        return false;
+    public JSONObject writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
+       return userservice.getEmailCheck(principaldetail.getUsername());
     }
     @PostMapping("/insertarticle")
     public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {

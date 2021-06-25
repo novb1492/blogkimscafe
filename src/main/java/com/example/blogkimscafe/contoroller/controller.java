@@ -43,8 +43,11 @@ public class controller {
     }
     @GetMapping("/mypage")
     public String myPage(@AuthenticationPrincipal principaldetail principaldetail,Model model) {
-        model.addAttribute("uservo", principaldetail.getUservo());
-        return "mypage";
+        if(existsByEmail(principaldetail.getUsername())){
+            model.addAttribute("uservo", principaldetail.getUservo());
+            return "mypage"; 
+        }
+        return "/";
     }
     @GetMapping("/updatepwdpage")
     public String updatePwdPage() {
@@ -56,7 +59,7 @@ public class controller {
     }
     @GetMapping("/writearticle")
     public String writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if(userservice.getEmailCheck(principaldetail.getUsername()).equals("true")){
+        if((boolean) userservice.getEmailCheck(principaldetail.getUsername()).get("result")){
             return "writearticlepage";
         }
         return "/auth/boardlist";
@@ -100,6 +103,9 @@ public class controller {
             model.addAttribute("array", boardservice.getSearchAtBoard(title,page,totalpage));
         }
         return "boardlist";
+    }
+    private boolean existsByEmail(String email){
+        return userservice.confrimEmail(email);
     }
     
 

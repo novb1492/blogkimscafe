@@ -21,7 +21,7 @@
                 <input type="button" onclick="doSendEamil()" value="인증번호전송">
                     <br>
                         <input type="text" id="randnum" placeholder="인증번호를입력해주세요">
-                            <input type="button" onclick="doConfrimTempnum()" value="제출">
+                            <input type="button" id="sendTempNum" onclick="doConfrimTempnum()" value="제출" disabled>
 
         </div>
         <div th:if="${uservo.getEmailcheck()=='true'}">

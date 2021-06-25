@@ -1,6 +1,7 @@
 package com.example.blogkimscafe.service;
 
 import com.example.blogkimscafe.email.sendemail;
+import com.nimbusds.jose.shaded.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,15 @@ public class emailservice {
     @Autowired
     private userservice userservice;
 
-    public boolean sendEmail(String email,int num) {
-        try {
+    public JSONObject sendEmail(String email,int num) {
+    
             String randnum=utilservice.GetRandomNum(num);
-            if(userservice.updateRandnum(email,randnum)){
-                return sendemail.sendEmail(email,"안녕하세요 kim's cafe입니다", "인증번호는"+randnum+"입니다");
+            JSONObject jsonObject=new JSONObject();
+            jsonObject=userservice.updateRandnum(email,randnum);
+            if((boolean) jsonObject.get("result")){
+                sendemail.sendEmail(email,"안녕하세요 kim's cafe입니다", "인증번호는"+randnum+"입니다");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+            return jsonObject;
     }
     public boolean sendTempPwd(String email,int num) {
         try {

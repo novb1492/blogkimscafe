@@ -67,11 +67,12 @@ function doCheckEmailauthentication(){
         xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-                if(xhr.response=='true'){
-                    location.href="/writearticle";
+                var result=JSON.parse(xhr.response);
+                if(result.result){
+                    location.href='/writearticle';
                 }else{
-                    alert("이메일인증 부탁드립니다");
-                }
+                    alert(result.messege);
+                }   
             }
         }                        
 }  
@@ -80,66 +81,80 @@ function doSendEamil(){
         var contentType="application/json";
         xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
-            var text;
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-                if(xhr.response=='true'){
-                    text="인증번호를 전송했습니다";
+            var result=JSON.parse(xhr.response);
+                if(result.result){
+                    document.getElementById('sendTempNum').disabled=false;
+                    alert(result.messege);
                 }else{
-                    text="인증번호 전송에 실패했습니다";
-                }
-                alert(text);
+                    alert(result.messege);
+                }  
+            }else{
+                alert('통신에 실패했습니다');
             }
         }  
 }
 function doConfrimTempnum(){
+    var sendTempNum= document.getElementById('sendTempNum');
+    sendTempNum.disabled=true;
     var xhr,url='/confrimrandnum',data=JSON.stringify({"randnum":""+document.getElementById('randnum').value+""});//'randnum='+document.getElementById('randnum').value;
     var contentType="application/json";
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
-        var text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                text="이메일인증완료";
-                location.href="/mypage";
-            }else{
-                text="번호를 다시 확인해주세요 ";
-            }
-            alert(text);
+                var result=JSON.parse(xhr.response);
+                if(result.result){
+                    alert(result.messege);
+                    location.href='/mypage';
+                }else{
+                    sendTempNum.disabled=false;
+                    alert(result.messege);
+                }  
+        }else{
+            alert('통신에 실패했습니다');
+            sendTempNum.disabled=false;
         }
     }    
 }
 function doSendEmailNoLoing(){
+    
     var xhr,url='/sendemailnologin',data=JSON.stringify({"email":""+document.getElementById('email').value+""});
     var contentType="application/json";
+    var sendTempNum= document.getElementById('sendTempPwd');
     xhr=doajax(url,data,contentType);
         xhr.onload = function() { 
-            var text;
             if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-                if(xhr.response=='true'){
-                    text="인증번호를 전송했습니다";
-                    document.getElementById('confrimrandnum').disabled=false;
+            var result=JSON.parse(xhr.response);
+                if(result.result){
+                    sendTempNum.disabled=false;
+                    alert(result.messege);
                 }else{
-                    text="인증번호 전송에 실패했습니다";
-                }
-                alert(text);
-            }
+                    alert(result.messege);
+                }  
+        }else{
+            alert('통신에 실패했습니다');
+        }
         }
 }  
 function doSendTempPwdEmail(){
-    var confrimrandnum=document.getElementById('confrimrandnum');
-    confrimrandnum.disabled=true;
+    var sendTempNum=document.getElementById('sendTempPwd');
+    sendTempNum.disabled=true;
     var xhr,url='/sendtemppwd',data='email='+document.getElementById('email').value+'&randnum='+document.getElementById('randnum').value;
     var contentType="application/x-www-form-urlencoded";
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("임시 비밀번호 전송");
-                location.href="/auth/loginpage";
-            }else{
-                confrimrandnum.disabled=false;
-                alert("번호를 다시 확인해주세요");
-            }
+            var result=JSON.parse(xhr.response);
+                if(result.result){
+                    alert(result.messege);
+                    location.href='/auth/loginpage';
+                }else{
+                    sendTempNum.disabled=false;
+                    alert(result.messege);
+                }  
+        }else{
+            sendTempNum.disabled=false;
+            alert('통신에 실패했습니다');
         }
     }
 }     
@@ -149,15 +164,17 @@ function doUpdatePwd(){
     var contentType="application/json";
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
-        var text;
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                text="비밀번호변경완료";
-                location.href="/mypage";
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/mypage';
             }else{
-                text="뭔가틀립니다";
+                alert(result.messege);
             }
-            alert(text);
+            
+        }else{
+            alert('통신에 실패했습니다');
         }
     }   
 }
