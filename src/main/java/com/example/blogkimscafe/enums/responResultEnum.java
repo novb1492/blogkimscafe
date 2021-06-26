@@ -6,7 +6,7 @@ package com.example.blogkimscafe.enums;
 
 public enum responResultEnum {
     
-    
+    /////////user/////////////////////////////////
     sucSingUp("회원가입 성공",true),
     alreadyEmail("이미 존재하는 이메일 입니다",false),
     sucUpdatePwd("비밀번호 변경성공 ",true),
@@ -19,6 +19,8 @@ public enum responResultEnum {
     rightTempNum("이메일인증이 완료 되었습니다",true),
     wrongTempNum("인증번호를 다시 확인해 주세요",false),
     sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true);
+    //////////////board///////////////////////////////////
+    
    
    
     private final String messege;

@@ -20,6 +20,8 @@ function doInsertUser(){
             }else{
                 alert(result.messege);
             }
+        }else{
+            alert("통신에 실패 하였습니다");
         }
     }  
 }
