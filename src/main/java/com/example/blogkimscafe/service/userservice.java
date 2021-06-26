@@ -24,9 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class userservice {
     
-    private final boolean yes=true;
-    private final boolean no=false;
-
     @Autowired
     private userdao userdao; 
     @Autowired
@@ -41,10 +38,9 @@ public class userservice {
     }
     @Transactional(rollbackFor = {Exception.class}) 
     public String insertUser(userdto userdto) {
-
         try {
            System.out.println("회원가입 이메일"+ userdto.getEmail());
-           if(userdao.existsByEmail(userdto.getEmail())){
+           if(confrimEmail(userdto.getEmail())){
                 return "alreadyEmail"; 
            }
             uservo uservo=new uservo(userdto);
@@ -53,7 +49,7 @@ public class userservice {
             uservo.setRole(Role.USER.getValue());
             uservo.setRandnum(utilservice.GetRandomNum(6));
             uservo.setEmailcheck("false");
-           userdao.save(uservo);
+            userdao.save(uservo);
             return "sucSingUp";
         } catch (RuntimeException e) {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");  
@@ -62,12 +58,12 @@ public class userservice {
     @Transactional(rollbackFor = {Exception.class}) 
     public JSONObject updateRandnum(String email,String randnum) {
         try {
-            if(userdao.existsByEmail(email)){
+            if(confrimEmail(email)){
                 uservo uservo=userdao.findByEmail(email);
                 uservo.setRandnum(randnum);
                 return utilservice.makeJson(responResultEnum.sendTempNumToEmail.getBool(),responResultEnum.sendTempNumToEmail.getMessege());
             }
-            return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
+            return callNotExistsUser();
         } catch (Exception e) {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");
         }
@@ -75,7 +71,7 @@ public class userservice {
     @Transactional(rollbackFor = {Exception.class}) 
     public JSONObject confrimRandnum(String email,String randnum) {
         try {
-            if(userdao.existsByEmail(email)){
+            if(confrimEmail(email)){
                 uservo uservo=userdao.findByEmail(email);
                 if(uservo.getRandnum().equals(randnum)){
                     uservo.setEmailcheck("true");
@@ -83,50 +79,59 @@ public class userservice {
                 }
                 return utilservice.makeJson(responResultEnum.wrongTempNum.getBool(), responResultEnum.wrongTempNum.getMessege());
             }
-            return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
+            return callNotExistsUser();
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 잠시후 다시시도 바랍니다");
         }
     }
     public JSONObject getEmailCheck(String email) {
-        if(userdao.existsByEmail(email)){
+        if(confrimEmail(email)){
            if(userdao.getEmailCheckfindByEmail(email).equals("true")){
                 return utilservice.makeJson(responResultEnum.emailCheckIsTrue.getBool(), responResultEnum.emailCheckIsTrue.getMessege());
            }
            return utilservice.makeJson(responResultEnum.emailCheckIsFalse.getBool(), responResultEnum.emailCheckIsFalse.getMessege()); 
         }
-        return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
+        return callNotExistsUser();
     }
     @Transactional(rollbackFor = {Exception.class}) 
     public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,pwddto pwddto ) {
         try {
-            uservo uservo=userdao.findByEmail(principaldetail.getUsername());
-            BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
-            if(bCryptPasswordEncoder.matches(pwddto.getPwd(), uservo.getPwd())){
-                if(pwddto.getNpwd().equals(pwddto.getNpwd2())){
-                    String hashpwd=bCryptPasswordEncoder.encode(pwddto.getNpwd2());
-                    userdao.updatePwdNative(hashpwd,uservo.getEmail());
-                    principaldetail.getUservo().setPwd(hashpwd);
-                    return utilservice.makeJson(responResultEnum.sucUpdatePwd.getBool(),responResultEnum.sucUpdatePwd.getMessege());
+            String email=principaldetail.getUsername();
+            if(confrimEmail(email)){
+                uservo uservo=userdao.findByEmail(email);
+                BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+                if(bCryptPasswordEncoder.matches(pwddto.getPwd(), uservo.getPwd())){
+                    if(pwddto.getNpwd().equals(pwddto.getNpwd2())){
+                        String hashpwd=bCryptPasswordEncoder.encode(pwddto.getNpwd2());
+                        userdao.updatePwdNative(hashpwd,uservo.getEmail());
+                        principaldetail.getUservo().setPwd(hashpwd);
+                        return utilservice.makeJson(responResultEnum.sucUpdatePwd.getBool(),responResultEnum.sucUpdatePwd.getMessege());
+                    }
+                    return utilservice.makeJson(responResultEnum.notEqualsNpwd.getBool(), responResultEnum.notEqualsNpwd.getMessege());
                 }
-                return utilservice.makeJson(responResultEnum.notEqualsNpwd.getBool(), responResultEnum.notEqualsNpwd.getMessege());
+                return utilservice.makeJson(responResultEnum.notEqalsPwd.getBool(),responResultEnum.notEqalsPwd.getMessege());
             }
-            return utilservice.makeJson(responResultEnum.notEqalsPwd.getBool(),responResultEnum.notEqalsPwd.getMessege());
+            return callNotExistsUser();
         } catch (Exception e) {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");
         }
     }
     @Transactional(rollbackFor = {Exception.class}) 
-    public boolean updateTempPwd(String email,String randnum8) {
+    public JSONObject updateTempPwd(String email,String randnum8) {
         try {
-            uservo uservo=userdao.findByEmail(email);
-            BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
-            uservo.setPwd(bCryptPasswordEncoder.encode(randnum8));
-            return yes;
+            if(confrimEmail(email)){
+                uservo uservo=userdao.findByEmail(email);
+                BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+                uservo.setPwd(bCryptPasswordEncoder.encode(randnum8));
+                return utilservice.makeJson(responResultEnum.sendTempPwd.getBool(),responResultEnum.sendTempPwd.getMessege());
+            }
+            return callNotExistsUser();
         } catch (Exception e) {
-            e.printStackTrace();
+           throw new RuntimeException("오류가 발생했습니다 잠시후 다시시도 바랍니다");
         }
-        return no;
+    }
+    private JSONObject callNotExistsUser() {
+        return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
     }
     
     

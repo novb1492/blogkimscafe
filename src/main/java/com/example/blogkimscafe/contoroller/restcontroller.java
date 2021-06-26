@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-
 import javax.validation.Valid;
-
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddto;
@@ -82,11 +80,12 @@ public class restcontroller {
         
     }
     @PostMapping("/sendtemppwd")
-    public boolean sendTempPwd(@RequestParam("email")String email,@RequestParam("randnum")String randnum) {
-        if(userservice.confrimRandnum(email,randnum)){
+    public JSONObject sendTempPwd(@RequestParam("email")String email,@RequestParam("randnum")String randnum) {
+        JSONObject jsonObject=userservice.confrimRandnum(email, randnum);
+        if((boolean) jsonObject.get("result")){
            return emailservice.sendTempPwd(email,8);
         }
-        return false;
+        return jsonObject;
     }   
     @PostMapping("/updatepwd")
     public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody@Valid pwddto pwddto) {
@@ -124,22 +123,6 @@ public class restcontroller {
     @PostMapping("/deletecomment")
     public boolean deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
-    }
-    @PostMapping("/testjson")
-    public JSONObject testJson(@RequestBody userdto userdto) {
-       JSONObject jsonObject=new JSONObject();
-        jsonObject.put("result", true);
-        jsonObject.put("messege", "틀리네요json");
-        jsonObject.put("email", userdto.getEmail());
-        return jsonObject;
-    }
-    @PostMapping("/testmap")
-    public Map<String,Object> testMap(@RequestBody userdto userdto) {
-        Map<String,Object>map=new HashMap<>();
-        map.put("result", true);
-        map.put("messege", "틀리네요map");
-        map.put("email", userdto.getEmail());
-        return map;
     }
     private JSONObject responToFront(String text) {
         

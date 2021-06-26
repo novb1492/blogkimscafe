@@ -14,7 +14,7 @@ public class sendemail  {
     @Autowired
     private JavaMailSender sender;//자체적으로 제공해주는 기능
 
-    public boolean sendEmail(String toAddress, String subject, String body) {
+    public void sendEmail(String toAddress, String subject, String body) {
 
         System.out.println(toAddress+"보낼주소");
 
@@ -26,12 +26,10 @@ public class sendemail  {
           helper.setText(body);//내용
         } catch (MessagingException e) {
           e.printStackTrace();
-          System.out.println(toAddress+"에게 메일전송실패");
-          return false;
+          throw new RuntimeException("이메일 전송에 실패했습니다 잠시후 다시시도 바랍니다");
         }
         sender.send(message);
         System.out.println(toAddress+"에게 메일전송");
-        return true;
     }
         
        

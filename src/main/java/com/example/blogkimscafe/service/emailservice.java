@@ -25,16 +25,15 @@ public class emailservice {
             }
             return jsonObject;
     }
-    public boolean sendTempPwd(String email,int num) {
-        try {
-            String temppwd=utilservice.GetRandomNum(8);
-            if(userservice.updateTempPwd(email,temppwd)){
-                return sendemail.sendEmail(email,"안녕하세요 kim's cafe입니다", "임시비밀번호는"+temppwd+"입니다");
+    public JSONObject sendTempPwd(String email,int num) {
+            String temppwd=utilservice.GetRandomNum(num);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject=userservice.updateTempPwd(email,temppwd);
+            if((boolean) jsonObject.get("result")){
+               sendemail.sendEmail(email,"안녕하세요 kim's cafe입니다", "임시비밀번호는"+temppwd+"입니다");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+       
+        return jsonObject;
         
     }
     

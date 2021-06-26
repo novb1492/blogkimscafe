@@ -17,7 +17,8 @@ public enum responResultEnum {
     notExistsUser("존재하지 않는 사용자입니다",false),
     sendTempNumToEmail("이메일로 인증번호를 전송했습니다",true),
     rightTempNum("이메일인증이 완료 되었습니다",true),
-    wrongTempNum("인증번호를 다시 확인해 주세요",false);
+    wrongTempNum("인증번호를 다시 확인해 주세요",false),
+    sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true);
    
    
     private final String messege;
