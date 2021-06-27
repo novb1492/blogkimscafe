@@ -30,7 +30,7 @@
                     <input type="hidden"  name="bid" th:value="${boardvo.getBid}">
                         <input type="submit" id="update" value="수정">
                             </form>
-                                <input type="button" id="deletearticle" value="삭제">
+                                <input type="button"th:onclick="doDeleteArticle([[${boardvo.getBid}]])" value="삭제">
             </div>
             <div id="errorcomment"></div>  
             <br>

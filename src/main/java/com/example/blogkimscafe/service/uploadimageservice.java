@@ -66,7 +66,24 @@ public class uploadimageservice {
            throw new RuntimeException("사진 db에 저장중 예외발생");
         }
     }
-    public List<boardimagevo> selectDeleteImage(List<Integer>alreadyimages,int bid) {
+    @Transactional(rollbackFor = {Exception.class})
+    public void deleteImage(List<Integer>alreadyimages,int bid) {
+        List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
+        try {
+                if(deleteImages.isEmpty()==false){
+                   for(boardimagevo b:deleteImages){
+                       boardimagedao.deleteById(b.getId());
+                       deleteLocalFile(b.getImagelocal());
+                   }
+                }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("사진 교체중 예외발생");
+        }
+        
+    }
+    private List<boardimagevo> selectDeleteImage(List<Integer>alreadyimages,int bid) {
         try {
             List<boardimagevo>deleteImages=new ArrayList<>();
             List<boardimagevo>dbImages=boardimagedao.findByBid(bid);
@@ -90,24 +107,7 @@ public class uploadimageservice {
             throw new RuntimeException("selectDeleteImage 예외발생");
         }
     }
-    @Transactional(rollbackFor = {Exception.class})
-    public void deleteImage(List<Integer>alreadyimages,int bid) {
-        List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
-        try {
-                if(deleteImages.isEmpty()==false){
-                   for(boardimagevo b:deleteImages){
-                       boardimagedao.deleteById(b.getId());
-                       deleteLocalFile(b.getImagelocal());
-                   }
-                }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("사진 교체중 예외발생");
-        }
-        
-    }
-    public void deleteLocalFile(String localLocation) {
+    private void deleteLocalFile(String localLocation) {
         System.out.println(localLocation+"삭제경로");
         File file=new File(localLocation);
         try {

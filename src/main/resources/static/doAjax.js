@@ -247,6 +247,28 @@ function doUpdateComment(cid){
         }
     }   
 }
+function doDeleteArticle(bid){
+    var xhr = new XMLHttpRequest();
+    var url="/deletearticle";
+    var data=JSON.stringify({"bid":bid});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/boardlist';
+            }else{
+                alert(result.messege);
+                location.href='/auth/content?bid='+bid;
+            }
+            
+        }else{
+            alert('통신에 실패했습니다');
+        }
+    }  
+ }
 var click=true;
 var beforeClickUpdateID;
 function clickUpdateButton(cid){

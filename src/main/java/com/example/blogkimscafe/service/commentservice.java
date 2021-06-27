@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class commentservice {
 
     private final int pagesize=3;
-    private final boolean yes=true;
-
 
     @Autowired
     private commentdao commentdao;
@@ -82,11 +80,10 @@ public class commentservice {
            throw new RuntimeException("댓글 불러오기에 실패했습니다 다시시도 바랍니다");
        }
     }
-    public boolean deleteCommentByBid(int bid) {
+    public void deleteCommentByBid(int bid) {
 
         try {
-            commentdao.deleteBybidNative(bid);
-            return yes;
+            commentdao.deleteByBidNative(bid);
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }

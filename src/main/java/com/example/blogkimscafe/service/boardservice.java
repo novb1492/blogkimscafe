@@ -33,6 +33,8 @@ public class boardservice {
     private uploadimageservice uploadimageservice;
     @Autowired
     private utilservice utilservice;
+    @Autowired
+    private commentservice commentservice;
 
     @Transactional(rollbackFor = {Exception.class})
     public JSONObject insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
@@ -80,6 +82,21 @@ public class boardservice {
             throw new RuntimeException("글 수정에 실패 했습니다 잠시후 다시시도 바랍니다");
         }  
 
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    public JSONObject deleteArticle(int bid,String email) {
+        boardvo boardvo=boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글입니다"));
+        confrimWriter(boardvo.getEmail(),email);
+        try {
+            boarddao.deleteById(bid);
+            commentservice.deleteCommentByBid(bid);
+            List<Integer>alreadyimages=new ArrayList<>();
+            uploadimageservice.deleteImage(alreadyimages, bid);
+
+            return utilservice.makeJson(responResultEnum.sucDeleteArticle.getBool(), responResultEnum.sucDeleteArticle.getMessege());
+        } catch (Exception e) {
+            throw new RuntimeException("오류가 발생했습니다 다시시도 부탁드립니다");
+        }
     }
     @Transactional
     public boardvo getArticle(int bid) {

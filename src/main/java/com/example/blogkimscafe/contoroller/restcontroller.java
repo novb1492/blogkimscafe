@@ -106,6 +106,11 @@ public class restcontroller {
        System.out.println(alreadyimages.isEmpty()+"비웠나요"+alreadyimages);
         return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid,file,alreadyimages);
     }
+    @PostMapping("/deletearticle")
+    public JSONObject deleteArticle(@RequestBody boarddto boarddto ,@AuthenticationPrincipal principaldetail principaldetail) { 
+        System.out.println("삭제할 게시물 "+boarddto.getBid());
+        return boardservice.deleteArticle(boarddto.getBid(),principaldetail.getUsername());
+    }
     @PostMapping("/insertcomment")
     public JSONObject insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
         String email= principaldetail.getUsername();
