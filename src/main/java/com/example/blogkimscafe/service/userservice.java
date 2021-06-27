@@ -36,7 +36,6 @@ public class userservice {
         System.out.println(email+"이메일 조회");
         return userdao.existsByEmail(email);
     }
-    @Transactional(rollbackFor = {Exception.class}) 
     public String insertUser(userdto userdto) {
         try {
            System.out.println("회원가입 이메일"+ userdto.getEmail());
@@ -55,7 +54,7 @@ public class userservice {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");  
         } 
     }
-    @Transactional(rollbackFor = {Exception.class}) 
+    @Transactional
     public JSONObject updateRandnum(String email,String randnum) {
         try {
             if(confrimEmail(email)){
@@ -68,7 +67,7 @@ public class userservice {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");
         }
     }
-    @Transactional(rollbackFor = {Exception.class}) 
+    @Transactional
     public JSONObject confrimRandnum(String email,String randnum) {
         try {
             if(confrimEmail(email)){
@@ -93,7 +92,7 @@ public class userservice {
         }
         return callNotExistsUser();
     }
-    @Transactional(rollbackFor = {Exception.class}) 
+    @Transactional
     public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,pwddto pwddto ) {
         try {
             String email=principaldetail.getUsername();
@@ -116,7 +115,7 @@ public class userservice {
             throw new RuntimeException("처리중 에러가 발생했습니다 다시 시도 바랍니다");
         }
     }
-    @Transactional(rollbackFor = {Exception.class}) 
+    @Transactional
     public JSONObject updateTempPwd(String email,String randnum8) {
         try {
             if(confrimEmail(email)){

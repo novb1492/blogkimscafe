@@ -107,21 +107,21 @@ public class restcontroller {
         return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid,file,alreadyimages);
     }
     @PostMapping("/insertcomment")
-    public boolean insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
+    public JSONObject insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
         String email= principaldetail.getUsername();
-        if(userservice.getEmailCheck(email).equals("true")){
+        JSONObject jsonObject=userservice.getEmailCheck(email);
+        if((boolean) jsonObject.get("result")){
             return commentservice.insertComment(commentdto,email); 
         }
-        return false;
+        return jsonObject;
+       
     }
     @PostMapping("/updatecomment")
-    public Boolean updateComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
-
-        return commentservice.updateComment(commentdto, principaldetail.getUsername());
-        
+    public JSONObject updateComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
+        return commentservice.updateComment(commentdto, principaldetail.getUsername()); 
     }
     @PostMapping("/deletecomment")
-    public boolean deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
+    public JSONObject deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
     }
     private JSONObject responToFront(String text) {

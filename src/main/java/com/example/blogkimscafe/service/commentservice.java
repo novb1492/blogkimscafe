@@ -3,11 +3,12 @@ package com.example.blogkimscafe.service;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
+import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.comment.commentdao;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.comment.commentvo;
+import com.nimbusds.jose.shaded.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,43 +22,35 @@ public class commentservice {
 
     @Autowired
     private commentdao commentdao;
+    @Autowired
+    private utilservice utilservice;
 
-    @Transactional(rollbackFor = {Exception.class}) 
-    public boolean insertComment(commentdto commentdto,String email) {
-
+    public JSONObject insertComment(commentdto commentdto,String email) {
         try {
-
             commentvo commentvo=new commentvo(commentdto,email);
             commentdao.save(commentvo);
-            return yes;
+            return utilservice.makeJson(responResultEnum.sucInsertComment.getBool(), responResultEnum.sucInsertComment.getMessege());
         } catch (Exception e) {
-            throw new RuntimeException("등록중 문제가 생겼습니다");
-        }
-     
-    }
-    @Transactional(rollbackFor = {Exception.class}) 
-    public boolean updateComment(commentdto commentdto,String email) {
-
-        try {
-            commentvo commentvo=commentdao.findById(commentdto.getCid()).orElseThrow(()->new Exception("존재 하지 않은 댓글입니다"));
-            if(email.equals(commentvo.getEmail())){
-                commentvo.setComment(commentdto.getComment());
-                commentdao.save(commentvo);
-                return yes;
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            throw new RuntimeException("댓글 수정중 예외발생");
+            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
-    @Transactional(rollbackFor = {Exception.class}) 
-    public boolean deleteCommentByCid(int cid,String email) {
+    @Transactional
+    public JSONObject updateComment(commentdto commentdto,String email) {
+        commentvo commentvo=commentdao.findById(commentdto.getCid()).orElseThrow(()->new RuntimeException("존재 하지 않은 댓글입니다"));
+        confirmWriter(commentvo.getEmail(), email);
         try {
-            if(commentdao.findById(cid).orElseThrow(()->new Exception("존재하지 않는 댓글입니다")).getEmail().equals(email)){
-                commentdao.deleteById(cid);
-                return yes;
-            }
-            return yes;
+            commentvo.setComment(commentdto.getComment());
+            return utilservice.makeJson(responResultEnum.sucUpdateComment.getBool(),responResultEnum.sucUpdateComment.getMessege());
+        } catch (Exception e) {
+            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+        }
+    }
+    public JSONObject deleteCommentByCid(int cid,String email) {
+        commentvo commentvo=commentdao.findById(cid).orElseThrow(()->new RuntimeException("존재하지 않는 댓글입니다"));
+        confirmWriter(commentvo.getEmail(), email);
+        try {
+            commentdao.deleteById(cid);
+            return utilservice.makeJson(responResultEnum.sucDeleteCommnet.getBool(), responResultEnum.sucDeleteCommnet.getMessege());
         } catch (Exception e) {
            throw new RuntimeException("삭제중 문제가 생겼습니다");
         }  
@@ -82,23 +75,25 @@ public class commentservice {
                 end=fisrt+pagesize-1; 
                 array=commentdao.getCommentNative(bid,fisrt-1,end-fisrt+1);
             }else{
-                array=commentdao.findByBidOrderByCid(bid);
+                array=commentdao.findByBidOrderByCidDesc(bid);
             }
                 return array;
        } catch (Exception e) {
-           e.printStackTrace();
+           throw new RuntimeException("댓글 불러오기에 실패했습니다 다시시도 바랍니다");
        }
-     
-        return null;
     }
-    @Transactional(rollbackFor = {Exception.class}) 
     public boolean deleteCommentByBid(int bid) {
 
         try {
             commentdao.deleteBybidNative(bid);
             return yes;
         } catch (Exception e) {
-            throw new RuntimeException("삭제중 문제가 생겼습니다");
+            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+        }
+    }
+    private void confirmWriter(String dbEmail,String email){
+        if(email.equals(dbEmail)==false){
+            throw new RuntimeException("작성자와 일치 하지 않습니다");
         }
     }
     

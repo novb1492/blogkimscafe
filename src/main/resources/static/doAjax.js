@@ -189,12 +189,16 @@ function doInsertComment(){
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("댓글을 등록 했습니다");
-                location.href="/auth/content?bid="+bid;
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/content?bid='+bid;
             }else{
-                alert("댓글 등록에 실패했습니다");
+                alert(result.messege);
             }
+        }
+        else{
+            alert('통신에 실패했습니다');
         }
     }   
 }
@@ -207,12 +211,17 @@ function doDeleteComment(cid){
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("댓글을 삭제 했습니다");
-                location.href="/auth/content?bid="+bid;
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/content?bid='+bid;
             }else{
-                alert("삭제에 실패했습니다");
+                alert(result.messege);
             }
+    
+        }
+        else{
+            alert('통신에 실패했습니다');
         }
     }   
 }
@@ -225,12 +234,16 @@ function doUpdateComment(cid){
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("댓글을 수정 했습니다");
-                location.href="/auth/content?bid="+bid;
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/content?bid='+bid;
             }else{
-                alert("수정에 실패했습니다");
+                alert(result.messege);
             }
+        }
+        else{
+            alert('통신에 실패했습니다');
         }
     }   
 }

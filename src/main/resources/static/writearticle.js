@@ -21,7 +21,8 @@ function doInsertArticle(){
  }
  function doUpdateArticle() {
     var alreadyimagesarray=[]; 
-    var alreayimages= document.getElementsByTagName('img');
+    var alreayimages= document.getElementsByClassName('image');
+    
     for(var i=0;i<alreayimages.length;i++){
         alreadyimagesarray.push(alreayimages[i].id);
     }

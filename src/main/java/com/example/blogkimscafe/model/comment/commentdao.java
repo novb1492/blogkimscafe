@@ -13,7 +13,7 @@ public interface commentdao extends JpaRepository<commentvo,Integer> {
     @Query(value = "select *from blogcomment  where bid=?1 order by cid desc limit ?2,?3",nativeQuery = true)
     List<commentvo> getCommentNative(int bid,int first,int end);
 
-    List<commentvo> findByBidOrderByCid(int bid);
+    List<commentvo> findByBidOrderByCidDesc(int bid);
     
     int countByBid(int bid);
  

@@ -81,7 +81,7 @@ public class boardservice {
         }  
 
     }
-    @Transactional(rollbackFor = {Exception.class})
+    @Transactional
     public boardvo getArticle(int bid) {
         boardvo boardvo= boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글 입니다"));
         try {

@@ -24,8 +24,11 @@ public enum responResultEnum {
     sucInsertArticle("게시글을 등록했습니다",true),
     notExistsArticle("존재하지 않은 게시물입니다",false),
     notEqualsWriter("작성자가 일치 하지 않습니다",false),
-    sucUpdateArticle("글 수정에 성공했습니다",true);
-    
+    sucUpdateArticle("글 수정에 성공했습니다",true),
+    /////////////댓글/////////////////////////////////////
+    sucInsertComment("댓글을 등록 했습니다",true),
+    sucUpdateComment("댓글을 수정 했습니다",true),
+    sucDeleteCommnet("댓글을 삭제 했습니다",true);
    
    
     private final String messege;
