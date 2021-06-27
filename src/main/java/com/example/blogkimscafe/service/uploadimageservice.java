@@ -37,7 +37,6 @@ public class uploadimageservice {
         }
         return false;  
     }
-    @Transactional(rollbackFor = {Exception.class})
     public List<boardimagevo> insertImageLocal(List<MultipartFile> file,boarddto boarddto,String email) {
         try {
             List<boardimagevo>array=new ArrayList<>();
@@ -71,14 +70,13 @@ public class uploadimageservice {
         try {
             List<boardimagevo>deleteImages=new ArrayList<>();
             List<boardimagevo>dbImages=boardimagedao.findByBid(bid);
-            if(alreadyimages.isEmpty()){
+            if(alreadyimages.isEmpty()){/////////만약 비웠다면 기존사진이 다 삭제되어 온경우
                 return dbImages;
             }
                 for(int i=0;i<dbImages.size();i++){
                     for(int ii=0;ii<alreadyimages.size();ii++){ 
                         if(dbImages.get(i).getId()!=alreadyimages.get(ii)){
                             if(ii==alreadyimages.size()-1){
-                                    System.out.println(1+"체크");
                                     deleteImages.add(dbImages.get(i));
                              }
                         }else{
@@ -92,6 +90,7 @@ public class uploadimageservice {
             throw new RuntimeException("selectDeleteImage 예외발생");
         }
     }
+    @Transactional(rollbackFor = {Exception.class})
     public void deleteImage(List<Integer>alreadyimages,int bid) {
         try {
                List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
