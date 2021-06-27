@@ -6,10 +6,14 @@ package com.example.blogkimscafe.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagevo;
+import com.nimbusds.jose.shaded.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,17 +25,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class boardservice {
 
-    private final boolean yes=true;
-    private final boolean no=false;
     private final int pagesize=3;
 
     @Autowired
     private boarddao boarddao;
     @Autowired
     private uploadimageservice uploadimageservice;
+    @Autowired
+    private utilservice utilservice;
 
     @Transactional(rollbackFor = {Exception.class})
-    public boolean insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
+    public JSONObject insertArticle(String email,boarddto boarddto,List<MultipartFile> file) {
         boolean emthy=file.get(0).isEmpty();
         System.out.println(emthy+"비었나요?");
         List<boardimagevo>array=new ArrayList<>();
@@ -40,13 +44,10 @@ public class boardservice {
             if(emthy==false){
                 if(uploadimageservice.confrimOnlyImage(file)){
                     System.out.println("imgage가아닌걸 발견함 등록");
-                    return no;   
+                    return utilservice.makeJson(responResultEnum.findNoImageFile.getBool(), responResultEnum.findNoImageFile.getMessege());   
                 }else{
                     System.out.println("사진 저장 시작");
                    array=uploadimageservice.insertImageLocal(file, boarddto, email);
-                   if(array==null){
-                       return no;
-                   }
                 }
             }
             boardvo.setEmail(email);
@@ -54,37 +55,36 @@ public class boardservice {
             if(emthy==false){
                 uploadimageservice.insertImageToDb(array, boardvo.getBid());
             }
-            System.out.println(boardvo.getBid()+"게시글번호");
-            return yes;
+            return utilservice.makeJson(responResultEnum.sucInsertArticle.getBool(), responResultEnum.sucInsertArticle.getMessege());
         } catch (Exception e) {
-            throw new RuntimeException("글 등록중 예외발생");
+            throw new RuntimeException("글 등록에 실패 했습니다 잠시후 다시시도 바랍니다");
         }      
     }
     @Transactional(rollbackFor = {Exception.class})
-    public boolean updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file,List<Integer>alreadyimages) {
-        try {
-            boardvo boardvo=boarddao.findById(bid).orElseThrow();
-            if(email.equals(boardvo.getEmail())){
-                uploadimageservice.deleteImage(alreadyimages, bid);
-                if(file.get(0).isEmpty()==false){
-                    boarddto.setBid(bid);
-                    List<boardimagevo>array=uploadimageservice.insertImageLocal(file, boarddto,email);
-                    uploadimageservice.insertImageToDb(array, bid);
-                }
-                boardvo.setTitle(boarddto.getTitle());
-                boardvo.setContent(boarddto.getContent());
-            }
-            return yes;
+    public JSONObject updateArticle(String email,boarddto boarddto,int bid,List<MultipartFile>file,List<Integer>alreadyimages) {
+       
+        boardvo boardvo=boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글입니다"));
+        confrimWriter(boardvo.getEmail(), email);
+        try { 
+                    uploadimageservice.deleteImage(alreadyimages, bid);
+                    if(file.get(0).isEmpty()==false){
+                        boarddto.setBid(bid);
+                        List<boardimagevo>array=uploadimageservice.insertImageLocal(file, boarddto,email);
+                        uploadimageservice.insertImageToDb(array, bid);
+                    }
+                    boardvo.setTitle(boarddto.getTitle());
+                    boardvo.setContent(boarddto.getContent());
+                return utilservice.makeJson(responResultEnum.sucUpdateArticle.getBool(), responResultEnum.sucUpdateArticle.getMessege());
         } catch (Exception e) {
           
-            throw new RuntimeException("글 수정중 예외발생");
+            throw new RuntimeException("글 수정에 실패 했습니다 잠시후 다시시도 바랍니다");
         }  
 
     }
     @Transactional
     public boardvo getArticle(int bid) {
+        boardvo boardvo= boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글 입니다"));
         try {
-            boardvo boardvo= boarddao.findById(bid).orElseThrow();
             boardvo.setHit(boardvo.getHit()+1);
             return boardvo;
         } catch (Exception e) {
@@ -130,7 +130,12 @@ public class boardservice {
         }
         return array;
     }
-    
+    private void confrimWriter(String dbEmail,String email) {
+        if(email.equals(email)==false){
+            throw new RuntimeException("작성자가 일치 하지 않습니다");
+        }
+    }
+   
    /* public String blobToString(Blob content) {
         try {
             return new String(content.getBytes(1, (int) content.length()));
@@ -145,6 +150,7 @@ public class boardservice {
             throw new RuntimeException("stringToBlob중 예외발생");
         }
     }*/
+    
 
     
     

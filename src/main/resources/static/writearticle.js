@@ -1,12 +1,3 @@
-window.onload=function(){
-    document.querySelectorAll('.image').forEach(function(item) {
-        item.addEventListener('c', function() {
-            var id = item.id;
-            document.getElementsByClassName(id+'comment')[0].disabled=false;
-            document.getElementById(id+'update').disabled=false;
-        });
-    });
-}
 function doInsertArticle(){
     var form= document.getElementById('form');
     var formData = new FormData(form);
@@ -15,12 +6,16 @@ function doInsertArticle(){
     xhr.send(formData);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("작성완료");
-                location.href="/auth/boardlist";
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/boardlist';
             }else{
-                alert("등록에 실패했습니다");
+                alert(result.messege);
             }
+            
+        }else{
+            alert('통신에 실패했습니다');
         }
     }  
  }
@@ -41,12 +36,16 @@ function doInsertArticle(){
     xhr.send(formData);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            if(xhr.response=='true'){
-                alert("작성완료");
-                location.href="/auth/boardlist";
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/auth/content?bid='+document.getElementById("bid").value;
             }else{
-                alert("등록에 실패했습니다");
+                alert(result.messege);
             }
+            
+        }else{
+            alert('통신에 실패했습니다');
         }
     }  
  }

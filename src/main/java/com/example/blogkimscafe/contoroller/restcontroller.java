@@ -98,11 +98,11 @@ public class restcontroller {
        return userservice.getEmailCheck(principaldetail.getUsername());
     }
     @PostMapping("/insertarticle")
-    public boolean insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
+    public JSONObject insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
         return boardservice.insertArticle(principaldetail.getUsername(), boarddto,file);
     }
     @PostMapping("/updatearticle")
-    public boolean updateArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam("bid")int bid,@RequestParam(value = "file", required = false)List<MultipartFile> file,@RequestParam(value =  "alreadyimages", required = false)List<Integer>alreadyimages) {
+    public JSONObject updateArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam("bid")int bid,@RequestParam(value = "file", required = false)List<MultipartFile> file,@RequestParam(value =  "alreadyimages", required = false)List<Integer>alreadyimages) {
        System.out.println(alreadyimages.isEmpty()+"비웠나요"+alreadyimages);
         return boardservice.updateArticle(principaldetail.getUsername(), boarddto, bid,file,alreadyimages);
     }

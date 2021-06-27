@@ -18,8 +18,13 @@ public enum responResultEnum {
     sendTempNumToEmail("이메일로 인증번호를 전송했습니다",true),
     rightTempNum("이메일인증이 완료 되었습니다",true),
     wrongTempNum("인증번호를 다시 확인해 주세요",false),
-    sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true);
+    sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true),
     //////////////board///////////////////////////////////
+    findNoImageFile("이미지가 아닌 파일이 존재합니다 ",false),
+    sucInsertArticle("게시글을 등록했습니다",true),
+    notExistsArticle("존재하지 않은 게시물입니다",false),
+    notEqualsWriter("작성자가 일치 하지 않습니다",false),
+    sucUpdateArticle("글 수정에 성공했습니다",true);
     
    
    
