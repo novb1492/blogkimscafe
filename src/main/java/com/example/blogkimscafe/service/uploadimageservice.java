@@ -92,8 +92,8 @@ public class uploadimageservice {
     }
     @Transactional(rollbackFor = {Exception.class})
     public void deleteImage(List<Integer>alreadyimages,int bid) {
+        List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
         try {
-               List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
                 if(deleteImages.isEmpty()==false){
                    for(boardimagevo b:deleteImages){
                        boardimagedao.deleteById(b.getId());
@@ -103,7 +103,7 @@ public class uploadimageservice {
             
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("사진 삭제중 예외발생");
+            throw new RuntimeException("사진 교체중 예외발생");
         }
         
     }
@@ -115,6 +115,7 @@ public class uploadimageservice {
                 file.delete();
             }
         } catch (Exception e) {
+            System.out.println("사진 삭제중 예외 발생");
             throw new RuntimeException("deleteLocalFile 예외발생");
         }
             

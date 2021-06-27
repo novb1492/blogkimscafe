@@ -65,15 +65,15 @@ public class boardservice {
        
         boardvo boardvo=boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글입니다"));
         confrimWriter(boardvo.getEmail(), email);
+        uploadimageservice.deleteImage(alreadyimages, bid);
         try { 
-                    uploadimageservice.deleteImage(alreadyimages, bid);
-                    if(file.get(0).isEmpty()==false){
-                        boarddto.setBid(bid);
-                        List<boardimagevo>array=uploadimageservice.insertImageLocal(file, boarddto,email);
-                        uploadimageservice.insertImageToDb(array, bid);
-                    }
-                    boardvo.setTitle(boarddto.getTitle());
-                    boardvo.setContent(boarddto.getContent());
+            if(file.get(0).isEmpty()==false){
+                boarddto.setBid(bid);
+                List<boardimagevo>array=uploadimageservice.insertImageLocal(file, boarddto,email);
+                uploadimageservice.insertImageToDb(array, bid);
+            }
+                boardvo.setTitle(boarddto.getTitle());
+                boardvo.setContent(boarddto.getContent());
                 return utilservice.makeJson(responResultEnum.sucUpdateArticle.getBool(), responResultEnum.sucUpdateArticle.getMessege());
         } catch (Exception e) {
           
@@ -81,24 +81,22 @@ public class boardservice {
         }  
 
     }
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class})
     public boardvo getArticle(int bid) {
         boardvo boardvo= boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글 입니다"));
         try {
             boardvo.setHit(boardvo.getHit()+1);
             return boardvo;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("오류가 발생했습니다 다시시도 부탁드립니다");
         }
-        return null;
     }
     public Page<boardvo> getBoard(int page) {
         try {
             return boarddao.findAll(PageRequest.of(page-1, pagesize,Sort.by(Sort.Direction.DESC,"bid")));
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("목록을 불러오는데 실패했습니다 다시시도  바랍니다");
         }
-        return null;
     }
     public int getSearchAtBoardCount(String title){
         int totalpage=0;
@@ -112,7 +110,7 @@ public class boardservice {
         } catch (Exception e) {
            e.printStackTrace();
         }
-        return 1;
+        return 0;
     }
     public List<boardvo> getSearchAtBoard(String title,int page,int totalpage) {
         List<boardvo>array=new ArrayList<>();
@@ -125,10 +123,10 @@ public class boardservice {
             }else{
                 array=boarddao.findByTitleLikeOrderByBidNative(title);
             }
+            return array;
         } catch (Exception e) {
-           e.printStackTrace();
+           throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
-        return array;
     }
     private void confrimWriter(String dbEmail,String email) {
         if(email.equals(email)==false){
