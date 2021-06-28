@@ -2,7 +2,7 @@ package com.example.blogkimscafe.model.reservation;
 
 import java.sql.Timestamp;
 
-import javax.validation.constraints.Email;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

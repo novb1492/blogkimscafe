@@ -29,7 +29,10 @@ public enum responResultEnum {
     /////////////댓글/////////////////////////////////////
     sucInsertComment("댓글을 등록 했습니다",true),
     sucUpdateComment("댓글을 수정 했습니다",true),
-    sucDeleteCommnet("댓글을 삭제 했습니다",true);
+    sucDeleteCommnet("댓글을 삭제 했습니다",true),
+    ///////////////예약///////////////////////////////////
+    sucInsertReservation("예약에 성공했습니다",true),
+    failInsertRervation("예약이 다 찼습니다",false);
    
    
     private final String messege;

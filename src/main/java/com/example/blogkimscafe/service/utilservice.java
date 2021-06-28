@@ -1,5 +1,10 @@
 package com.example.blogkimscafe.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
@@ -27,6 +32,20 @@ public class utilservice {
         jsonObject.put("result",result);
         jsonObject.put("messege", sucupdatepwd);
         return jsonObject;
+    }
+    public int getNowHour() {
+        Calendar cal = Calendar.getInstance();
+	    int hour = cal.get(Calendar.HOUR_OF_DAY);
+        System.out.println(hour+"현재시간");
+        return hour;  
+    }
+    public Timestamp makeToTimestamp(int requestTime) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        String today = sdf.format(date);
+        String reservationdatetime=today+" "+requestTime+":0:0";
+
+        return Timestamp.valueOf(reservationdatetime);
     }
     
 }

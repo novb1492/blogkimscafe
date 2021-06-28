@@ -18,11 +18,13 @@ import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.comment.commentdto;
+import com.example.blogkimscafe.model.reservation.reservationdto;
 import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
+import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
@@ -48,6 +50,8 @@ public class restcontroller {
     private commentservice commentservice; 
     @Autowired
     private utilservice utilservice;
+    @Autowired
+    private reservationservice reservationservice;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -129,9 +133,14 @@ public class restcontroller {
     public JSONObject deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
     }
-    @PostMapping("/getreservation")
-    public void getreservation(@RequestBody String seat) {
+    @PostMapping("/getimebyseat")
+    public List<Integer> getReservation(@RequestParam("seat") String seat) {
         System.out.println("예약시간가지러옴" +seat);
+        return reservationservice.getCanRerserTime(seat);
+    }
+    @PostMapping("/insertreservation")
+    public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime) {
+        return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
     }
     private JSONObject responToFront(String text) {
         
