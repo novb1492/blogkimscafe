@@ -104,6 +104,10 @@ public class controller {
         }
         return "boardlist";
     }
+    @GetMapping("/auth/reservationpage")
+    public String reservationPage() {
+        return "reservationpage";
+    }
     private boolean existsByEmail(String email){
         return userservice.confrimEmail(email);
     }

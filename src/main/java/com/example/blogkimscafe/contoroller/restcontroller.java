@@ -129,9 +129,14 @@ public class restcontroller {
     public JSONObject deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
     }
+    @PostMapping("/getreservation")
+    public void getreservation(@RequestBody String seat) {
+        System.out.println("예약시간가지러옴" +seat);
+    }
     private JSONObject responToFront(String text) {
         
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
+
     
 }

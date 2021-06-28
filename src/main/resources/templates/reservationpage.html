@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmln:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <title>예약페이지</title>
+    <style>
+        .modal{ position:absolute; width:100%; height:100%; background: rgba(0,0,0,0.8); top:0; left:0; display:none;}
+        .modal_content{width:400px; height:200px;background:#fff; border-radius:10px;position:relative; top:50%; left:50%;
+        margin-top:-100px; margin-left:-200px;text-align:center;box-sizing:border-box; padding:74px 0;line-height:23px; cursor:pointer;}
+        #canvas{ position: relative; top: 0%; }
+        #text-block {position: absolute;color: black;}
+    </style>
+</head>
+<body>
+    <div id="canvas">
+        <div id="text-block">
+                <a href="/auth/index">홈</a>
+                <div sec:authorize="!isAuthenticated()"><!--세션을 이렇게 model로 안넘겨도 그냥 바로 꺼내쓸수 있다 20210515 편리하다-->
+                    예약하시려면 로그인 부탁드립니다
+                    <br>
+                    <a href="/auth/joinpage">회원가입</a>
+                    <a href="/auth/loginpage">로그인</a>
+                </div>
+                <div sec:authorize="isAuthenticated()"><!--else문을 모르겠다-->
+                    <div sec:authentication="name" ></div>
+                    <a href="/mypage">마이페이지</a>
+                    <a href="/logout">로그아웃</a>
+                    <a href="/showreservationcepage">예약내역</a>
+                </div>
+                <!--<form action="/reservationprocess" method="POST"> 보단 이제 ajax가 훨씬 디테일 하게 컨트롤된다-->
+                    a-1<input type="radio" name="radio" class="seat" onclick="choiceseat('a-1')" ><!--radio중복선택 막는건 name을 통일하면 막힌다20210525-->
+                    a-2<input type="radio" name="radio"  class="seat" onclick="choiceseat('a-2')">
+                    a-3<input type="radio" name="radio"  class="seat" onclick="choiceseat('a-3')">
+                    a-4<input type="radio" name="radio"  class="seat" onclick="choiceseat('a-4')">
+                </div>                 
+                        <div class="modal">
+                            <div class="modal_content">
+                                <br>
+                                예약시간
+                                <br>
+                                <div id="requesthourdiv"></div>
+                                <br>
+                                <input type="hidden" id="remail"  th:value="${#authentication.name}"><!--#붙히고 꺼내쓰면된다!20210528-->
+                                <input type="hidden" id="rname"  th:value="${#authentication.name}"><!--#붙히고 꺼내쓰면된다!20210528-->
+                                <input type="button" id="button"  value="예약">
+                                <input type="button" id="canclebutton" value="취소">
+                            </div>
+                        </div>
+                <!--</form>--><!--이렇게 내가 생각하던대로 되는데 1시간동안 삽질 했네 미친 20210524-->
+    </div>
+<script src="../static/reservationlib.js"></script>
+
+<script>
+    var seat;
+    var requesthour = []; // key 값을 담을 배열
+    var alreadytime=[];
+
+
+    $(function(){
+        $('.seat').click(function(){
+            $('.modal').fadeIn();
+        })
+     
+        $('#button').click(function(){
+            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
+                requesthour.push($(this).val());
+            });
+            $.ajax({
+                type:"post",
+                url:"/insertReservation",
+            data:{
+               "seat":seat,
+               "requesthour":requesthour,
+               "remail":$('#remail').val(),
+               "rname":$('#rname').val()
+            },
+            success:function(data){
+                if(data){
+                    alert('예약성공'); 
+                    out();
+                }else{
+                    alert('죄송합니다 예약에 실패 했습니다 예약이 다 찾거나 일시적 오류입니다');
+                    out();
+                }  
+                }
+            })
+        })
+        $('#canclebutton').click(function(){
+           out();
+        })
+
+    })
+    function out(){
+        $('.modal').fadeOut();
+        $( '#requesthourdiv' ).html(" ");///이게 없으면 체크박스가 계속 생긴다 20210528
+        requesthour=[];////////////////////이거 없으면 체크박스 초기화 안됨
+    }
+</script>
+</body>
+</html>
