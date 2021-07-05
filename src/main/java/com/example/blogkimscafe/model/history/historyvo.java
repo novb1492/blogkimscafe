@@ -14,8 +14,10 @@ import com.example.blogkimscafe.model.reservation.reservationvo;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Table(name = "bloghistory")
 @Entity
 public class historyvo {
@@ -24,6 +26,9 @@ public class historyvo {
     @Column(name = "id",nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+
+    @Column(name = "rid",nullable = false)
+    int rid;
 
     @Column(name="email",nullable = false)
     String email;
@@ -38,10 +43,11 @@ public class historyvo {
     @CreationTimestamp
     Timestamp created;
 
-    public  historyvo(reservationvo reservationvo,Timestamp timestamp) {
+    public historyvo(reservationvo reservationvo,Timestamp timestamp) {
         this.email=reservationvo.getEmail();
         this.requestTime=reservationvo.getRequesthour();
         this.requestDay=timestamp;
+        this.rid=reservationvo.getId();
         
     }
 }

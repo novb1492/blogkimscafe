@@ -109,5 +109,13 @@ public class reservationservice {
            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
+    public List<reservationvo> getReservationByEmail(String email) {
+        try {
+            return reservationdao.findByEmail(email);
+        } catch (Exception e) {
+            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+        }
+    }
+   
 
 }

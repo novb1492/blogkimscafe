@@ -11,6 +11,8 @@ import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
+import com.example.blogkimscafe.service.historyservice;
+import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,10 @@ public class controller {
     private boardimagedao boardimagedao;
     @Autowired
     private commentservice commentservice;
+    @Autowired
+    private reservationservice reservationservice;
+    @Autowired
+    private historyservice historyservice;
 
 
     @GetMapping("/auth/joinpage")
@@ -111,7 +117,16 @@ public class controller {
     private boolean existsByEmail(String email){
         return userservice.confrimEmail(email);
     }
-    
+    @GetMapping("/showreservationpage")
+    public String showReservationPage(@AuthenticationPrincipal principaldetail principaldetail,Model model,@RequestParam(value = "page",defaultValue = "1")int page) {
+        String email=principaldetail.getUsername();
+        int totalpages=historyservice.getCountHistories(email);
+        model.addAttribute("array", reservationservice.getReservationByEmail(email));
+        model.addAttribute("harray", historyservice.getHistories(email,page,totalpages));
+        model.addAttribute("currentpage", page);
+        model.addAttribute("totalpages",totalpages);
+        return "showreservationpage";
+    }
 
    
 

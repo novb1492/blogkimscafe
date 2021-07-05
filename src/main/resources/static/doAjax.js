@@ -297,6 +297,10 @@ function disabedTrue(beforeClickUpdateID,name){
         document.getElementById(beforeClickUpdateID+name).disabled=true;  
     }
 }
+//////예약 관련 함수들
+function doDeleteReservation(rid){
+    
+}
 
 
     
