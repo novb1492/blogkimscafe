@@ -60,6 +60,7 @@ public class reservationservice {
     public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime) {
         try {
             String seat=reservationdto.getSeat();
+            System.out.println(confrimTime(seat, requestTime)+"check");
             if(confrimTime(seat, requestTime)){
                 for(int i=0;i<requestTime.size();i++){
                     reservationvo reservationvo=new reservationvo(reservationdto);
@@ -72,18 +73,26 @@ public class reservationservice {
                 }
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
-            return utilservice.makeJson(responResultEnum.failInsertRervation.getBool(), responResultEnum.failInsertRervation.getMessege());
+            return utilservice.makeJson(responResultEnum.failInsertReservation.getBool(), responResultEnum.failInsertReservation.getMessege());
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
     private boolean confrimTime(String seat,List<Integer>requestTime){
         List<reservationvo>alreadyTimes=reservationdao.findBySeat(seat);
-            for(reservationvo r:alreadyTimes){
-                for(int i=0;i<requestTime.size();i++){
+        int nowHour=utilservice.getNowHour();
+        System.out.println("들어옴");
+            for(int i=0;i<requestTime.size();i++){
+                System.out.println("요청시간"+requestTime.get(i)+"현재시간"+nowHour);
+                if(requestTime.get(i)<=nowHour){
+                    System.out.println("불가이유:이전시간 요청");
+                    return false;
+                }
+                for(reservationvo r:alreadyTimes){
                     if(r.getRequesthour()==requestTime.get(i)){
+                        System.out.println("불가이유: 중복시간 요청");
                         return false;
-                    } 
+                    }
                 }
             }
             return true;

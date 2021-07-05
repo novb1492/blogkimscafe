@@ -32,7 +32,7 @@ public enum responResultEnum {
     sucDeleteCommnet("댓글을 삭제 했습니다",true),
     ///////////////예약///////////////////////////////////
     sucInsertReservation("예약에 성공했습니다",true),
-    failInsertRervation("예약이 다 찼습니다",false);
+    failInsertReservation("예약이 다 찼습니다",false);
    
    
     private final String messege;
