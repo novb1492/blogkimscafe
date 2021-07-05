@@ -12,6 +12,7 @@ import com.nimbusds.jose.shaded.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -24,6 +25,8 @@ public class reservationservice {
     private reservationdao reservationdao;
     @Autowired
     private utilservice utilservice;
+    @Autowired
+    private historyservice historyservice;
 
 
     public List<Integer> getCanRerserTime(String seat) {
@@ -57,6 +60,7 @@ public class reservationservice {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
+    @Transactional(rollbackFor = {Exception.class})
     public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime) {
         try {
             String seat=reservationdto.getSeat();
@@ -70,6 +74,7 @@ public class reservationservice {
                     Timestamp timestamp=utilservice.makeToTimestamp(requestTime.get(i));
                     reservationvo.setReservationdatetime(timestamp);
                     reservationdao.save(reservationvo);
+                    historyservice.insertHistory(reservationvo);
                 }
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
