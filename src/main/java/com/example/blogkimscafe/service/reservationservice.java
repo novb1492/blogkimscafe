@@ -60,7 +60,8 @@ public class reservationservice {
     public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime) {
         try {
             String seat=reservationdto.getSeat();
-            if(confrimTime(seat, requestTime)){
+            String confirm=confrimTime(seat, requestTime);
+            if("true".equals(confirm)){
                 for(int i=0;i<requestTime.size();i++){
                     reservationvo reservationvo=new reservationvo(reservationdto);
                     reservationvo.setRequesthour(requestTime.get(i));
@@ -72,28 +73,29 @@ public class reservationservice {
                 }
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
-            return utilservice.makeJson(responResultEnum.failInsertReservation.getBool(), responResultEnum.failInsertReservation.getMessege());
+            System.out.println(responResultEnum.valueOf(confirm).getMessege());
+            return utilservice.makeJson(responResultEnum.valueOf(confirm).getBool(), responResultEnum.valueOf(confirm).getMessege());
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
-    private boolean confrimTime(String seat,List<Integer>requestTime){
+    private String confrimTime(String seat,List<Integer>requestTime){
         List<reservationvo>alreadyTimes=reservationdao.findBySeat(seat);
         int nowHour=utilservice.getNowHour();
             for(int i=0;i<requestTime.size();i++){
                 System.out.println("요청시간"+requestTime.get(i)+"현재시간"+nowHour);
                 if(requestTime.get(i)<=nowHour){
                     System.out.println("불가이유:이전시간 요청");
-                    return false;
+                    return "beforeTime";
                 }
                 for(reservationvo r:alreadyTimes){
                     if(r.getRequesthour()==requestTime.get(i)){
                         System.out.println("불가이유: 중복시간 요청");
-                        return false;
+                        return "alreadyTime";
                     }
                 }
             }
-            return true;
+            return "true";
     }
     private List<reservationvo> getAlreadyTime(String seat){
         try {
