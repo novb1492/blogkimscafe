@@ -60,7 +60,6 @@ public class reservationservice {
     public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime) {
         try {
             String seat=reservationdto.getSeat();
-            System.out.println(confrimTime(seat, requestTime)+"check");
             if(confrimTime(seat, requestTime)){
                 for(int i=0;i<requestTime.size();i++){
                     reservationvo reservationvo=new reservationvo(reservationdto);
@@ -81,7 +80,6 @@ public class reservationservice {
     private boolean confrimTime(String seat,List<Integer>requestTime){
         List<reservationvo>alreadyTimes=reservationdao.findBySeat(seat);
         int nowHour=utilservice.getNowHour();
-        System.out.println("들어옴");
             for(int i=0;i<requestTime.size();i++){
                 System.out.println("요청시간"+requestTime.get(i)+"현재시간"+nowHour);
                 if(requestTime.get(i)<=nowHour){
