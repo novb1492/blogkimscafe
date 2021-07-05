@@ -22,9 +22,9 @@ public class historyservice {
             Timestamp timestamp=utilservice.makeToTimestamp(reservationvo.getRequesthour());
             historyvo historyvo=new historyvo(reservationvo, timestamp);
             historydao.save(historyvo);
-            throw new Exception();
         } catch (Exception e) {
-            throw new RuntimeException("history 저장중 오류가 발생 했습니다");
+            System.out.println("history 저장중 오류가 발생 했습니다");
+            throw new RuntimeException();
         }
     }
 }

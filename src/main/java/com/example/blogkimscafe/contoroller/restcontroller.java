@@ -140,7 +140,12 @@ public class restcontroller {
     }
     @PostMapping("/insertreservation")
     public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime) {
-        return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
+        String email=principaldetail.getUsername();
+        JSONObject jsonObject=userservice.getEmailCheck(email);
+        if((boolean) jsonObject.get("result")){
+            return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
+        }
+        return jsonObject;
     }
     private JSONObject responToFront(String text) {
         
