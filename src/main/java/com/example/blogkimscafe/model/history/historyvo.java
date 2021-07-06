@@ -33,6 +33,9 @@ public class historyvo {
     @Column(name="email",nullable = false)
     String email;
 
+    @Column(name = "seat",nullable = false)
+    String seat;
+
     @Column(name = "requestTime",nullable = false)
     int requestTime;
 
@@ -48,6 +51,7 @@ public class historyvo {
         this.requestTime=reservationvo.getRequesthour();
         this.requestDay=timestamp;
         this.rid=reservationvo.getId();
+        this.seat=reservationvo.getSeat();
         
     }
 }
