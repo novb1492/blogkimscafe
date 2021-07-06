@@ -147,8 +147,12 @@ public class restcontroller {
         }
         return jsonObject;
     }
-    private JSONObject responToFront(String text) {
-        
+    @PostMapping("/deletereservation")
+    public JSONObject deleteReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto  ) {
+        System.out.println("취소할 예약 번호"+reservationdto.getRid());
+        return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
+    }
+    private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
 

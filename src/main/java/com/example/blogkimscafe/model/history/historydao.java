@@ -15,4 +15,6 @@ public interface historydao extends JpaRepository<historyvo,Integer> {
 
     @Query(value = "select * from bloghistory where email=?1 order by id desc ",nativeQuery = true)
     public List<historyvo>findByEmailNative2(String email);
+
+    public void deleteByRid(int rid);
 }

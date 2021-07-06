@@ -48,4 +48,12 @@ public class historyservice {
         }
         
     }
+    public void deleteHistory(int rid) {
+        try {
+            historydao.deleteByRid(rid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("history삭제에 실패했습니다");
+        }
+    }
 }

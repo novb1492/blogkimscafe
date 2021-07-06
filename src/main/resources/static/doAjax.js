@@ -182,6 +182,7 @@ function doUpdatePwd(){
         }
     }   
 }
+//////댓글에 관련된 함수들
 function doInsertComment(){
     var bid=document.getElementById('bid').value;
     var xhr;
@@ -300,8 +301,27 @@ function disabedTrue(beforeClickUpdateID,name){
     }
 }
 //////예약 관련 함수들
-function doDeleteReservation(rid){
+function doDeleteReservation(id){
+    var xhr;
+    var url='/deletereservation'; 
+    var data=JSON.stringify({"rid":""+id+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/showreservationpage';
+            }else{
+                alert(result.messege);
+            }
     
+        }
+        else{
+            alert('통신에 실패했습니다');
+        }
+    }   
 }
 
 

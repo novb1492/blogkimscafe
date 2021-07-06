@@ -3,13 +3,11 @@ package com.example.blogkimscafe.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
 import com.example.blogkimscafe.model.reservation.reservationdto;
 import com.example.blogkimscafe.model.reservation.reservationvo;
 import com.nimbusds.jose.shaded.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,6 +122,29 @@ public class reservationservice {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
+    @Transactional(rollbackFor = {Exception.class})
+    public JSONObject deleteReservation(String email,reservationdto reservationdto) {
+        int rid=reservationdto.getRid();
+        try {
+          if(confrimReservation(reservationdto.getRid(),email)){
+                reservationdao.deleteById(rid);
+                historyservice.deleteHistory(rid);
+                return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
+          }
+          return utilservice.makeJson(responResultEnum.failDeleteReservation.getBool(), responResultEnum.failDeleteReservation.getMessege());
+        } catch (Exception e) {
+           e.printStackTrace();
+           throw new RuntimeException("deleteReservation에서 오류가 발생 했습니다");
+        }
+    }
+    private boolean confrimReservation(int rid,String email) {
+        reservationvo reservationvo=reservationdao.findById(rid).orElseThrow(()->new RuntimeException("예약자와 취소자가 일치 하지 않습니다"));
+        if(reservationvo.getEmail().equals(email)){
+            return true;
+        }
+        return false;
+    }
+  
    
 
 }

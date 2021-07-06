@@ -36,7 +36,7 @@
                                 <td>[[${array.getReservationdatetime}]]</td>
                                 <td>                         
                                 <input type="button" value="예약변경">
-                                <input type="button"  th:id="${array.getId}" class="cancle" value="예약취소">  
+                                <input type="button" th:onclick="doDeleteReservation([[${array.getId}]])" class="cancleButton" value="예약취소">  
                     </td>
                 </tr>
             </div>			     				     
