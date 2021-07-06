@@ -316,7 +316,6 @@ function doDeleteReservation(id){
             }else{
                 alert(result.messege);
             }
-    
         }
         else{
             alert('통신에 실패했습니다');
