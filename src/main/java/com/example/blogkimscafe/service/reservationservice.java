@@ -111,7 +111,15 @@ public class reservationservice {
     }
     public List<reservationvo> getReservationByEmail(String email) {
         try {
-            return reservationdao.findByEmail(email);
+            List<reservationvo>array=new ArrayList<>();
+            for(reservationvo reservationvo: reservationdao.findByEmail(email)){
+                if(utilservice.compareDate(reservationvo.getReservationdatetime())){
+                    array.add(reservationvo);
+                }else{
+                    reservationdao.deleteById(reservationvo.getId());
+                }
+            }
+            return array;
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }

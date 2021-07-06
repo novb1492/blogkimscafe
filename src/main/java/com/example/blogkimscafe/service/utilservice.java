@@ -2,6 +2,7 @@ package com.example.blogkimscafe.service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -61,6 +62,14 @@ public class utilservice {
     }
     public int getEnd(int fisrt,int pagesize) {
         return fisrt+pagesize-1;
+    }
+    public boolean compareDate(Timestamp timestamp) {
+        LocalDateTime reservationTime=timestamp.toLocalDateTime();
+        LocalDateTime today= LocalDateTime.now(); 
+        if(reservationTime.isAfter(today)){
+           return true;
+        }
+        return false;
     }
     
 }
