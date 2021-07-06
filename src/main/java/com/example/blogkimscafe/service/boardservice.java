@@ -116,27 +116,16 @@ public class boardservice {
         }
     }
     public int getSearchAtBoardCount(String title){
-        int totalpage=0;
-        try {
-            int count=boarddao.countByTitleLikeNative(title);
-            totalpage=count/pagesize;
-            if(count%pagesize>0){
-                totalpage++;
-            }
-            return totalpage;
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-        return 0;
+
+            return utilservice.getTotalpages(boarddao.countByTitleLikeNative(title), pagesize);
+
     }
     public List<boardvo> getSearchAtBoard(String title,int page,int totalpage) {
         List<boardvo>array=new ArrayList<>();
         try {
-            int fisrt=0,end=0;
             if(totalpage>1){
-                fisrt=(page-1)*pagesize+1;
-                end=fisrt+pagesize-1; 
-                array=boarddao.findByTitleLikeOrderByBidLimitNative(title,fisrt-1,end-fisrt+1);
+              int fisrt=utilservice.getFirst(page, pagesize);
+                array=boarddao.findByTitleLikeOrderByBidLimitNative(title,fisrt-1,utilservice.getEnd(fisrt, pagesize)-fisrt+1);
             }else{
                 array=boarddao.findByTitleLikeOrderByBidNative(title);
             }

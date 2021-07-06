@@ -55,23 +55,14 @@ public class commentservice {
     }
     public int totalCommentCount(int bid) {
 
-        int count=commentdao.countByBid(bid);
-        int totalpages=count/pagesize;
-        if(count%pagesize>0){
-            totalpages++;
-        }
-        System.out.println(bid+"글의 총 댓글"+count);
-        System.out.println("댓글총페이지"+totalpages);
-        return totalpages;
+        return utilservice.getTotalpages(commentdao.countByBid(bid), pagesize);
     }
     public List<commentvo> getComment(int bid,int page,int totalpages) {
        List<commentvo>array=new ArrayList<>();
-       int fisrt=0,end=0;
        try {
             if(totalpages>1){
-                fisrt=(page-1)*pagesize+1;
-                end=fisrt+pagesize-1; 
-                array=commentdao.getCommentNative(bid,fisrt-1,end-fisrt+1);
+                int fisrt=utilservice.getFirst(page, pagesize);
+                array=commentdao.getCommentNative(bid,fisrt-1,utilservice.getEnd(fisrt, pagesize)-fisrt+1);
             }else{
                 array=commentdao.findByBidOrderByCidDesc(bid);
             }

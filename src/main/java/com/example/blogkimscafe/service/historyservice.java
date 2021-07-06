@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class historyservice {
-    private int pagesize=3;
+    private final int pagesize=3;
 
     @Autowired
     private historydao historydao;
@@ -30,29 +30,16 @@ public class historyservice {
         }
     }
     public int getCountHistories(String email){
-        int totalpages=0;
-        try {
-            int count=historydao.countByEmailNative(email);
-            totalpages=count/pagesize;
-            if(count%pagesize>0){
-                totalpages++;
-            }
-            return totalpages;
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-        return 0;
+       return utilservice.getTotalpages(historydao.countByEmailNative(email), pagesize);
     }
     public List<historyvo> getHistories(String email,int page,int totalpages) {
-        int fisrt=0,end=0;
         List<historyvo>array=new ArrayList<>();
         try {
             if(totalpages>1){
-                fisrt=(page-1)*pagesize+1;
-                end=fisrt+pagesize-1; 
-                array=historydao.findByEmailNative(email,fisrt-1, end+1);
+               int fisrt=utilservice.getFirst(page, pagesize);
+                array=historydao.findByEmailNative(email,fisrt-1, utilservice.getEnd(fisrt, pagesize)-fisrt+1);
             }else{
-                array=historydao.findByEmailNative2(email, fisrt, end);
+                array=historydao.findByEmailNative2(email);
             }
             return array;
         } catch (Exception e) {
