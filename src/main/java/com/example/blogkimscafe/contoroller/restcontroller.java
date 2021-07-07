@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.HttpURLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -29,9 +30,12 @@ import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -162,9 +166,18 @@ public class restcontroller {
     @PostMapping("/confrimPay")
     public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
         RestTemplate restTemplate=new RestTemplate();
+        HttpHeaders headers=new HttpHeaders();
         try {
-            Map<String,Object> entity=restTemplate.getForObject("https://api.iamport.kr/payments/{"+imp_uid+"}",JSONObject.class);
-            System.out.println(entity.values());
+            headers.add("Content-Type","application/json");
+            Map<String,Object>body=new HashMap<>();
+            body.put("imp_key", "7336595505277037");
+            body.put("imp_secret", "19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec");
+            HttpEntity<MultiValueMap<String,String>>entity=new HttpEntity<>(headers);
+            ResponseEntity<JSONObject> token=restTemplate.exchange("https://api.iamport.kr/users/getToken",HttpMethod.POST, entity,JSONObject.class);
+            System.out.println(token+"token");
+
+            //restTemplate.getForObject("https://api.iamport.kr/payments/"+imp_uid+"",JSONObject.class);
+      
         } catch (Exception e) {
             e.printStackTrace();
         }
