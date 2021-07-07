@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 
+
 @RestController
 public class restcontroller {
 
@@ -155,6 +156,13 @@ public class restcontroller {
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
+	@PostMapping("/verifyIamport")
+    public boolean confrimProduct(@RequestParam("price")int price) {
+        System.out.println("가격"+price);
+        return false;
+        
+    }
+    
 
     
 }

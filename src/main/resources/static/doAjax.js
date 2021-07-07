@@ -301,6 +301,14 @@ function disabedTrue(beforeClickUpdateID,name){
     }
 }
 //////예약 관련 함수들
+var seat;
+var requesthour = []; // key 값을 담을 배열
+var alreadytime=[];
+
+function choiceseat(value){
+    seat=value;
+}
+
 function doDeleteReservation(id){
     var xhr;
     var url='/deletereservation'; 
