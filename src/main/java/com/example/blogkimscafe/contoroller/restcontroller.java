@@ -7,7 +7,6 @@ package com.example.blogkimscafe.contoroller;
 
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +21,12 @@ import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
+import com.example.blogkimscafe.service.iamportservice;
 import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 public class restcontroller {
 
-    private final String imp_key="7336595505277037";
-    private final String imp_secret="19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec";
 
     @Autowired
     private userservice userservice;
@@ -54,6 +48,8 @@ public class restcontroller {
     private utilservice utilservice;
     @Autowired
     private reservationservice reservationservice;
+    @Autowired
+    private iamportservice iamportservice;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -159,31 +155,7 @@ public class restcontroller {
     }
     @PostMapping("/confrimPay")
     public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
-        RestTemplate restTemplate=new RestTemplate();
-
-        HttpHeaders headers=new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        JSONObject body=new JSONObject();
-        body.put("imp_key", imp_key);
-        body.put("imp_secret", imp_secret);
-        try {  
-            HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
-            ResponseEntity<JSONObject> token=restTemplate.postForEntity("https://api.iamport.kr/users/getToken",entity,JSONObject.class);
-            
-            System.out.println(token+"fulltoken");
-            System.out.println(token.getStatusCode()+"tgetsoken");
-            System.out.println(token.getStatusCodeValue()+"getvaltoken");
-            System.out.println(token.getBody()+"bodytoken");
-            System.out.println(token.getBody().get("response")+"bodytoken");
-
-            //restTemplate.getForObject("https://api.iamport.kr/payments/"+imp_uid+"",JSONObject.class);
-      
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(imp_uid);
+        iamportservice.getToken();
     }
 
     
