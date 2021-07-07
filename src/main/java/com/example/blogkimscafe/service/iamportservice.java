@@ -1,11 +1,13 @@
 package com.example.blogkimscafe.service;
 
+
+
+import com.example.blogkimscafe.model.reservation.IamprotDto;
 import com.nimbusds.jose.shaded.json.JSONObject;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,18 +28,18 @@ public class iamportservice {
         body.put("imp_secret", imp_secret);
         try {  
             HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
-            ResponseEntity<JSONObject> token=restTemplate.postForEntity("https://api.iamport.kr/users/getToken",entity,JSONObject.class);
+            IamprotDto token=restTemplate.postForObject("https://api.iamport.kr/users/getToken",entity,IamprotDto.class);
             
-            System.out.println(token+"fulltoken");
-            System.out.println(token.getStatusCode()+"tgetsoken");
-            System.out.println(token.getStatusCodeValue()+"getvaltoken");
-            System.out.println(token.getBody()+"bodytoken");
-            System.out.println(token.getBody().get("response")+"bodytoken");
+            System.out.println(token+" FULLtoken");
+            System.out.println(token.getResponse().get("access_token")+" token");
+           
 
+            
             //restTemplate.getForObject("https://api.iamport.kr/payments/"+imp_uid+"",JSONObject.class);
       
         } catch (Exception e) {
             e.printStackTrace();
+           
         }
     }
 }
