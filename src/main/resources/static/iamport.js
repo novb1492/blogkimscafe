@@ -13,12 +13,27 @@ function iamport(productName,price,buyerEmail){
         buyer_addr : '서울 강남구 도곡동',
         buyer_postcode : '123-456'
     },  function(rsp) {
-        console.log(rsp);
         if (rsp.success) {
-            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
-                requesthour.push($(this).val());
-            });
-             insertReservation(seat,requesthour);
+            console.log(rsp.imp_uid);
+            $.ajax({
+                type:"post",
+                url:"/confrimPay",
+            data:{
+                'imp_uid' : rsp.imp_uid
+            },
+            success:function(data){
+                if(data.result){
+                    $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
+                        requesthour.push($(this).val());
+                    });
+                     insertReservation(seat,requesthour);
+                }else{
+                    alert(data.messege);
+                }  
+                out();
+            }
+            })
+            
         }else{
              var msg = '결제에 실패하였습니다.';
              msg += '에러내용 : ' + rsp.error_msg;
@@ -27,7 +42,6 @@ function iamport(productName,price,buyerEmail){
         }
     });
 }
-
 function insertReservation(seat,requesthour){
     $.ajax({
         type:"post",
@@ -46,4 +60,17 @@ function insertReservation(seat,requesthour){
     }
     })
 
+}
+function canclePay(){
+    $.ajax({
+        url: "http://www.myservice.com/payments/cancel",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "merchant_uid": "mid_" + new Date().getTime(), // 주문번호
+          "cancel_request_amount": 2000, // 환불금액
+          "reason": "테스트 결제 환불" // 환불사유
+        }),
+        dataType: "json"
+      });
 }

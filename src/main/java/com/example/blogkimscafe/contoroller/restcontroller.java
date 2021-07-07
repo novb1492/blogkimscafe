@@ -7,10 +7,10 @@ package com.example.blogkimscafe.contoroller;
 
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
+import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -29,7 +29,10 @@ import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -156,12 +159,19 @@ public class restcontroller {
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
-	@PostMapping("/verifyIamport")
-    public boolean confrimProduct(@RequestParam("price")int price) {
-        System.out.println("가격"+price);
-        return true;
-        
+    @PostMapping("/confrimPay")
+    public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
+        RestTemplate restTemplate=new RestTemplate();
+        try {
+            Map<String,Object> entity=restTemplate.getForObject("https://api.iamport.kr/payments/{"+imp_uid+"}",JSONObject.class);
+            System.out.println(entity.values());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(imp_uid);
     }
+
     
 
     
