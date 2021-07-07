@@ -50,41 +50,8 @@
     </div>
 
 <script src="../static/doAjax.js"></script>
+<script src="../static/iamport.js"></script>
 <script>
-    var send;
-    function iamport(productName,price,buyer){
-		//가맹점 식별코드
-		IMP.init('imp59938102');
-		IMP.request_pay({
-		    pg : 'kcp',
-		    pay_method : 'card',
-		    merchant_uid : 'merchant_' + new Date().getTime(),
-		    name : 'a-1', //결제창에서 보여질 이름
-		    amount : 500, //실제 결제되는 가격
-		    buyer_email : 'iamport@siot.do',
-		    buyer_name : '구매자이름',
-		    buyer_tel : '010-1234-5678',
-		    buyer_addr : '서울 강남구 도곡동',
-		    buyer_postcode : '123-456'
-		}, function(rsp) {
-			console.log(rsp);
-			// 결제검증
-			$.ajax({
-	        	type : "POST",
-	        	url : "/verifyIamport", 
-                data:{
-               "price":500,
-            },
-	        }).done(function(data) {
-	        	console.log(data);
-	        	if(data){
-		        	alert("결제 및 결제검증완료");
-	        	} else {
-	        		alert("결제 실패");
-	        	}
-	        });
-		});
-	}
     $(function(){
         $('.seat').click(function(){
             $('.modal').fadeIn();
@@ -109,29 +76,8 @@
             }
             })    
         })
-     
         $('#button').click(function(){
-            iamport(500);
-            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
-                requesthour.push($(this).val());
-            });
-            $.ajax({
-                type:"post",
-                url:"/insertreservation",
-            data:{
-               "seat":seat,
-               "requesthour":requesthour,
-            },
-            success:function(data){
-                if(data){
-                    alert('예약성공'); 
-                    out();
-                }else{
-                    alert('죄송합니다 예약에 실패 했습니다 예약이 다 찾거나 일시적 오류입니다');
-                    out();
-                }  
-                }
-            })
+            iamport(seat,500,'kim@kim.com');
         })
         $('#canclebutton').click(function(){
            out();

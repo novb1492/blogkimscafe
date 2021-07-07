@@ -308,7 +308,6 @@ var alreadytime=[];
 function choiceseat(value){
     seat=value;
 }
-
 function doDeleteReservation(id){
     var xhr;
     var url='/deletereservation'; 

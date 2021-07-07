@@ -135,7 +135,7 @@ public class restcontroller {
         return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
     }
     @PostMapping("/getimebyseat")
-    public List<Integer> getReservation(@RequestParam("seat") String seat) {
+    public List<Integer> getReservation(@RequestParam("seat") String seat,@AuthenticationPrincipal principaldetail principaldetail) {
         System.out.println("예약시간가지러옴" +seat);
         return reservationservice.getCanRerserTime(seat);
     }
@@ -159,7 +159,7 @@ public class restcontroller {
 	@PostMapping("/verifyIamport")
     public boolean confrimProduct(@RequestParam("price")int price) {
         System.out.println("가격"+price);
-        return false;
+        return true;
         
     }
     
