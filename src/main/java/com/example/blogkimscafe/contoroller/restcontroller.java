@@ -50,6 +50,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 public class restcontroller {
 
+    private final String imp_key="7336595505277037";
+    private final String imp_secret="19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec";
+
     @Autowired
     private userservice userservice;
     @Autowired
@@ -168,16 +171,22 @@ public class restcontroller {
     @PostMapping("/confrimPay")
     public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
         RestTemplate restTemplate=new RestTemplate();
+
         HttpHeaders headers=new HttpHeaders();
-        try {
-            headers.setContentType(MediaType.APPLICATION_JSON);
-           JSONObject body=new JSONObject();
-            body.put("imp_key", "7336595505277037");
-            body.put("imp_secret", "19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec");
-            HttpEntity<String>entity=new HttpEntity<>(body.toString(),headers);
-            System.out.println(entity+"entity");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        
+        JSONObject body=new JSONObject();
+        body.put("imp_key", imp_key);
+        body.put("imp_secret", imp_secret);
+        try {  
+            HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
             ResponseEntity<JSONObject> token=restTemplate.postForEntity("https://api.iamport.kr/users/getToken",entity,JSONObject.class);
-            System.out.println(token+"token");
+            
+            System.out.println(token+"fulltoken");
+            System.out.println(token.getStatusCode()+"tgetsoken");
+            System.out.println(token.getStatusCodeValue()+"getvaltoken");
+            System.out.println(token.getBody()+"bodytoken");
+            System.out.println(token.getBody().get("response")+"bodytoken");
 
             //restTemplate.getForObject("https://api.iamport.kr/payments/"+imp_uid+"",JSONObject.class);
       
