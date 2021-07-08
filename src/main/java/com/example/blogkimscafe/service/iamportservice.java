@@ -24,12 +24,11 @@ public class iamportservice {
     private JSONObject body=new JSONObject();
 
     private IamprotDto getToken() {
-
+        headerAndBodyClear();
         headers.setContentType(MediaType.APPLICATION_JSON);
         body=new JSONObject();
         body.put("imp_key", imp_key);
         body.put("imp_secret", imp_secret);
-
         try {  
             HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
             IamprotDto token=restTemplate.postForObject("https://api.iamport.kr/users/getToken",entity,IamprotDto.class);
@@ -49,7 +48,7 @@ public class iamportservice {
             if(iamprotDto==null){
                 throw new Exception();
             }
-            headers.clear();
+            headerAndBodyClear();
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
 
@@ -57,6 +56,7 @@ public class iamportservice {
             System.out.println(buyerInfor+" fullinfor");
             System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
             System.out.println(price+" price");
+            
             if(price==(int)buyerInfor.getResponse().get("amount")){
                 return true;
             }
@@ -72,9 +72,8 @@ public class iamportservice {
             if(iamprotDto==null){
                 throw new Exception();
             }
-            headers.clear();
+            headerAndBodyClear();
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
-            body.clear();
             body.put("imp_uid", imp_uid);
 
             HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(body, headers);
@@ -86,5 +85,9 @@ public class iamportservice {
             System.out.println("cancleBuy가 실패 했습니다 직접 환불 바랍니다");
             throw new RuntimeException("환불에 실패 했습니다 다시시도 바랍니다");
         }
+    }
+    private void headerAndBodyClear(){
+        headers.clear();
+        body.clear();
     }
 }
