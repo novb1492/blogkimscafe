@@ -76,6 +76,10 @@ private List<boardimagevo> selectDeleteImage(List<Integer>alreadyimages,int bid)
 즉 기존사진변화처리->새사진이있다면등록
 기존사진/새사진을 따로따로 생각하고 처리했습니다
 
+글 형식은 varchar가아닌 blob사용 해서 
+mysql조회시 글내용이 아니라 용량으로 나오게 하고싶은데
+아직 구현하지 못했습니다
+
 예외는
 @RestControllerAdvice 사용했습니다
 restcontroller전역에서 예외를 잡아서 한번에
@@ -93,6 +97,82 @@ Transactional 잡아서 롤백 시킨다는 사실을 알았고
 그밖의 자세한 내용은
 https://cordingmonster.tistory.com/category/Spring%20boot%20%ED%98%BC%EC%9E%90%20%EB%A7%9B%EB%B3%B4%EA%B8%B0
 에서 좀더 자세히 보실 수 있습니다
+
+MYSQL 입니다
+| blogboard          |
+| blogboardimage     |
+| blogcomment        |
+| bloghistory        |
+| blogreservation    |
+| blogseatinfor      |
+| blogusers   
+
+회원테이블=blogusers
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int          | NO   | PRI | NULL    | auto_increment |
+| created    | datetime     | YES  |     | NULL    |                |
+| email      | varchar(30)  | NO   | UNI | NULL    |                |
+| emailcheck | varchar(255) | YES  |     | NULL    |                |
+| name       | varchar(20)  | NO   |     | NULL    |                |
+| provider   | varchar(255) | YES  |     | NULL    |                |
+| providerid | varchar(255) | YES  |     | NULL    |                |
+| pwd        | varchar(100) | NO   |     | NULL    |                |
+| randnum    | varchar(255) | YES  |     | NULL    |                |
+| role       | varchar(255) | NO   |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+게시글에 대한 테이블=blogboard
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| bid     | int         | NO   | PRI | NULL    | auto_increment |
+| content | longtext    | NO   |     | NULL    |                |
+| created | datetime    | YES  |     | NULL    |                |
+| email   | varchar(50) | NO   |     | NULL    |                |
+| hit     | int         | NO   |     | 0       |                |
+| title   | varchar(30) | NO   |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+
+댓글테이블=blogcomment
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| cid     | int         | NO   | PRI | NULL    | auto_increment |
+| bid     | int         | NO   |     | NULL    |                |
+| comment | varchar(50) | NO   |     | NULL    |                |
+| created | datetime    | YES  |     | NULL    |                |
+| email   | varchar(50) | NO   |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+
+예약에 관련된 테이블=blogreservation/bloghistory
+
+blogreservation
++---------------------+--------------+------+-----+---------+----------------+
+| Field               | Type         | Null | Key | Default | Extra          |
++---------------------+--------------+------+-----+---------+----------------+
+| id                  | int          | NO   | PRI | NULL    | auto_increment |
+| created             | datetime     | YES  |     | NULL    |                |
+| remail              | varchar(255) | NO   |     | NULL    |                |
+| rname               | varchar(255) | NO   |     | NULL    |                |
+| requesthour         | int          | NO   |     | NULL    |                |
+| reservationdatetime | datetime     | NO   |     | NULL    |                |
+| seat                | varchar(255) | NO   |     | NULL    |                |
+| imp_uid             | varchar(255) | NO   |     | NULL    |                |
++---------------------+--------------+------+-----+---------+----------------+
+bloghistory
+
+blogseatinfor
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int          | NO   | PRI | NULL    | auto_increment |
+| limited | int          | NO   |     | NULL    |                |
+| price   | int          | NO   |     | NULL    |                |
+| seat    | varchar(255) | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+예약할때 자리별 인원수/시간별요금을 넣어 놨습니다
 
 
 
