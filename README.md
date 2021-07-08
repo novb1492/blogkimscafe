@@ -41,7 +41,7 @@ html/바닐라js/j쿼리/css
  대부분 비동기 통신으로 구성했습니다
 
 백엔드
-자바/스프링
+자바/스프링/jpa
 -MultipartFile을 이용해서 파일형식을 받을 수 있다는 걸 공부 했습니다
 그래서 프론트의 사진을 받았습니다
 RestTemplate/HttpHeaders/HttpEntity 를 이용해서 아임포트api를 호출합니다
