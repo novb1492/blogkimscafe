@@ -33,7 +33,7 @@
                                 <td>[[${array.getRequesthour}]]시~[[${array.getRequesthour+1}]]시</td><!--오 연산도 된다20210528-->
                                 <td>[[${array.getSeat}]]</td>   
                                 <td >[[${array.getEmail}]]</td>
-                                <td>[[${array.getReservationdatetime}]]</td>
+                                <td>[[${array.getCreated}]]</td>
                                 <td>                         
                                 <input type="button" value="예약변경">
                                 <input type="button" th:onclick="doDeleteReservation([[${array.getId}]])" class="cancleButton" value="예약취소">  
@@ -55,7 +55,7 @@
                 <td>[[${array.getRequestTime}]]시~[[${array.getRequestTime+1}]]시</td>
                 <td>[[${array.getSeat}]]</td>
                 <td>[[${array.getEmail}]]</td>
-                <td>[[${array.getRequestDay}]]</td>
+                <td>[[${array.getCreated}]]</td>
             </tr> 				     
         </table>
         <div th:if="${currentpage<totalpages}">

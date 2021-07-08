@@ -42,16 +42,20 @@ public class historyvo {
     @Column(name = "requestDay",nullable = false)
     Timestamp requestDay;
 
+    @Column(name = "imp_uid",nullable = false)
+    private String imp_uid;
+
     @Column(name="created")
     @CreationTimestamp
     Timestamp created;
 
-    public historyvo(reservationvo reservationvo,Timestamp timestamp) {
+    public historyvo(reservationvo reservationvo) {
         this.email=reservationvo.getEmail();
         this.requestTime=reservationvo.getRequesthour();
-        this.requestDay=timestamp;
+        this.requestDay=reservationvo.getReservationdatetime();
         this.rid=reservationvo.getId();
         this.seat=reservationvo.getSeat();
+        this.imp_uid=reservationvo.getImp_uid();
         
     }
 }

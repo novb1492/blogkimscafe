@@ -1,9 +1,8 @@
 package com.example.blogkimscafe.service;
 
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.blogkimscafe.model.history.historydao;
 import com.example.blogkimscafe.model.history.historyvo;
 import com.example.blogkimscafe.model.reservation.reservationvo;
@@ -21,8 +20,7 @@ public class historyservice {
 
     public void insertHistory(reservationvo reservationvo) {
         try {
-            Timestamp timestamp=utilservice.makeToTimestamp(reservationvo.getRequesthour());
-            historyvo historyvo=new historyvo(reservationvo, timestamp);
+            historyvo historyvo=new historyvo(reservationvo);
             historydao.save(historyvo);
         } catch (Exception e) {
             System.out.println("history 저장중 오류가 발생 했습니다");
