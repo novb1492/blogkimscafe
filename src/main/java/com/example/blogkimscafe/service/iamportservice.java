@@ -56,7 +56,9 @@ public class iamportservice {
             System.out.println(buyerInfor+" fullinfor");
             System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
             System.out.println(price+" price");
-            return true;
+            if(price==(int)buyerInfor.getResponse().get("amount")){
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("getBuyerInfor 검증 실패"); 
