@@ -45,7 +45,7 @@
                                 <br>
                                 <div id="requesthourdiv"></div>
                                 <br>
-                                <input type="button" id="button"  value="예약">
+                                <input type="button" id="insertbutton"  value="예약">
                                 <input type="button" id="canclebutton" value="취소">
                             </div>
                         </div>
@@ -78,7 +78,7 @@
             }
             })    
         })
-        $('#button').click(function(){
+        $('#insertbutton').click(function(){
             var email=document.getElementById('email').value;
             var name=document.getElementById('name').value;
             $.ajax({

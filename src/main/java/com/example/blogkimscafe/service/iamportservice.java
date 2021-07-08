@@ -42,7 +42,7 @@ public class iamportservice {
         }
         return null;
     }
-    public boolean confrimBuyerInfor(String imp_uid,int price) {
+    public boolean confrimBuyerInfor(String imp_uid,int price,String email) {
         IamprotDto iamprotDto=getToken();
         try {
             if(iamprotDto==null){
@@ -57,7 +57,7 @@ public class iamportservice {
             System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
             System.out.println(price+" price");
             
-            if(price==(int)buyerInfor.getResponse().get("amount")){
+            if(price==(int)buyerInfor.getResponse().get("amount")&&email.equals(buyerInfor.getResponse().get("buyer_email"))){
                 return true;
             }
         } catch (Exception e) {

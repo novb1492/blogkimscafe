@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class reservationservice {
 
     private final int openTime=6;
-    private final int closeTime=24;
+    private final int closeTime=23;
     
     @Autowired
     private reservationdao reservationdao;

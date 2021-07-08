@@ -146,7 +146,7 @@ public class restcontroller {
         JSONObject jsonObject=userservice.getEmailCheck(email);
         if((boolean) jsonObject.get("result")){
             int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
-            if(iamportservice.confrimBuyerInfor(imp_uid,price)){
+            if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
                 return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
             }else{
                 iamportservice.cancleBuy(imp_uid);
@@ -161,7 +161,7 @@ public class restcontroller {
         return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
     }
     @PostMapping("/getprice")
-    public int getPrice(@RequestParam("seat")String seat) {
+    public int getPriceOneHour(@RequestParam("seat")String seat) {
         seatInforVo seatInforVo=seatInforDao.findBySeat(seat);
         if(seatInforVo!=null){
             return seatInforVo.getPrice();
