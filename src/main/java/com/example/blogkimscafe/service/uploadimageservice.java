@@ -51,6 +51,7 @@ public class uploadimageservice {
             return array;
           
         }catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("사진 로컬에 저장중 예외발생");
         }
     }
