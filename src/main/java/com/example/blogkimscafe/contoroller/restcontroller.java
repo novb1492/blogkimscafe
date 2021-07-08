@@ -16,6 +16,8 @@ import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.reservation.reservationdto;
+import com.example.blogkimscafe.model.reservation.seat.seatInforDao;
+import com.example.blogkimscafe.model.reservation.seat.seatInforVo;
 import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.boardservice;
@@ -50,6 +52,8 @@ public class restcontroller {
     private reservationservice reservationservice;
     @Autowired
     private iamportservice iamportservice;
+    @Autowired
+    private seatInforDao seatInforDao;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -155,6 +159,18 @@ public class restcontroller {
     public JSONObject deleteReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto  ) {
         System.out.println("취소할 예약 번호"+reservationdto.getRid());
         return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
+    }
+    @PostMapping("/getprice")
+    public int getPrice(@RequestParam("seat")String seat) {
+        seatInforVo seatInforVo=seatInforDao.findBySeat(seat);
+        if(seatInforVo!=null){
+            return seatInforVo.getPrice();
+        }
+       return 0;
+    }
+    @PostMapping("/cofrimemailcheck")
+    public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail) {
+        return userservice.getEmailCheck(principaldetail.getUsername());
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

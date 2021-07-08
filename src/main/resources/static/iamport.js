@@ -1,4 +1,4 @@
-function iamport(productName,price,buyerEmail){
+function iamport(productName,price,buyerEmail,requesthour){
     //가맹점 식별코드
     IMP.init('imp59938102');
     IMP.request_pay({
@@ -15,9 +15,6 @@ function iamport(productName,price,buyerEmail){
     },  function(rsp) {
         if (rsp.success) {
             console.log(rsp.imp_uid);
-            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
-                requesthour.push($(this).val());
-            });
             $.ajax({
                 type:"post",
                 url:"/insertreservation",
