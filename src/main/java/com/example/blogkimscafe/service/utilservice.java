@@ -70,9 +70,5 @@ public class utilservice {
            return true;
         }
         return false;
-    }
-    public void name() {
-        
-    }
-    
+    }    
 }

@@ -42,7 +42,7 @@ public class iamportservice {
         }
         return null;
     }
-    public boolean getBuyerInfor(String imp_uid) {
+    public boolean confrimBuyerInfor(String imp_uid) {
         IamprotDto iamprotDto=getToken();
         try {
             if(iamprotDto==null){
@@ -62,5 +62,14 @@ public class iamportservice {
             System.out.println("getBuyerInfor 검증 실패"); 
         }
         return false;
+    }
+    public void cancleBuy(String imp_uid) {
+        try {
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("cancleBuy가 실패 했습니다 직접 환불 바랍니다");
+            throw new RuntimeException("환불에 실패 했습니다 다시시도 바랍니다");
+        }
     }
 }

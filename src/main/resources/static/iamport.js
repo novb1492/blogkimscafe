@@ -15,19 +15,22 @@ function iamport(productName,price,buyerEmail){
     },  function(rsp) {
         if (rsp.success) {
             console.log(rsp.imp_uid);
+            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
+                requesthour.push($(this).val());
+            });
             $.ajax({
                 type:"post",
-                url:"/confrimPay",
+                url:"/insertreservation",
             data:{
-                'imp_uid' : rsp.imp_uid
+                'imp_uid' : rsp.imp_uid,
+                "seat":seat,
+                "requesthour":requesthour
             },
             success:function(data){
                 if(data.result){
-                    $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
-                        requesthour.push($(this).val());
-                    });
-                     insertReservation(seat,requesthour);
-                }else{
+                  alert(data.messege);
+                }
+                else{
                     alert(data.messege);
                 }  
                 out();
@@ -41,25 +44,6 @@ function iamport(productName,price,buyerEmail){
              out();
         }
     });
-}
-function insertReservation(seat,requesthour){
-    $.ajax({
-        type:"post",
-        url:"/insertreservation",
-    data:{
-       "seat":seat,
-       "requesthour":requesthour,
-    },
-    success:function(data){
-        if(data.result){
-            alert(data.messege); 
-        }else{
-            alert(data.messege);
-        }  
-        out();
-    }
-    })
-
 }
 function canclePay(){
     $.ajax({

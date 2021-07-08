@@ -137,11 +137,16 @@ public class restcontroller {
         return reservationservice.getCanRerserTime(seat);
     }
     @PostMapping("/insertreservation")
-    public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime) {
+    public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid) {
         String email=principaldetail.getUsername();
         JSONObject jsonObject=userservice.getEmailCheck(email);
         if((boolean) jsonObject.get("result")){
-            return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
+            if(iamportservice.confrimBuyerInfor(imp_uid)){
+                return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
+            }else{
+                iamportservice.cancleBuy(imp_uid);
+            }
+            return responToFront("failConfrimBuyerInfor");
         }
         return jsonObject;
     }
@@ -153,10 +158,7 @@ public class restcontroller {
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
-    @PostMapping("/confrimPay")
-    public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
-        iamportservice.getBuyerInfor(imp_uid);
-    }
+
 
     
 
