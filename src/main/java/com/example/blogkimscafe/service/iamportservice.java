@@ -2,7 +2,7 @@ package com.example.blogkimscafe.service;
 
 
 
-import com.example.blogkimscafe.model.reservation.BuyerInfor;
+import com.example.blogkimscafe.model.reservation.BuyerInforDto;
 import com.example.blogkimscafe.model.reservation.IamprotDto;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -52,11 +52,9 @@ public class iamportservice {
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
 
-            BuyerInfor buyerInfor =restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid+"",entity,BuyerInfor.class);
+            BuyerInforDto buyerInfor =restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid+"",entity,BuyerInforDto.class);
             System.out.println(buyerInfor+" fullinfor");
             System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
-            
-           
             
             return true;
         } catch (Exception e) {

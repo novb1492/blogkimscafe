@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class BuyerInfor {
+public class BuyerInforDto {
     
     private String code;
     private String messege;
