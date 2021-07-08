@@ -155,7 +155,7 @@ public class restcontroller {
     }
     @PostMapping("/confrimPay")
     public void confrimPay(@RequestParam("imp_uid")String imp_uid) {
-        iamportservice.getToken();
+        iamportservice.getBuyerInfor(imp_uid);
     }
 
     

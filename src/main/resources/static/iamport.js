@@ -10,7 +10,7 @@ function iamport(productName,price,buyerEmail){
         buyer_email : buyerEmail,
         buyer_name : '구매자이름',
         buyer_tel : '010-1234-5678',
-        buyer_addr : '서울 강남구 도곡동',
+        buyer_addr : '서울',
         buyer_postcode : '123-456'
     },  function(rsp) {
         if (rsp.success) {

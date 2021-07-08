@@ -2,25 +2,28 @@ package com.example.blogkimscafe.service;
 
 
 
+import com.example.blogkimscafe.model.reservation.BuyerInfor;
 import com.example.blogkimscafe.model.reservation.IamprotDto;
 import com.nimbusds.jose.shaded.json.JSONObject;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
+
 @Service
 public class iamportservice {
     
     private final String imp_key="7336595505277037";
     private final String imp_secret="19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec";
+    private RestTemplate restTemplate=new RestTemplate();
+    private HttpHeaders headers=new HttpHeaders();
+    JSONObject body=new JSONObject();
 
-    public void getToken() {
-         RestTemplate restTemplate=new RestTemplate();
+    private IamprotDto getToken() {
 
-        HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         
         JSONObject body=new JSONObject();
@@ -32,14 +35,34 @@ public class iamportservice {
             
             System.out.println(token+" FULLtoken");
             System.out.println(token.getResponse().get("access_token")+" token");
-           
-
-            
-            //restTemplate.getForObject("https://api.iamport.kr/payments/"+imp_uid+"",JSONObject.class);
-      
+            return token;
         } catch (Exception e) {
             e.printStackTrace();
-           
+            System.out.println("gettoken에서 오류가 발생");
         }
+        return null;
+    }
+    public boolean getBuyerInfor(String imp_uid) {
+        IamprotDto iamprotDto=getToken();
+        try {
+            if(iamprotDto==null){
+                throw new Exception();
+            }
+            headers.clear();
+            headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
+            HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
+
+            BuyerInfor buyerInfor =restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid+"",entity,BuyerInfor.class);
+            System.out.println(buyerInfor+" fullinfor");
+            System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
+            
+           
+            
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("getBuyerInfor 검증 실패"); 
+        }
+        return false;
     }
 }
