@@ -7,6 +7,8 @@ import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
 import com.example.blogkimscafe.model.reservation.reservationdto;
 import com.example.blogkimscafe.model.reservation.reservationvo;
+import com.example.blogkimscafe.model.reservation.seat.seatInforDao;
+import com.example.blogkimscafe.model.reservation.seat.seatInforVo;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class reservationservice {
     private utilservice utilservice;
     @Autowired
     private historyservice historyservice;
+    @Autowired
+    private seatInforDao seatInfordao;
 
 
     public List<Integer> getCanRerserTime(String seat) {
@@ -59,7 +63,7 @@ public class reservationservice {
         }
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime) {
+    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime,String imp_uid) {
         try {
             String seat=reservationdto.getSeat();
             String confirm=confrimTime(seat, requestTime);
@@ -69,6 +73,7 @@ public class reservationservice {
                     reservationvo.setRequesthour(requestTime.get(i));
                     reservationvo.setEmail(email);
                     reservationvo.setName(name);
+                    reservationvo.setImp_uid(imp_uid);
                     Timestamp timestamp=utilservice.makeToTimestamp(requestTime.get(i));
                     reservationvo.setReservationdatetime(timestamp);
                     reservationdao.save(reservationvo);
@@ -135,6 +140,15 @@ public class reservationservice {
         } catch (Exception e) {
            e.printStackTrace();
            throw new RuntimeException("deleteReservation에서 오류가 발생 했습니다");
+        }
+    }
+    public int getPrice(String seat,int times) {
+        try {
+            seatInforVo vo=seatInfordao.findBySeat(seat);
+            return vo.getPrice()*times;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("계산중 오류가 발생했습니다");
         }
     }
     private boolean confrimReservation(int rid,String email) {

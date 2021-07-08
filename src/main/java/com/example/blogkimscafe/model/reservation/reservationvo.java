@@ -41,6 +41,9 @@ public class reservationvo {
     @Column(name="reservationdatetime",nullable = false)
     private Timestamp reservationdatetime;
 
+    @Column(name = "imp_uid",nullable = false)
+    private String imp_uid;
+
     public reservationvo(){}
 
     public reservationvo (reservationdto reservationdto) {

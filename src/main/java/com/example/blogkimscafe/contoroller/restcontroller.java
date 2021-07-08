@@ -141,8 +141,9 @@ public class restcontroller {
         String email=principaldetail.getUsername();
         JSONObject jsonObject=userservice.getEmailCheck(email);
         if((boolean) jsonObject.get("result")){
-            if(iamportservice.confrimBuyerInfor(imp_uid)){
-                return reservationservice.insertReservation(reservationdto,principaldetail.getUsername(),principaldetail.getUservo().getName(),requestTime);
+            int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
+            if(iamportservice.confrimBuyerInfor(imp_uid,price)){
+                return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
             }else{
                 iamportservice.cancleBuy(imp_uid);
             }

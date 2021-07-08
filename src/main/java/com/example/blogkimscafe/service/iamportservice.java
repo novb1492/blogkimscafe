@@ -42,7 +42,7 @@ public class iamportservice {
         }
         return null;
     }
-    public boolean confrimBuyerInfor(String imp_uid) {
+    public boolean confrimBuyerInfor(String imp_uid,int price) {
         IamprotDto iamprotDto=getToken();
         try {
             if(iamprotDto==null){
@@ -55,7 +55,7 @@ public class iamportservice {
             BuyerInforDto buyerInfor =restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid+"",entity,BuyerInforDto.class);
             System.out.println(buyerInfor+" fullinfor");
             System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
-            
+            System.out.println(price+" price");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
