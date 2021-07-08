@@ -26,7 +26,6 @@ public class iamportservice {
     private IamprotDto getToken() {
         headerAndBodyClear();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        body=new JSONObject();
         body.put("imp_key", imp_key);
         body.put("imp_secret", imp_secret);
         try {  
