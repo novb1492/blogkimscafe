@@ -4,6 +4,7 @@ package com.example.blogkimscafe.service;
 
 import com.example.blogkimscafe.model.reservation.BuyerInforDto;
 import com.example.blogkimscafe.model.reservation.IamprotDto;
+import com.example.blogkimscafe.model.reservation.cancleBuyDto;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,15 +21,15 @@ public class iamportservice {
     private final String imp_secret="19412b4bca453060662162083d1ccc8ee7c53bd98a2f33faedd7ebc3e6ad4c359c36f899ebd6ddec";
     private RestTemplate restTemplate=new RestTemplate();
     private HttpHeaders headers=new HttpHeaders();
-    JSONObject body=new JSONObject();
+    private JSONObject body=new JSONObject();
 
     private IamprotDto getToken() {
 
         headers.setContentType(MediaType.APPLICATION_JSON);
-        
-        JSONObject body=new JSONObject();
+        body=new JSONObject();
         body.put("imp_key", imp_key);
         body.put("imp_secret", imp_secret);
+
         try {  
             HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
             IamprotDto token=restTemplate.postForObject("https://api.iamport.kr/users/getToken",entity,IamprotDto.class);
@@ -67,7 +68,19 @@ public class iamportservice {
     }
     public void cancleBuy(String imp_uid) {
         try {
-            
+            IamprotDto iamprotDto=getToken();
+            if(iamprotDto==null){
+                throw new Exception();
+            }
+            headers.clear();
+            headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
+            body.clear();
+            body.put("imp_uid", imp_uid);
+
+            HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(body, headers);
+            cancleBuyDto cancle =restTemplate.postForObject("https://api.iamport.kr/payments/cancel",entity,cancleBuyDto.class);
+
+            System.out.println(cancle+" full cancle");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("cancleBuy가 실패 했습니다 직접 환불 바랍니다");
