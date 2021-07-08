@@ -19,6 +19,7 @@ public enum responResultEnum {
     rightTempNum("이메일인증이 완료 되었습니다",true),
     wrongTempNum("인증번호를 다시 확인해 주세요",false),
     sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true),
+    notEqualsUser("사용자 정보가 일치 하지 않습니다", false),
     //////////////board///////////////////////////////////
     findNoImageFile("이미지가 아닌 파일이 존재합니다 ",false),
     sucInsertArticle("게시글을 등록했습니다",true),

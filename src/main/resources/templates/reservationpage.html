@@ -27,7 +27,8 @@
                     <a href="/auth/loginpage">로그인</a>
                 </div>
                 <div sec:authorize="isAuthenticated()"><!--else문을 모르겠다-->
-                    <input type="hidden" id="email" th:value="${#authentication.getName()}" />
+                    <input type="hidden" id="email" th:value="${uservo.getEmail}"/>
+                    <input type="hidden" id="name" th:value="${uservo.getName}" />
                     <div sec:authentication="name" ></div>
                     <a href="/mypage">마이페이지</a>
                     <a href="/logout">로그아웃</a>
@@ -78,10 +79,16 @@
             })    
         })
         $('#button').click(function(){
+            var email=document.getElementById('email').value;
+            var name=document.getElementById('name').value;
             $.ajax({
                 type:"post",
                 url:"/cofrimemailcheck",
-            success:function(data){
+                data:{
+                    "name":name,
+                    "email":email,
+                },
+                success:function(data){
                 if(data.result){
                     $.ajax({
                     type:"post",
@@ -92,12 +99,11 @@
                     success:function(data){
                     if(data!=0){
                         $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
-                        requesthour.push($(this).val());
+                            requesthour.push($(this).val());
                         });
                         var price=data*requesthour.length;
-                        var email=document.getElementById('email').value;
                         console.log(email+'주문자 이메일');
-                        iamport(seat,price,email,requesthour);
+                        iamport(seat,price,email,name,requesthour);
                     }
                     else{
                         alert('존재 하지 않는 자리입니다');

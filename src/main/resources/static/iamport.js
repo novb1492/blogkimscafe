@@ -1,4 +1,4 @@
-function iamport(productName,price,buyerEmail,requesthour){
+function iamport(productName,price,buyerEmail,buyerName,requesthour){
     //가맹점 식별코드
     IMP.init('imp59938102');
     IMP.request_pay({
@@ -8,7 +8,7 @@ function iamport(productName,price,buyerEmail,requesthour){
         name : productName, //결제창에서 보여질 이름
         amount : price, //실제 결제되는 가격
         buyer_email : buyerEmail,
-        buyer_name : '구매자이름',
+        buyer_name : buyerName,
         buyer_tel : '010-1234-5678',
         buyer_addr : '서울',
         buyer_postcode : '123-456'

@@ -169,8 +169,14 @@ public class restcontroller {
        return 0;
     }
     @PostMapping("/cofrimemailcheck")
-    public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail) {
-        return userservice.getEmailCheck(principaldetail.getUsername());
+    public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("name")String name,@RequestParam("email")String email) {
+        String loginEmail=principaldetail.getUsername();
+        if(loginEmail.equals(email)&&principaldetail.getUservo().getName().equals(name)){
+            return userservice.getEmailCheck(loginEmail);
+        }
+        
+        return responToFront("notEqualsUser");
+        
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

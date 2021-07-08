@@ -9,6 +9,7 @@ package com.example.blogkimscafe.contoroller;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
+import com.example.blogkimscafe.model.user.uservo;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.historyservice;
@@ -111,7 +112,12 @@ public class controller {
         return "boardlist";
     }
     @GetMapping("/auth/reservationpage")
-    public String reservationPage() {
+    public String reservationPage(Model model,@AuthenticationPrincipal principaldetail principaldetail) {
+        uservo uservo=principaldetail.getUservo();
+        if(uservo!=null){
+            model.addAttribute("uservo",uservo);
+
+        }
         return "reservationpage";
     }
     private boolean existsByEmail(String email){

@@ -29,6 +29,8 @@ public class reservationservice {
     private historyservice historyservice;
     @Autowired
     private seatInforDao seatInfordao;
+    @Autowired
+    private iamportservice iamportservice;
 
 
     public List<Integer> getCanRerserTime(String seat) {
@@ -83,7 +85,9 @@ public class reservationservice {
             }
             System.out.println(responResultEnum.valueOf(confirm).getMessege());
             return utilservice.makeJson(responResultEnum.valueOf(confirm).getBool(), responResultEnum.valueOf(confirm).getMessege());
-        } catch (Exception e) {
+            } catch (Exception e) {
+            iamportservice.cancleBuy(imp_uid);
+            e.printStackTrace();
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
