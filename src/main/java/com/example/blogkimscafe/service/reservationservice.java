@@ -84,6 +84,7 @@ public class reservationservice {
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
             System.out.println(responResultEnum.valueOf(confirm).getMessege());
+            iamportservice.cancleBuy(imp_uid);
             return utilservice.makeJson(responResultEnum.valueOf(confirm).getBool(), responResultEnum.valueOf(confirm).getMessege());
             } catch (Exception e) {
             iamportservice.cancleBuy(imp_uid);
