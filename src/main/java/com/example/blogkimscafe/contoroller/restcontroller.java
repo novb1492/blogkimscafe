@@ -207,7 +207,7 @@ public class restcontroller {
     }
     @GetMapping("/test")
     public void test() {
-        coolSmsService.getToken();
+        coolSmsService.sendMessege();
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
