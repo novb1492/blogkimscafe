@@ -1,5 +1,6 @@
 package com.example.blogkimscafe.service;
 
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class utilservice {
         String reservationdatetime=today+" "+requestTime+":0:0";
 
         return Timestamp.valueOf(reservationdatetime);
+
     }
     public int getTotalpages(int totalCount,int pagesize) {
             int totalpage=0;
@@ -75,4 +77,5 @@ public class utilservice {
     public void emthySession(HttpSession httpSession) {
         httpSession.removeAttribute("seat");
     }
+
 }

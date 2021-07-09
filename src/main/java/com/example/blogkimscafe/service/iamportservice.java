@@ -24,7 +24,6 @@ public class iamportservice {
     private JSONObject body=new JSONObject();
 
     private IamprotDto getToken() {
-        headerAndBodyClear();
         headers.setContentType(MediaType.APPLICATION_JSON);
         body.put("imp_key", imp_key);
         body.put("imp_secret", imp_secret);
@@ -38,6 +37,8 @@ public class iamportservice {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("gettoken에서 오류가 발생");
+        }finally{
+            headerAndBodyClear();
         }
         return null;
     }
@@ -47,7 +48,6 @@ public class iamportservice {
             if(iamprotDto==null){
                 throw new Exception();
             }
-            headerAndBodyClear();
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
 
@@ -62,6 +62,9 @@ public class iamportservice {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("getBuyerInfor 검증 실패"); 
+        }finally{
+            headerAndBodyClear();
+
         }
         return false;
     }
@@ -71,7 +74,6 @@ public class iamportservice {
             if(iamprotDto==null){
                 throw new Exception();
             }
-            headerAndBodyClear();
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             body.put("imp_uid", imp_uid);
             if(returnPrice!=0){
@@ -86,6 +88,8 @@ public class iamportservice {
             e.printStackTrace();
             System.out.println("cancleBuy가 실패 했습니다 직접 환불 바랍니다");
             throw new RuntimeException("환불에 실패 했습니다 다시시도 바랍니다");
+        }finally{
+            headerAndBodyClear();
         }
     }
     private void headerAndBodyClear(){

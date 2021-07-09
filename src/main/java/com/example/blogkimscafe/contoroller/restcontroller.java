@@ -24,6 +24,7 @@ import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.aboutSeatService;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
+import com.example.blogkimscafe.service.coolSmsService;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.iamportservice;
 import com.example.blogkimscafe.service.reservationservice;
@@ -32,6 +33,7 @@ import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,6 +58,8 @@ public class restcontroller {
     private iamportservice iamportservice;
     @Autowired
     private aboutSeatService aboutSeatService;
+    @Autowired
+    private coolSmsService coolSmsService;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -200,6 +204,10 @@ public class restcontroller {
     @PostMapping("/emthysession")
     public void emthysession(HttpSession session) {
         utilservice.emthySession(session);
+    }
+    @GetMapping("/test")
+    public void test() {
+        coolSmsService.getToken();
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

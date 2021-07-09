@@ -174,6 +174,7 @@ blogreservation
 | reservationdatetime | datetime     | NO   |     | NULL    |                |
 | seat                | varchar(255) | NO   |     | NULL    |                |
 | imp_uid             | varchar(255) | NO   |     | NULL    |                |
+| price               | int          | NO   |     | NULL    |                |
 +---------------------+--------------+------+-----+---------+----------------+
 bloghistory
 +--------------+--------------+------+-----+---------+----------------+
@@ -187,8 +188,10 @@ bloghistory
 | rid          | int          | NO   |     | NULL    |                |
 | seat         | varchar(255) | NO   |     | NULL    |                |
 | imp_uid      | varchar(255) | NO   |     | NULL    |                |
+| price        | int          | NO   |     | NULL    |                |
 +--------------+--------------+------+-----+---------+----------------+
-blogseatinfor
+
+상품테이블=blogseatinfor
 +---------+--------------+------+-----+---------+----------------+
 | Field   | Type         | Null | Key | Default | Extra          |
 +---------+--------------+------+-----+---------+----------------+
