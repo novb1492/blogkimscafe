@@ -37,7 +37,9 @@ public enum responResultEnum {
     alreadyTime("예약이 다 찼습니다",false),
     sucDeleteRerservation("에약 취소 성공",true),
     failDeleteReservation("예약자가 아니거나 잘못된 시간입니다",false),
-    failConfrimBuyerInfor("상품금액과 결제 금액이 다릅니다",false);
+    failConfrimBuyerInfor("상품금액과 결제 금액이 다릅니다",false),
+    ExistsSeat("존재하는 자리입니다",true),
+    notExistsSeat("존재하지 않은 자리입니다",false),;
    
     private final String messege;
     private final boolean torf;

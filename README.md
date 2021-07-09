@@ -2,7 +2,6 @@
 springboot/gradle을 사용했습니다
 
 설명
-DB=mysql
 
 USER
 구현기능

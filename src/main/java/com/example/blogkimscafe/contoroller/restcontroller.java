@@ -10,16 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.board.boarddto;
 import com.example.blogkimscafe.model.comment.commentdto;
 import com.example.blogkimscafe.model.reservation.reservationdto;
-import com.example.blogkimscafe.model.reservation.seat.seatInforDao;
 import com.example.blogkimscafe.model.reservation.seat.seatInforVo;
 import com.example.blogkimscafe.model.user.pwddto;
 import com.example.blogkimscafe.model.user.userdto;
+import com.example.blogkimscafe.service.aboutSeatService;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.emailservice;
@@ -53,7 +55,7 @@ public class restcontroller {
     @Autowired
     private iamportservice iamportservice;
     @Autowired
-    private seatInforDao seatInforDao;
+    private aboutSeatService aboutSeatService;
     
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -141,10 +143,11 @@ public class restcontroller {
         return reservationservice.getCanRerserTime(seat);
     }
     @PostMapping("/insertreservation")
-    public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid) {
+    public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
         String email=principaldetail.getUsername();
         JSONObject jsonObject=userservice.getEmailCheck(email);
         if((boolean) jsonObject.get("result")){
+            reservationdto.setSeat((String)httpSession.getAttribute("seat"));
             int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
             if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
                 return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
@@ -160,13 +163,14 @@ public class restcontroller {
         System.out.println("취소할 예약 번호"+reservationdto.getRid());
         return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
     }
-    @PostMapping("/getprice")
-    public int getPriceOneHour(@RequestParam("seat")String seat) {
-        seatInforVo seatInforVo=seatInforDao.findBySeat(seat);
+    @PostMapping("/confrimseat")
+    public JSONObject getPriceOneHour(@RequestParam("seat")String seat,HttpSession httpSession) {
+        seatInforVo seatInforVo=aboutSeatService.confrimSeat(seat);
         if(seatInforVo!=null){
-            return seatInforVo.getPrice();
+            httpSession.setAttribute("seat", seatInforVo);
+            return responToFront("ExistsSeat");
         }
-       return 0;
+        return responToFront("notExistsSeat");
     }
     @PostMapping("/cofrimemailcheck")
     public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("name")String name,@RequestParam("email")String email) {
@@ -177,6 +181,18 @@ public class restcontroller {
         
         return responToFront("notEqualsUser");
         
+    }
+    @PostMapping("/getpricebyhour")
+    public int getPriceByHour(HttpSession session) {
+        seatInforVo seatInforVo=(seatInforVo)session.getAttribute("seat");
+        if(seatInforVo!=null){
+            return seatInforVo.getPrice();
+        }
+        return 0;
+    }
+    @PostMapping("/emthysession")
+    public void emthysession(HttpSession session) {
+        session.removeAttribute("seat");
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

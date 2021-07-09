@@ -92,21 +92,33 @@
                 if(data.result){
                     $.ajax({
                     type:"post",
-                    url:"/getprice",
+                    url:"/confrimseat",
                     data:{
                         "seat":seat,
                     },
                     success:function(data){
-                    if(data!=0){
-                        $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
+                    if(data.result){
+                        $.ajax({
+                        type:"post",
+                        url:"/getpricebyhour",
+                        success:function(data){
+                        if(data!=0){
+                            $('input[name="requesthour"]:checkbox:checked').each(function(){///check박스 값 가져오려면 name값 지정해 넣어주면돤다20210526
                             requesthour.push($(this).val());
-                        });
-                        var price=data*requesthour.length;
-                        console.log(email+'주문자 이메일');
-                        iamport(seat,price,email,name,requesthour);
+                            });
+                            var price=data*requesthour.length;
+                            console.log(email+'주문자 이메일');
+                            iamport(seat,price,email,name,requesthour);
+                        }
+                        else{
+                            alert('잘못된 접근 입니다');
+                            out();
+                        }  
+                        }
+                        })    
                     }
                     else{
-                        alert('존재 하지 않는 자리입니다');
+                        alert(data.messege);
                         out();
                     }  
                     }
@@ -125,6 +137,10 @@
 
 })
     function out(){
+        $.ajax({
+            type:"post",
+            url:"/emthysession",
+        })    
         $('.modal').fadeOut();
         $( '#requesthourdiv' ).html(" ");///이게 없으면 체크박스가 계속 생긴다 20210528
         requesthour=[];////////////////////이거 없으면 체크박스 초기화 안됨
