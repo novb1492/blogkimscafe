@@ -13,26 +13,25 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 @Service
 public class coolSmsService {
     
- 
     private final String apikey="NCSFT0AZ2O3FHMAX";
     private final String APISecret="AHZNZ3IIMGSYIXFLR7HQDBYA5KPFSFCS";
 
-
-    public void sendMessege() {
+    public void sendMessege(String phoneNum,String messege) {
        
         String api_key = apikey;
         String api_secret = APISecret;
         Message coolsms = new Message(api_key, api_secret);
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("to", "01091443409");
+        params.put("to", phoneNum);
         params.put("from", "01091443409");
         params.put("type", "SMS");
-        params.put("text", "문자 내용");
-  
+        params.put("text", messege);
         try {
             coolsms.send(params);
+            System.out.println("문자 전송 완료");
         } catch (CoolsmsException e) {
             e.printStackTrace();
+            System.out.println("전송 실패");
         }
        
     }

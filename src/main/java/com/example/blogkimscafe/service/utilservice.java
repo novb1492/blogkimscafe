@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
@@ -76,6 +77,18 @@ public class utilservice {
     }    
     public void emthySession(HttpSession httpSession) {
         httpSession.removeAttribute("seat");
+    }
+    public String sendReservtionOkMessege(List<Integer>requestTime,String seat) {
+        String messege="";
+        for(int i: requestTime){
+            messege+=Integer.toString(i)+"시~"+Integer.toString(i+1)+"시 ";
+        }
+        System.out.println(messege+"messege");
+        return "안녕하세요 kimscafe 입니다 예약내역을 알려드립니다 자리는 "+seat+", 시간은 "+messege+"입니다 감사합니다";
+        
+    }
+    public String sendReservationCandleMessege(int requestTime,String seat) {
+        return "안녕하세요 kimscafe 입니다 예약이 취소 되었습니다 자리: "+seat+" 시간: "+requestTime;
     }
 
 }

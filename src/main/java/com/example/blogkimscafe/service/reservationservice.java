@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import com.example.blogkimscafe.email.sendemail;
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
 import com.example.blogkimscafe.model.reservation.reservationdto;
@@ -30,6 +31,10 @@ public class reservationservice {
     private historyservice historyservice;
     @Autowired
     private iamportservice iamportservice;
+    @Autowired
+    private coolSmsService coolSmsService;
+    @Autowired
+    private sendemail sendemail;
 
 
     public List<Integer> getCanRerserTime(String seat) {
@@ -80,6 +85,9 @@ public class reservationservice {
                     reservationdao.save(reservationvo);
                     historyservice.insertHistory(reservationvo);
                 }
+                String done=utilservice.sendReservtionOkMessege(requestTime,seat);
+                //sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
+                //coolSmsService.sendMessege("", done);
                 utilservice.emthySession(httpSession);
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
@@ -140,6 +148,9 @@ public class reservationservice {
                 iamportservice.cancleBuy(reservationvo.getImp_uid(),reservationvo.getPrice());
                 reservationdao.deleteById(rid);
                 historyservice.deleteHistory(rid);
+                String done=utilservice.sendReservationCandleMessege(reservationvo.getRequesthour(),reservationvo.getSeat());
+                //sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
+                //coolSmsService.sendMessege("",done);
                 return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
           }
           return utilservice.makeJson(responResultEnum.failDeleteReservation.getBool(), responResultEnum.failDeleteReservation.getMessege());

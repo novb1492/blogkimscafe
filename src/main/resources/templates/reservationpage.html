@@ -81,9 +81,11 @@
         $('#insertbutton').click(function(){
             var email=document.getElementById('email').value;
             var name=document.getElementById('name').value;
+            $('#insertbutton').attr('disabled',true);
+            $('#canclebutton').attr('disabled',true);
             $.ajax({
                 type:"post",
-                url:"/cofrimemailcheck",
+                url:"/cofrimemailcheck",    
                 data:{
                     "name":name,
                     "email":email,
@@ -144,6 +146,8 @@
         $('.modal').fadeOut();
         $( '#requesthourdiv' ).html(" ");///이게 없으면 체크박스가 계속 생긴다 20210528
         requesthour=[];////////////////////이거 없으면 체크박스 초기화 안됨
+        $('#insertbutton').attr('disabled',false);
+            $('#canclebutton').attr('disabled',false);
     }
 </script>
 </body>
