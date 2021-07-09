@@ -10,8 +10,6 @@ import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
 import com.example.blogkimscafe.model.reservation.reservationdto;
 import com.example.blogkimscafe.model.reservation.reservationvo;
-import com.example.blogkimscafe.model.reservation.seat.seatInforDao;
-import com.example.blogkimscafe.model.reservation.seat.seatInforVo;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +28,6 @@ public class reservationservice {
     private utilservice utilservice;
     @Autowired
     private historyservice historyservice;
-    @Autowired
-    private seatInforDao seatInfordao;
     @Autowired
     private iamportservice iamportservice;
 
@@ -90,7 +86,6 @@ public class reservationservice {
             failInsert(httpSession, imp_uid);
             return utilservice.makeJson(responResultEnum.valueOf(confirm).getBool(), responResultEnum.valueOf(confirm).getMessege());
             } catch (Exception e) {
-           
             e.printStackTrace();
             failInsert(httpSession, imp_uid);
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
@@ -140,7 +135,9 @@ public class reservationservice {
     public JSONObject deleteReservation(String email,reservationdto reservationdto) {
         int rid=reservationdto.getRid();
         try {
-          if(confrimReservation(reservationdto.getRid(),email)){
+        reservationvo reservationvo=confrimReservation(reservationdto.getRid(),email);
+          if(reservationvo!=null){
+                iamportservice.cancleBuy(reservationvo.getImp_uid(),reservationvo.getPrice());
                 reservationdao.deleteById(rid);
                 historyservice.deleteHistory(rid);
                 return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
@@ -151,25 +148,24 @@ public class reservationservice {
            throw new RuntimeException("deleteReservation에서 오류가 발생 했습니다");
         }
     }
-    public int getPrice(String seat,int times) {
+    public int getPrice(int priceByHour,int times) {
         try {
-            seatInforVo vo=seatInfordao.findBySeat(seat);
-            return vo.getPrice()*times;
+          return priceByHour*times;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("계산중 오류가 발생했습니다");
         }
     }
     private void failInsert(HttpSession httpSession ,String imp_uid) {
-        iamportservice.cancleBuy(imp_uid);
+        iamportservice.cancleBuy(imp_uid,0);
         utilservice.emthySession(httpSession);
     }
-    private boolean confrimReservation(int rid,String email) {
+    private reservationvo confrimReservation(int rid,String email) {
         reservationvo reservationvo=reservationdao.findById(rid).orElseThrow(()->new RuntimeException("예약자와 취소자가 일치 하지 않습니다"));
         if(reservationvo.getEmail().equals(email)){
-            return true;
+            return reservationvo;
         }
-        return false;
+        return null;
     }
  
   

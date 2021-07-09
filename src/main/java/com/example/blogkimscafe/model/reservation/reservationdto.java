@@ -20,4 +20,6 @@ public class reservationdto {
     private int requesthour;
     
     private Timestamp reservationdatetime;
+
+    private int price;
 }

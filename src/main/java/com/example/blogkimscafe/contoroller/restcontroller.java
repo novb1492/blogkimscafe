@@ -149,21 +149,20 @@ public class restcontroller {
         try {
             if((boolean) jsonObject.get("result")){
                 seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
-                reservationdto.setSeat(seatInforVo.getSeat());
-                int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
-                if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
+                if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
+                    reservationdto.setPrice(seatInforVo.getPrice());
                     return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession);
-                }else{
-                    iamportservice.cancleBuy(imp_uid);
                 }
+                iamportservice.cancleBuy(imp_uid,0);
                 return responToFront("failConfrimBuyerInfor");
             }
+            iamportservice.cancleBuy(imp_uid,0);
             return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
-            iamportservice.cancleBuy(imp_uid);
+            iamportservice.cancleBuy(imp_uid,0);
             utilservice.emthySession(httpSession);
-            throw new RuntimeException("오류가 발생했습니다 ");
+            throw new RuntimeException("insertreservation에서 오류가 발생했습니다 ");
         }
     }
     @PostMapping("/deletereservation")

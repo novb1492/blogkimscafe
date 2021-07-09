@@ -44,12 +44,16 @@ public class reservationvo {
     @Column(name = "imp_uid",nullable = false)
     private String imp_uid;
 
+    @Column(name = "price",nullable = false)
+    private int price;
+
     public reservationvo(){}
 
     public reservationvo (reservationdto reservationdto) {
         this.requesthour=reservationdto.getRequesthour();
         this.reservationdatetime=reservationdto.getReservationdatetime();
         this.seat=reservationdto.getSeat();
+        this.price=reservationdto.getPrice();
     }
 
 }

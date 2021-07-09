@@ -49,6 +49,9 @@ public class historyvo {
     @CreationTimestamp
     Timestamp created;
 
+    @Column(name = "price",nullable = false)
+    private int price;
+
     public historyvo(reservationvo reservationvo) {
         this.email=reservationvo.getEmail();
         this.requestTime=reservationvo.getRequesthour();
@@ -56,6 +59,7 @@ public class historyvo {
         this.rid=reservationvo.getId();
         this.seat=reservationvo.getSeat();
         this.imp_uid=reservationvo.getImp_uid();
+        this.price=reservationvo.getPrice();
         
     }
 }

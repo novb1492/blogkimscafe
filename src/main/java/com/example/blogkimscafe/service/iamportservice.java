@@ -65,7 +65,7 @@ public class iamportservice {
         }
         return false;
     }
-    public void cancleBuy(String imp_uid) {
+    public void cancleBuy(String imp_uid,int returnPrice) {
         try {
             IamprotDto iamprotDto=getToken();
             if(iamprotDto==null){
@@ -74,6 +74,9 @@ public class iamportservice {
             headerAndBodyClear();
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             body.put("imp_uid", imp_uid);
+            if(returnPrice!=0){
+                body.put("amount", returnPrice);
+            }
 
             HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(body, headers);
             cancleBuyDto cancle =restTemplate.postForObject("https://api.iamport.kr/payments/cancel",entity,cancleBuyDto.class);
