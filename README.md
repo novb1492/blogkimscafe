@@ -94,6 +94,20 @@ Transactional 잡아서 롤백 시킨다는 사실을 알았고
 적용했습니다 save()에도 적용이 되는걸 발견해서 
 자주 사용하게 될거같다라는 생각이 들었습니다
 
+예약은
+세션을 사용했습니다
+올바른 자리인지 검증을 하고
+맞다면 세션값에 넣어줬습니다
+public JSONObject getPriceOneHour(@RequestParam("seat")String seat,HttpSession httpSession)
+그후 결제후 검증에서 프론트에서 받아 쓰는게아닌
+세션값에서 꺼내서 검증이 될 수 있게 했습니다
+seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
+reservationdto.setSeat(seatInforVo.getSeat());
+그후 동작이 끝나면
+실패든성공이든 상관없이
+public void emthySession(HttpSession httpSession)
+만들어서 세션에서 값을 빼주도록 만들었습니다
+
 그밖의 자세한 내용은
 https://cordingmonster.tistory.com/category/Spring%20boot%20%ED%98%BC%EC%9E%90%20%EB%A7%9B%EB%B3%B4%EA%B8%B0
 에서 좀더 자세히 보실 수 있습니다

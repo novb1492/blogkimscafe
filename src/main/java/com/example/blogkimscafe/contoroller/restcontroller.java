@@ -152,7 +152,7 @@ public class restcontroller {
                 reservationdto.setSeat(seatInforVo.getSeat());
                 int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
                 if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
-                    return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
+                    return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession);
                 }else{
                     iamportservice.cancleBuy(imp_uid);
                 }
@@ -162,6 +162,7 @@ public class restcontroller {
         } catch (Exception e) {
             e.printStackTrace();
             iamportservice.cancleBuy(imp_uid);
+            utilservice.emthySession(httpSession);
             throw new RuntimeException("오류가 발생했습니다 ");
         }
     }
@@ -199,7 +200,7 @@ public class restcontroller {
     }
     @PostMapping("/emthysession")
     public void emthysession(HttpSession session) {
-        session.removeAttribute("seat");
+        utilservice.emthySession(session);
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

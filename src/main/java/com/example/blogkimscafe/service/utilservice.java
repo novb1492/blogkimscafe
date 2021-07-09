@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
 
 import com.nimbusds.jose.shaded.json.JSONObject;
 
@@ -71,4 +72,7 @@ public class utilservice {
         }
         return false;
     }    
+    public void emthySession(HttpSession httpSession) {
+        httpSession.removeAttribute("seat");
+    }
 }

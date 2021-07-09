@@ -3,6 +3,9 @@ package com.example.blogkimscafe.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
 import com.example.blogkimscafe.model.reservation.reservationdto;
@@ -65,7 +68,7 @@ public class reservationservice {
         }
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime,String imp_uid) {
+    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime,String imp_uid,HttpSession httpSession) {
         try {
             String seat=reservationdto.getSeat();
             String confirm=confrimTime(seat, requestTime);
@@ -81,14 +84,15 @@ public class reservationservice {
                     reservationdao.save(reservationvo);
                     historyservice.insertHistory(reservationvo);
                 }
+                utilservice.emthySession(httpSession);
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
-            System.out.println(responResultEnum.valueOf(confirm).getMessege());
-            iamportservice.cancleBuy(imp_uid);
+            failInsert(httpSession, imp_uid);
             return utilservice.makeJson(responResultEnum.valueOf(confirm).getBool(), responResultEnum.valueOf(confirm).getMessege());
             } catch (Exception e) {
-            iamportservice.cancleBuy(imp_uid);
+           
             e.printStackTrace();
+            failInsert(httpSession, imp_uid);
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
@@ -155,6 +159,10 @@ public class reservationservice {
             e.printStackTrace();
             throw new RuntimeException("계산중 오류가 발생했습니다");
         }
+    }
+    private void failInsert(HttpSession httpSession ,String imp_uid) {
+        iamportservice.cancleBuy(imp_uid);
+        utilservice.emthySession(httpSession);
     }
     private boolean confrimReservation(int rid,String email) {
         reservationvo reservationvo=reservationdao.findById(rid).orElseThrow(()->new RuntimeException("예약자와 취소자가 일치 하지 않습니다"));
