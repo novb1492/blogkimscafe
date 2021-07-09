@@ -146,17 +146,24 @@ public class restcontroller {
     public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
         String email=principaldetail.getUsername();
         JSONObject jsonObject=userservice.getEmailCheck(email);
-        if((boolean) jsonObject.get("result")){
-            reservationdto.setSeat((String)httpSession.getAttribute("seat"));
-            int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
-            if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
-                return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
-            }else{
-                iamportservice.cancleBuy(imp_uid);
+        try {
+            if((boolean) jsonObject.get("result")){
+                seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
+                reservationdto.setSeat(seatInforVo.getSeat());
+                int price=reservationservice.getPrice(reservationdto.getSeat(), requestTime.size());
+                if(iamportservice.confrimBuyerInfor(imp_uid,price,email)){
+                    return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid);
+                }else{
+                    iamportservice.cancleBuy(imp_uid);
+                }
+                return responToFront("failConfrimBuyerInfor");
             }
-            return responToFront("failConfrimBuyerInfor");
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            iamportservice.cancleBuy(imp_uid);
+            throw new RuntimeException("오류가 발생했습니다 ");
         }
-        return jsonObject;
     }
     @PostMapping("/deletereservation")
     public JSONObject deleteReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto  ) {
