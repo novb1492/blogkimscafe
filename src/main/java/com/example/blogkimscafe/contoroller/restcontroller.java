@@ -248,7 +248,7 @@ public class restcontroller {
     }
     @GetMapping("/auth/navercallback")
     public void naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
-        naverLoingService.getNaverToken(code, state);
+        naverLoingService.LoginNaver(naverLoingService.getNaverToken(code, state));
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
