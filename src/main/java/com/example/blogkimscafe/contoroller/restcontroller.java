@@ -243,7 +243,7 @@ public class restcontroller {
         return userservice.deleteUser(userdto, choice);
     }
     @PostMapping("/auth/naver")
-    public JSONObject naverLogin() {
+    public String naverLogin() {
         return  naverLoingService.naverLogin();
     }
     @GetMapping("/auth/navercallback")
