@@ -35,7 +35,7 @@
                                 <td >[[${array.getEmail}]]</td>
                                 <td>[[${array.getCreated}]]</td>
                                 <td>                         
-                                <input type="button" value="예약변경">
+                                <input type="button" th:onclick="doUpdateReservation([[${array.getId}]])" class="updateButton" value="예약변경">
                                 <input type="button" th:onclick="doDeleteReservation([[${array.getId}]])" class="cancleButton" value="예약취소">  
                     </td>
                 </tr>

@@ -159,6 +159,17 @@ public class reservationservice {
            throw new RuntimeException("deleteReservation에서 오류가 발생 했습니다");
         }
     }
+    @Transactional
+    public JSONObject updateReservation(String email,reservationdto reservationdto) {
+        reservationvo reservationvo=getReservationByid(reservationdto.getRid());
+        iamportservice.cancleBuy(reservationvo.getImp_uid(),reservationvo.getPrice());
+        try {
+            return utilservice.makeJson(responResultEnum.updateReservation.getBool(),responResultEnum.updateReservation.getMessege());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("updateReservation 오류가 발생했습니다");
+        }
+    }
     public int getPrice(int priceByHour,int times) {
         try {
           return priceByHour*times;
@@ -166,6 +177,9 @@ public class reservationservice {
             e.printStackTrace();
             throw new RuntimeException("계산중 오류가 발생했습니다");
         }
+    }
+    private reservationvo getReservationByid(int id){
+        return reservationdao.findById(id).orElseThrow(()-> new RuntimeException("존재 하지 않는 예약입니다"));
     }
     private void failInsert(HttpSession httpSession ,String imp_uid) {
         iamportservice.cancleBuy(imp_uid,0);

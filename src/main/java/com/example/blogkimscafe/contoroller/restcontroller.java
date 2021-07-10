@@ -206,6 +206,10 @@ public class restcontroller {
         System.out.println("취소할 예약 번호"+reservationdto.getRid());
         return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
     }
+    @PostMapping("/updatereservation")
+    public JSONObject updateReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto) {
+        return reservationservice.updateReservation(principaldetail.getUsername(), reservationdto);
+    }
     @PostMapping("/confrimseat")
     public JSONObject getPriceOneHour(@RequestParam("seat")String seat,HttpSession httpSession) {
         seatInforVo seatInforVo=aboutSeatService.confrimSeat(seat);

@@ -402,6 +402,27 @@ function doDeleteReservation(id){
         }
     }   
 }
+function doUpdateReservation(id){
+    var xhr;
+    var url='/updatereservation'; 
+    var data=JSON.stringify({"rid":""+id+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/showreservationpage';
+            }else{
+                alert(result.messege);
+            }
+        }
+        else{
+            alert('통신에 실패했습니다');
+        }
+    }   
+}
 
 
 
