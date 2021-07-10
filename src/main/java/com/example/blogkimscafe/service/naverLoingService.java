@@ -21,6 +21,7 @@ public class naverLoingService {
     
     private final String id="DrqDuzgTpM_sfreaZMly";
     private final String pwd="wCLQZ1kaQT";
+    private final String callBackUrl="http://localhost:8080/auth/navercallback";
 
     private RestTemplate restTemplate=new RestTemplate();
     private HttpHeaders headers=new HttpHeaders();
@@ -30,24 +31,25 @@ public class naverLoingService {
     @Autowired
     private AuthenticationManager authenticationManager;
     
-    public JSONObject naverLogin() {
+    public String naverLogin() {
         String state="";
         try {
-            state = URLEncoder.encode("http://localhost:8080/auth/navercallback", "UTF-8");
+            state = URLEncoder.encode(callBackUrl, "UTF-8");
         } catch (UnsupportedEncodingException e1) {
             e1.printStackTrace();
         }
             JSONObject naverDto=new JSONObject();
             naverDto.put("id", id);
             naverDto.put("state", state);
-            return naverDto; 
+            naverDto.put("callbackUrl", callBackUrl);
+            String naver="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id="+id+"&redirect_uri="+""+callBackUrl+""+"&state="+state+"";
+            return naver;
     }
     public void getNaverToken(String code,String state) {
          JSONObject jsonObject= restTemplate.getForObject("https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id="+id+"&client_secret="+pwd+"&code="+code+"&state="+state+"",JSONObject.class);
          System.out.println(jsonObject+" token"); 
          headers.add("Authorization", "Bearer "+jsonObject.get("access_token"));
          HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
- 
          try {
             naverDto naverDto =restTemplate.postForObject("https://openapi.naver.com/v1/nid/me",entity,naverDto.class);
             System.out.println(naverDto+ "정보");
@@ -67,6 +69,8 @@ public class naverLoingService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
          } catch (Exception e) {
              e.printStackTrace();
+         }finally{
+             headers.clear();
          }
        
      }
