@@ -61,6 +61,7 @@ public class naverLoingService {
            utilservice.setAuthentication(email, pwd);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("LoginNaver 오류가 발생 했습니다");
         }finally{
             headers.clear();
         }

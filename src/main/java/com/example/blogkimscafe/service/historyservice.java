@@ -23,8 +23,8 @@ public class historyservice {
             historyvo historyvo=new historyvo(reservationvo);
             historydao.save(historyvo);
         } catch (Exception e) {
-            System.out.println("history 저장중 오류가 발생 했습니다");
-            throw new RuntimeException();
+            e.printStackTrace();
+            throw new RuntimeException("history 저장중 오류가 발생 했습니다");
         }
     }
     public int getCountHistories(String email){
@@ -42,7 +42,7 @@ public class historyservice {
             return array;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("history 불러오기에 실패 했습니다");
+            throw new RuntimeException("getHistories history 불러오기에 실패 했습니다");
         }
         
     }
@@ -51,7 +51,7 @@ public class historyservice {
             historydao.deleteByRid(rid);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("history삭제에 실패했습니다");
+            throw new RuntimeException("deleteHistory history삭제에 실패했습니다");
         }
     }
 }

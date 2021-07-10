@@ -29,7 +29,8 @@ public class commentservice {
             commentdao.save(commentvo);
             return utilservice.makeJson(responResultEnum.sucInsertComment.getBool(), responResultEnum.sucInsertComment.getMessege());
         } catch (Exception e) {
-            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+            e.printStackTrace();
+            throw new RuntimeException("insertComment 오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
     @Transactional
@@ -40,23 +41,24 @@ public class commentservice {
             commentvo.setComment(commentdto.getComment());
             return utilservice.makeJson(responResultEnum.sucUpdateComment.getBool(),responResultEnum.sucUpdateComment.getMessege());
         } catch (Exception e) {
-            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+            e.printStackTrace();
+            throw new RuntimeException("updateComment 오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
     public JSONObject deleteCommentByCid(commentvo commentvo,String email) {
-        confirmWriter(commentvo.getEmail(), email);
+        confirmWriter(commentvo.getEmail(),email);
         try {
             commentdao.deleteById(commentvo.getCid());
             return utilservice.makeJson(responResultEnum.sucDeleteCommnet.getBool(), responResultEnum.sucDeleteCommnet.getMessege());
         } catch (Exception e) {
-           throw new RuntimeException("삭제중 문제가 생겼습니다");
+            e.printStackTrace();
+           throw new RuntimeException("deleteCommentByCid 삭제중 문제가 생겼습니다");
         }  
     }
     public commentvo getCommentVo(int cid) {
         return commentdao.findById(cid).orElseThrow(()->new RuntimeException("존재하지 않는 댓글입니다"));
     }
     public int totalCommentCount(int bid) {
-
         return utilservice.getTotalpages(commentdao.countByBid(bid), pagesize);
     }
     public List<commentvo> getComment(int bid,int page,int totalpages) {
@@ -70,15 +72,16 @@ public class commentservice {
             }
                 return array;
        } catch (Exception e) {
-           throw new RuntimeException("댓글 불러오기에 실패했습니다 다시시도 바랍니다");
+           e.printStackTrace();
+           throw new RuntimeException("getComment 댓글 불러오기에 실패했습니다 다시시도 바랍니다");
        }
     }
     public void deleteCommentByBid(int bid) {
-
         try {
             commentdao.deleteByBidNative(bid);
         } catch (Exception e) {
-            throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
+            e.printStackTrace();
+            throw new RuntimeException("deleteCommentByBid 오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
     private void confirmWriter(String dbEmail,String email){

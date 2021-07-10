@@ -29,10 +29,10 @@ public class iamportservice {
         body.put("imp_secret", imp_secret);
         try {  
             HttpEntity<JSONObject>entity=new HttpEntity<>(body,headers);
-            IamprotDto token=restTemplate.postForObject("https://api.iamport.kr/users/getToken",entity,IamprotDto.class);
             
+            IamprotDto token=restTemplate.postForObject("https://api.iamport.kr/users/getToken",entity,IamprotDto.class);
             System.out.println(token+" FULLtoken");
-            System.out.println(token.getResponse().get("access_token")+" token");
+    
             return token;
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,9 +53,7 @@ public class iamportservice {
 
             BuyerInforDto buyerInfor =restTemplate.postForObject("https://api.iamport.kr/payments/"+imp_uid+"",entity,BuyerInforDto.class);
             System.out.println(buyerInfor+" fullinfor");
-            System.out.println(buyerInfor.getResponse().get("amount")+" priceinfor");
-            System.out.println(price+" price");
-            
+
             if(price==(int)buyerInfor.getResponse().get("amount")&&email.equals(buyerInfor.getResponse().get("buyer_email"))){
                 return true;
             }
@@ -64,7 +62,6 @@ public class iamportservice {
             System.out.println("getBuyerInfor 검증 실패"); 
         }finally{
             headerAndBodyClear();
-
         }
         return false;
     }
@@ -74,8 +71,10 @@ public class iamportservice {
             if(iamprotDto==null){
                 throw new Exception();
             }
+
             headers.add("Authorization",(String) iamprotDto.getResponse().get("access_token"));
             body.put("imp_uid", imp_uid);
+            
             if(returnPrice!=0){
                 body.put("amount", returnPrice);
             }

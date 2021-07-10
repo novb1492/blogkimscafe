@@ -9,6 +9,8 @@ package com.example.blogkimscafe.service;
 
 import java.util.List;
 
+
+
 import com.example.blogkimscafe.config.security;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.Role;
@@ -52,13 +54,8 @@ public class userservice {
            if(confrimEmail(userdto.getEmail())){
                 return "alreadyEmail"; 
            }
-            uservo uservo=new uservo(userdto);
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
-            uservo.setPwd(bCryptPasswordEncoder.encode(uservo.getPwd()));
-            uservo.setRole(Role.USER.getValue());
-            uservo.setRandnum(utilservice.GetRandomNum(6));
-            uservo.setEmailcheck("false");
-            uservo.setPhonecheck("false");
+            uservo uservo=new uservo(0,userdto.getEmail(),bCryptPasswordEncoder.encode(userdto.getPwd()),userdto.getName(),null,Role.USER.getValue(),null,null,Role.failEmailSmsCheck.getValue(),null,null,Role.failEmailSmsCheck.getValue());
             userdao.save(uservo);
             return "sucSingUp";
         } catch (RuntimeException e) {
@@ -84,7 +81,7 @@ public class userservice {
             if(confrimEmail(email)){
                 uservo uservo=userdao.findByEmail(email);
                 if(uservo.getRandnum().equals(randnum)){
-                    uservo.setEmailcheck("true");
+                    uservo.setEmailcheck(Role.sucEmailSmsCheck.getValue());
                     return utilservice.makeJson(responResultEnum.rightTempNum.getBool(), responResultEnum.rightTempNum.getMessege());
                 }
                 return utilservice.makeJson(responResultEnum.wrongTempNum.getBool(), responResultEnum.wrongTempNum.getMessege());
@@ -96,7 +93,7 @@ public class userservice {
     }
     public JSONObject getEmailCheck(String email) {
         if(confrimEmail(email)){
-           if(userdao.getEmailCheckfindByEmail(email).equals("true")){
+           if(userdao.getEmailCheckfindByEmailNative(email).equals("true")){
                 return utilservice.makeJson(responResultEnum.emailCheckIsTrue.getBool(), responResultEnum.emailCheckIsTrue.getMessege());
            }
            return utilservice.makeJson(responResultEnum.emailCheckIsFalse.getBool(), responResultEnum.emailCheckIsFalse.getMessege()); 
@@ -113,7 +110,7 @@ public class userservice {
                 if(bCryptPasswordEncoder.matches(pwddto.getPwd(), uservo.getPwd())){
                     if(pwddto.getNpwd().equals(pwddto.getNpwd2())){
                         String hashpwd=bCryptPasswordEncoder.encode(pwddto.getNpwd2());
-                        userdao.updatePwdNative(hashpwd,uservo.getEmail());
+                        uservo.setPwd(hashpwd);
                         principaldetail.getUservo().setPwd(hashpwd);
                         return utilservice.makeJson(responResultEnum.sucUpdatePwd.getBool(),responResultEnum.sucUpdatePwd.getMessege());
                     }
@@ -178,7 +175,7 @@ public class userservice {
     public void changeSmsCheck(String email,String phoneNum) {
         try {
             uservo uservo=userdao.findByEmail(email);
-            uservo.setPhonecheck("true");
+            uservo.setPhonecheck(Role.sucEmailSmsCheck.getValue());
             uservo.setPhone(phoneNum);
         } catch (Exception e) {
            e.printStackTrace();
@@ -188,7 +185,7 @@ public class userservice {
     public void insertOauthLogin(JSONObject jsonObject,String email,String pwd,String phoneNum) {
         try {
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
-            uservo uservo=new uservo(0, email, bCryptPasswordEncoder.encode(pwd),(String)jsonObject.get("name"), null, "ROLE_USER","naver", (String)jsonObject.get("id"), "true", null,phoneNum, "true");
+            uservo uservo=new uservo(0, email, bCryptPasswordEncoder.encode(pwd),(String)jsonObject.get("name"), null,  Role.USER.getValue(),"naver", (String)jsonObject.get("id"),Role.sucEmailSmsCheck.getValue(), null,phoneNum,Role.sucEmailSmsCheck.getValue());
             userdao.save(uservo);
         } catch (Exception e) {
             e.printStackTrace();

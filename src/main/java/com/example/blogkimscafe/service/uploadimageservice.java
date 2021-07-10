@@ -30,10 +30,8 @@ public class uploadimageservice {
             String filename=file.get(i).getOriginalFilename();
             if(file.get(i).getContentType().split("/")[0].equals("image")){
                 System.out.println(filename+"이미지가 맞습니다");
-               
             }else{
                 return true;
-
             }
         }
         return false;  
@@ -50,10 +48,9 @@ public class uploadimageservice {
                 array.add(boardimagevo);
             }
             return array;
-          
         }catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("사진 로컬에 저장중 예외발생");
+            throw new RuntimeException("insertImageLocal 사진 로컬에 저장중 예외발생");
         }
     }
 
@@ -65,19 +62,20 @@ public class uploadimageservice {
                 boardimagedao.save(b);
             } 
         } catch (Exception e) {
-           throw new RuntimeException("사진 db에 저장중 예외발생");
+            e.printStackTrace();
+           throw new RuntimeException("insertImageToDb 사진 db에 저장중 예외발생");
         }
     }
     @Transactional(rollbackFor = {Exception.class})
     public void deleteImage(List<Integer>alreadyimages,int bid) {
         List<boardimagevo>deleteImages=selectDeleteImage(alreadyimages, bid);
         try {
-                if(deleteImages.isEmpty()==false){
-                   for(boardimagevo b:deleteImages){
-                       boardimagedao.deleteById(b.getId());
-                       deleteLocalFile(b.getImagelocal());
-                   }
+            if(deleteImages.isEmpty()==false){
+                for(boardimagevo b:deleteImages){
+                    boardimagedao.deleteById(b.getId());
+                    deleteLocalFile(b.getImagelocal());
                 }
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,20 +90,21 @@ public class uploadimageservice {
             if(alreadyimages.isEmpty()){/////////만약 비웠다면 기존사진이 다 삭제되어 온경우
                 return dbImages;
             }
-                for(int i=0;i<dbImages.size();i++){
-                    for(int ii=0;ii<alreadyimages.size();ii++){ 
-                        if(dbImages.get(i).getId()!=alreadyimages.get(ii)){
-                            if(ii==alreadyimages.size()-1){
-                                    deleteImages.add(dbImages.get(i));
-                             }
-                        }else{
-                            break;
-                        }
-                            
+            for(int i=0;i<dbImages.size();i++){
+                for(int ii=0;ii<alreadyimages.size();ii++){ 
+                    if(dbImages.get(i).getId()!=alreadyimages.get(ii)){
+                        if(ii==alreadyimages.size()-1){
+                                deleteImages.add(dbImages.get(i));
+                            }
+                    }else{
+                        break;
                     }
+                            
                 }
-                return deleteImages;
+            }
+            return deleteImages;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("selectDeleteImage 예외발생");
         }
     }
@@ -117,8 +116,8 @@ public class uploadimageservice {
                 file.delete();
             }
         } catch (Exception e) {
-            System.out.println("사진 삭제중 예외 발생");
-            throw new RuntimeException("deleteLocalFile 예외발생");
+            e.printStackTrace();
+            throw new RuntimeException("deleteLocalFile 사진 삭제중 예외 발생");
         }
             
     }
