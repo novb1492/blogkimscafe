@@ -119,6 +119,19 @@ function doSendEamil(){
             }
         }  
 }
+function goNaverLogin(){
+        var xhr,url='/auth/naver',data=null;
+        var contentType="application/json";
+        xhr=doajax(url,data,contentType);
+        xhr.onload = function() { 
+            if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            var result=JSON.parse(xhr.response);
+            location.href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id="+result.id+"&redirect_uri="+"http://localhost:8080/auth/navercallback"+"&state="+result.state+"";
+            }else{
+                alert('통신에 실패했습니다');
+            }
+        }  
+}
 function doSendSms(){
     var xhr,url='/sendSms',data=JSON.stringify({"phone":""+document.getElementById('phoneNum').value+""});
     var contentType="application/json";

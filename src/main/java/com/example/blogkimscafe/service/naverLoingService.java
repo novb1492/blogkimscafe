@@ -1,0 +1,70 @@
+package com.example.blogkimscafe.service;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import com.example.blogkimscafe.model.naverDto;
+import com.example.blogkimscafe.model.user.userdto;
+import com.nimbusds.jose.shaded.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class naverLoingService {
+    
+    private final String id="DrqDuzgTpM_sfreaZMly";
+    private final String pwd="wCLQZ1kaQT";
+
+    private RestTemplate restTemplate=new RestTemplate();
+    private HttpHeaders headers=new HttpHeaders();
+
+    @Autowired
+    private userservice userservice;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+    public JSONObject naverLogin() {
+        String state="";
+        try {
+            state = URLEncoder.encode("http://localhost:8080/auth/navercallback", "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+            JSONObject naverDto=new JSONObject();
+            naverDto.put("id", id);
+            naverDto.put("state", state);
+            return naverDto; 
+    }
+    public void getNaverToken(String code,String state) {
+         JSONObject jsonObject= restTemplate.getForObject("https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id="+id+"&client_secret="+pwd+"&code="+code+"&state="+state+"",JSONObject.class);
+         System.out.println(jsonObject+" token"); 
+         headers.add("Authorization", "Bearer "+jsonObject.get("access_token"));
+         HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
+ 
+         try {
+           naverDto naverDto =restTemplate.postForObject("https://openapi.naver.com/v1/nid/me",entity,naverDto.class);
+            System.out.println(naverDto+ "정보");
+   
+            String email=(String)naverDto.getResponse().get("email");
+            if(userservice.confrimEmail(email)==false){
+                userdto userdto=new userdto();
+                userdto.setEmail(email);
+                userdto.setName((String)naverDto.getResponse().get("name"));
+                userdto.setPwd(pwd);
+                userservice.insertUser(userdto);
+            }
+            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pwd));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+       
+     }
+}

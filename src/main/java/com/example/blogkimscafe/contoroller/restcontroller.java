@@ -27,12 +27,14 @@ import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.coolSmsService;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.iamportservice;
+import com.example.blogkimscafe.service.naverLoingService;
 import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
 import com.example.blogkimscafe.service.utilservice;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,6 +61,8 @@ public class restcontroller {
     private aboutSeatService aboutSeatService;
     @Autowired
     private coolSmsService coolSmsService;
+    @Autowired
+    private naverLoingService naverLoingService;
 
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -237,6 +241,14 @@ public class restcontroller {
     public JSONObject deleteUser(userdto userdto,@AuthenticationPrincipal principaldetail principaldetail,@RequestParam(value = "choice", required = false)List<String>choice) {
         userdto.setEmail(principaldetail.getUsername());
         return userservice.deleteUser(userdto, choice);
+    }
+    @PostMapping("/auth/naver")
+    public JSONObject naverLogin() {
+        return  naverLoingService.naverLogin();
+    }
+    @GetMapping("/auth/navercallback")
+    public void naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
+        naverLoingService.getNaverToken(code, state);
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
