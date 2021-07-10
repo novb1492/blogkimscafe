@@ -34,15 +34,11 @@ public class naverLoingService {
         String state="";
         try {
             state = URLEncoder.encode(callBackUrl, "UTF-8");
+            return "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id="+id+"&redirect_uri="+""+callBackUrl+""+"&state="+state+"";
         } catch (UnsupportedEncodingException e1) {
             e1.printStackTrace();
-        }
-        JSONObject naverDto=new JSONObject();
-        naverDto.put("id", id);
-        naverDto.put("state", state);
-        naverDto.put("callbackUrl", callBackUrl);
-        String naver="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id="+id+"&redirect_uri="+""+callBackUrl+""+"&state="+state+"";
-        return naver;
+            throw new RuntimeException("naverLogin 오류 발생");
+        } 
     }
     public JSONObject getNaverToken(String code,String state) {
          JSONObject jsonObject= restTemplate.getForObject("https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id="+id+"&client_secret="+pwd+"&code="+code+"&state="+state+"",JSONObject.class);
@@ -55,16 +51,18 @@ public class naverLoingService {
         try {
            naverDto naverDto =restTemplate.postForObject("https://openapi.naver.com/v1/nid/me",entity,naverDto.class);
            System.out.println(naverDto+ "정보");
-           String email=(String)naverDto.getResponse().get("email");
-           String[] email2=email.split("@");
-           if(!email2[1].equals("naver.com")){
-               email=email2[0]+"@naver.com";
+           
+           String[] split=naverDto.getResponse().get("email").toString().split("@");
+           String email="";
+
+           if(!split[1].equals("naver.com")){
+               email=split[0]+"@naver.com";
            }
            if(userservice.confrimEmail(email)==false){
-               String num=(String) naverDto.getResponse().get("mobile_e164");
-               String[] num2=num.split("2");
-               userservice.insertOauthLogin((JSONObject)naverDto.getResponse(),email,pwd,"0"+num2[1]);
+               split=naverDto.getResponse().get("mobile_e164").toString().split("2");
+               userservice.insertOauthLogin((JSONObject)naverDto.getResponse(),email,pwd,"0"+split[1]);
            }
+           
            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pwd));
            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
