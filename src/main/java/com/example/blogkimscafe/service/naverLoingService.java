@@ -49,10 +49,13 @@ public class naverLoingService {
          HttpEntity<JSONObject>entity=new HttpEntity<JSONObject>(headers);
  
          try {
-           naverDto naverDto =restTemplate.postForObject("https://openapi.naver.com/v1/nid/me",entity,naverDto.class);
+            naverDto naverDto =restTemplate.postForObject("https://openapi.naver.com/v1/nid/me",entity,naverDto.class);
             System.out.println(naverDto+ "정보");
-   
             String email=(String)naverDto.getResponse().get("email");
+            String[] email2=email.split("@");
+            if(!email2[1].equals("naver.com")){
+                email=email2[0]+"@naver.com";
+            }
             if(userservice.confrimEmail(email)==false){
                 userdto userdto=new userdto();
                 userdto.setEmail(email);

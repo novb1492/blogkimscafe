@@ -11,6 +11,4 @@ public class naverDto {
     private String resultcode;
     private String message;
     private JSONObject response;
-   
-
 }
