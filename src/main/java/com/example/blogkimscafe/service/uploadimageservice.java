@@ -16,8 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class uploadimageservice {
 
-    private final String saveUrl="C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/";
+    private final String windowLocal="C:/Users/Administrator/Desktop/blog/blogkimscafe/src/main/resources/static/images/";
     private final String saveDbName="http://localhost:8080/static/images/";
+    //private final String macLocal="/Users/kimhunyiung/Desktop/blogkimscafe/src/main/resources/static";
     
     @Autowired
     private boardimagedao boardimagedao;
@@ -43,7 +44,7 @@ public class uploadimageservice {
             for(MultipartFile f:file){
                 String filename=f.getOriginalFilename();
                 String savename=utilservice.getUUID()+filename;
-                String localLocation=saveUrl+savename;
+                String localLocation=windowLocal+savename;
                 f.transferTo(new File(localLocation));
                 boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename,savename,localLocation);
                 array.add(boardimagevo);

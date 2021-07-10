@@ -117,7 +117,8 @@ public class restcontroller {
     @PostMapping("/deletearticle")
     public JSONObject deleteArticle(@RequestBody boarddto boarddto ,@AuthenticationPrincipal principaldetail principaldetail) { 
         System.out.println("삭제할 게시물 "+boarddto.getBid());
-        return boardservice.deleteArticle(boarddto.getBid(),principaldetail.getUsername());
+        
+        return boardservice.deleteArticle(boardservice.getBoardVo(boarddto.getBid()),principaldetail.getUsername());
     }
     @PostMapping("/insertcomment")
     public JSONObject insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
@@ -200,6 +201,11 @@ public class restcontroller {
     @PostMapping("/emthysession")
     public void emthysession(HttpSession session) {
         utilservice.emthySession(session);
+    }
+    @PostMapping("/deleteuser")
+    public JSONObject deleteUser(userdto userdto,@AuthenticationPrincipal principaldetail principaldetail,@RequestParam(value = "choice", required = false)List<String>choice) {
+        userdto.setEmail(principaldetail.getUsername());
+        return userservice.deleteUser(userdto, choice);
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

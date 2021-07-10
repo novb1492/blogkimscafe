@@ -84,10 +84,11 @@ public class boardservice {
 
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject deleteArticle(int bid,String email) {
-        boardvo boardvo=boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글입니다"));
+    public JSONObject deleteArticle(boardvo boardvo,String email) {
+        
         confrimWriter(boardvo.getEmail(),email);
         try {
+            int bid=boardvo.getBid();
             boarddao.deleteById(bid);
             commentservice.deleteCommentByBid(bid);
             List<Integer>alreadyimages=new ArrayList<>();
@@ -97,6 +98,12 @@ public class boardservice {
         } catch (Exception e) {
             throw new RuntimeException("오류가 발생했습니다 다시시도 부탁드립니다");
         }
+    }
+    public boardvo getBoardVo(int bid) {
+        return boarddao.findById(bid).orElseThrow(()->new RuntimeException("존재하지 않는 게시글입니다"));
+    }
+    public List<boardvo> getAllBordVo(String email) {
+        return boarddao.findAllByEmail(email);
     }
     @Transactional
     public boardvo getArticle(int bid) {

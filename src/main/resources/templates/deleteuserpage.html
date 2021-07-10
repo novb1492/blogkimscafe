@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmln:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 탈퇴 페이지</title>
+</head>
+<body>
+    <a href="/">홈</a>
+    <br>
+    <a href="/mypage">마이페이지</a>
+    <br>
+    예약이 있다면취소/사용후 시도하시기 바랍니다
+    <form id="deleteuserform" method="post">
+        <input type="password" name="pwd" placeholder="비밀번호를 입력해주세요">
+            <br>
+            탈퇴시 삭제할 목록을 선택해 주세요
+            <br>
+            게시글<input type="checkbox" class="checkbox" name="choice"  value="board">
+            댓글<input type="checkbox" class="checkbox" name="choice"  value="comment">
+    </form>
+    <input type="button" id="deleteUserButton" onclick="deleteUser()" value="탈퇴하기">
+    <script src="../static/doAjax.js"></script>
+</body>
+</html>

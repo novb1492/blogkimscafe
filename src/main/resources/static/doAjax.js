@@ -6,6 +6,7 @@ function doajax(url,data,contentType){
     xhr.send(data); /// ajax data부분
     return xhr;
 }
+////////////////회원관련 함수들
 function doInsertUser(){
     var form= document.getElementById('form');
     var formData = new FormData(form);
@@ -18,6 +19,26 @@ function doInsertUser(){
             if(result.result){
                 alert(result.messege);
                 location.href='/auth/loginpage';
+            }else{
+                alert(result.messege);
+            }
+        }else{
+            alert("통신에 실패 하였습니다");
+        }
+    }  
+}
+function deleteUser(){
+    var form= document.getElementById('deleteuserform');
+    var formData = new FormData(form);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST" , "/deleteuser" , true);
+    xhr.send(formData);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            var result=JSON.parse(xhr.response);
+            if(result.result){
+                alert(result.messege);
+                location.href='/logout';
             }else{
                 alert(result.messege);
             }
@@ -251,7 +272,7 @@ function doUpdateComment(cid){
     }   
 }
 function doDeleteArticle(bid){
-    var xhr = new XMLHttpRequest();
+    var xhr;
     var url="/deletearticle";
     var data=JSON.stringify({"bid":bid});
     var contentType="application/json";
@@ -329,6 +350,7 @@ function doDeleteReservation(id){
         }
     }   
 }
+
 
 
     

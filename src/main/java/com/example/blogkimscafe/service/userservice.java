@@ -7,10 +7,15 @@ package com.example.blogkimscafe.service;
 
 
 
+import java.util.List;
+
 import com.example.blogkimscafe.config.security;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.Role;
 import com.example.blogkimscafe.enums.responResultEnum;
+import com.example.blogkimscafe.model.board.boarddao;
+import com.example.blogkimscafe.model.board.boardvo;
+import com.example.blogkimscafe.model.comment.commentdao;
 import com.example.blogkimscafe.model.user.*;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,12 @@ public class userservice {
     private security security;
     @Autowired
     private utilservice utilservice;
+    @Autowired
+    private boardservice boardservice;
+    @Autowired
+    private commentdao commentdao;
+    @Autowired
+    private reservationservice reservationservice;
   
     
     public boolean confrimEmail(String email) {
@@ -127,6 +138,40 @@ public class userservice {
             return callNotExistsUser();
         } catch (Exception e) {
            throw new RuntimeException("오류가 발생했습니다 잠시후 다시시도 바랍니다");
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    public JSONObject deleteUser(userdto userdto,List<String>aList) {
+        try {
+            uservo uservo=userdao.findByEmail(userdto.getEmail());
+            String email=uservo.getEmail();
+            if(confrimEmail(email)){
+                BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+                if(bCryptPasswordEncoder.matches(userdto.getPwd(),uservo.getPwd())){
+                    if(reservationservice.getReservationByEmail(email).isEmpty()){
+                        if(aList!=null){
+                            for(String s: aList){
+                                if(s.equals("board")){
+                                List<boardvo>array=boardservice.getAllBordVo(email);
+                                for(boardvo v:array){
+                                    boardservice.deleteArticle(v, email);
+                                }
+                                }else if(s.equals("comment")){
+                                    commentdao.deleteByEmail(email);
+                                }
+                            }
+                        }
+                        userdao.delete(uservo);
+                        return utilservice.makeJson(responResultEnum.sucDeleteUser.getBool(), responResultEnum.sucDeleteUser.getMessege());
+                    }
+                return utilservice.makeJson(responResultEnum.existReservation.getBool(), responResultEnum.existReservation.getMessege());
+                }
+                return utilservice.makeJson(responResultEnum.notEqalsPwd.getBool(),responResultEnum.notEqalsPwd.getMessege());
+            }
+            return callNotExistsUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("deleteUser 오류가 발생했습니다");
         }
     }
     private JSONObject callNotExistsUser() {

@@ -22,5 +22,7 @@ public interface commentdao extends JpaRepository<commentvo,Integer> {
     @Query(value = "DELETE FROM blogcomment c WHERE c.bid=?1",nativeQuery = true) // 딜리트 네거티브 쿼리 쓰는법!!!!!!!!!!!!20210531 대박이다 인서트도 이렇게 가능하지 않을까..? 테스트 해봐야겠다!
     void deleteByBidNative(int bid); 
 
+    void deleteByEmail(String email);
+
 
 }

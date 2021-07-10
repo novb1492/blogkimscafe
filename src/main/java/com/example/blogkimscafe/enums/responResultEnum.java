@@ -20,6 +20,7 @@ public enum responResultEnum {
     wrongTempNum("인증번호를 다시 확인해 주세요",false),
     sendTempPwd("임시비밀번호를 이메일로 전송했습니다",true),
     notEqualsUser("사용자 정보가 일치 하지 않습니다", false),
+    sucDeleteUser("회원 탈퇴 완료", true),
     //////////////board///////////////////////////////////
     findNoImageFile("이미지가 아닌 파일이 존재합니다 ",false),
     sucInsertArticle("게시글을 등록했습니다",true),
@@ -39,7 +40,8 @@ public enum responResultEnum {
     failDeleteReservation("예약자가 아니거나 잘못된 시간입니다",false),
     failConfrimBuyerInfor("상품금액과 결제 금액이 다릅니다",false),
     ExistsSeat("존재하는 자리입니다",true),
-    notExistsSeat("존재하지 않은 자리입니다",false),;
+    notExistsSeat("존재하지 않은 자리입니다",false),
+    existReservation("사용하지 않는 예약이 존재합니다 예약을 취소 하시거나 예약 시간이 지난 뒤 시도 해주세요",false);
    
     private final String messege;
     private final boolean torf;

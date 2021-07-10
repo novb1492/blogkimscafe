@@ -11,6 +11,7 @@ USER
 비밀번호변경
 이메일인증
 비밀번호찾기
+회원탈퇴
 
 RESERVATION
 당일 예약 시스템
@@ -107,6 +108,15 @@ reservationdto.setSeat(seatInforVo.getSeat());
 실패든성공이든 상관없이
 public void emthySession(HttpSession httpSession)
 만들어서 세션에서 값을 빼주도록 만들었습니다
+결제가 성공/취소 다음에는 메일/문자가 전송되게 
+해놨습니다
+
+회원탈퇴는
+탈퇴시 예약이 존재한다면
+불가능 하게 만들었습니다
+탈퇴시 게시글/댓글 혹은 둘다
+선택이 가능하고 선택한 종류는
+탈퇴시 같이 db에서 지워지게 만들었습니다
 
 그밖의 자세한 내용은
 https://cordingmonster.tistory.com/category/Spring%20boot%20%ED%98%BC%EC%9E%90%20%EB%A7%9B%EB%B3%B4%EA%B8%B0

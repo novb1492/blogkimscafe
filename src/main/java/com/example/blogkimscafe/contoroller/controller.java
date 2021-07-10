@@ -133,6 +133,10 @@ public class controller {
         model.addAttribute("totalpages",totalpages);
         return "showreservationpage";
     }
+    @GetMapping("/deleteuserpage")
+    public String deleteUserPage() {
+        return "deleteuserpage";
+    }
 
    
 
