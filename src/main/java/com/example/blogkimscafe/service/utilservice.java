@@ -15,10 +15,18 @@ import javax.servlet.http.HttpSession;
 
 import com.nimbusds.jose.shaded.json.JSONObject;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class utilservice {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public String GetRandomNum(int end) {
         String num="";
@@ -89,6 +97,10 @@ public class utilservice {
     }
     public String sendReservationCandleMessege(int requestTime,String seat) {
         return "안녕하세요 kimscafe 입니다 예약이 취소 되었습니다 자리: "+seat+" 시간: "+requestTime;
+    }
+    public void setAuthentication(String email,String pwd) {
+        Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pwd));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

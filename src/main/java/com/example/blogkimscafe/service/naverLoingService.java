@@ -8,10 +8,6 @@ import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,8 +24,8 @@ public class naverLoingService {
     @Autowired
     private userservice userservice;
     @Autowired
-    private AuthenticationManager authenticationManager;
-    
+    private utilservice utilservice;
+
     public String naverLogin() {
         String state="";
         try {
@@ -62,9 +58,7 @@ public class naverLoingService {
                split=naverDto.getResponse().get("mobile_e164").toString().split("2");
                userservice.insertOauthLogin((JSONObject)naverDto.getResponse(),email,pwd,"0"+split[1]);
            }
-           
-           Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pwd));
-           SecurityContextHolder.getContext().setAuthentication(authentication);
+           utilservice.setAuthentication(email, pwd);
         } catch (Exception e) {
             e.printStackTrace();
         }finally{
