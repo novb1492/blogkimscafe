@@ -43,15 +43,17 @@ public class commentservice {
             throw new RuntimeException("오류가 발생했습니다 잠시 후 다시시도 바랍니다");
         }
     }
-    public JSONObject deleteCommentByCid(int cid,String email) {
-        commentvo commentvo=commentdao.findById(cid).orElseThrow(()->new RuntimeException("존재하지 않는 댓글입니다"));
+    public JSONObject deleteCommentByCid(commentvo commentvo,String email) {
         confirmWriter(commentvo.getEmail(), email);
         try {
-            commentdao.deleteById(cid);
+            commentdao.deleteById(commentvo.getCid());
             return utilservice.makeJson(responResultEnum.sucDeleteCommnet.getBool(), responResultEnum.sucDeleteCommnet.getMessege());
         } catch (Exception e) {
            throw new RuntimeException("삭제중 문제가 생겼습니다");
         }  
+    }
+    public commentvo getCommentVo(int cid) {
+        return commentdao.findById(cid).orElseThrow(()->new RuntimeException("존재하지 않는 댓글입니다"));
     }
     public int totalCommentCount(int bid) {
 

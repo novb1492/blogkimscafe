@@ -13,7 +13,6 @@ import com.example.blogkimscafe.config.security;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.enums.Role;
 import com.example.blogkimscafe.enums.responResultEnum;
-import com.example.blogkimscafe.model.board.boarddao;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.comment.commentdao;
 import com.example.blogkimscafe.model.user.*;
@@ -59,6 +58,7 @@ public class userservice {
             uservo.setRole(Role.USER.getValue());
             uservo.setRandnum(utilservice.GetRandomNum(6));
             uservo.setEmailcheck("false");
+            uservo.setPhonecheck("false");
             userdao.save(uservo);
             return "sucSingUp";
         } catch (RuntimeException e) {
@@ -172,6 +172,17 @@ public class userservice {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("deleteUser 오류가 발생했습니다");
+        }
+    }
+    @Transactional
+    public void changeSmsCheck(String email,String phoneNum) {
+        try {
+            uservo uservo=userdao.findByEmail(email);
+            uservo.setPhonecheck("true");
+            uservo.setPhone(phoneNum);
+        } catch (Exception e) {
+           e.printStackTrace();
+           throw new RuntimeException("changeSmsCheck 오류가 발생했습니다");
         }
     }
     private JSONObject callNotExistsUser() {

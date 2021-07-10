@@ -16,7 +16,7 @@ public class coolSmsService {
     private final String apikey="NCSFT0AZ2O3FHMAX";
     private final String APISecret="AHZNZ3IIMGSYIXFLR7HQDBYA5KPFSFCS";
 
-    public void sendMessege(String phoneNum,String messege) {
+    public boolean sendMessege(String phoneNum,String messege) {
        
         String api_key = apikey;
         String api_secret = APISecret;
@@ -28,11 +28,13 @@ public class coolSmsService {
         params.put("text", messege);
         try {
             coolsms.send(params);
+            System.out.println();
             System.out.println("문자 전송 완료");
+            return true;
         } catch (CoolsmsException e) {
             e.printStackTrace();
-            System.out.println("전송 실패");
+            System.out.println("sendMessege 전송 실패");
         }
-       
+       return false;
     }
 }

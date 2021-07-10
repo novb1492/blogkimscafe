@@ -17,6 +17,8 @@
         <div th:text="${uservo.getCreated()}"></div>
         <br>
         <div th:if="${uservo.getEmailcheck()!='true'}">
+        이메일 인증을 진행해 주세요
+        <br>
             <input type="text" th:value="${uservo.getEmail()}" disabled>
                 <input type="button" onclick="doSendEamil()" value="인증번호전송">
                     <br>
@@ -25,7 +27,20 @@
 
         </div>
         <div th:if="${uservo.getEmailcheck()=='true'}">
-            이메일인증이 완료되었습니다.
+            이메일인증이 완료되었습니다.<br>
+        </div>
+        <div th:if="${uservo.getPhonecheck()!='true'}">
+            휴대폰 인증을 진행해 주세요
+            <br>
+            <input type="text" id="phoneNum" placeholder="전화번호를 입력해주세요">
+                    <input type="button" onclick="doSendSms()" value="인증번호전송">
+                    <br>
+                        <input type="text" id="randnum2" placeholder="인증번호를입력해주세요">
+                            <input type="button" id="sendTempNum2" onclick="doConfrimSmsNum()" value="제출" disabled>
+
+        </div>
+        <div th:if="${uservo.getPhonecheck()=='true'}">
+            전화인증이 완료되었습니다.<br>
         </div>
             <br>
                 <a href="/showreservationpage">예약내역</a>

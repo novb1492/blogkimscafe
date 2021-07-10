@@ -51,6 +51,12 @@ public class uservo {
     @Column(name="randnum")
     private String randnum;
 
+    @Column(name="phone")
+    private String phone;
+
+    @Column(name="phonecheck")
+    private String phonecheck;
+
     public uservo () {}
 
     public uservo (userdto userdto) {

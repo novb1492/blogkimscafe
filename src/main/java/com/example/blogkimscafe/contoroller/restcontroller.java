@@ -24,6 +24,7 @@ import com.example.blogkimscafe.model.user.userdto;
 import com.example.blogkimscafe.service.aboutSeatService;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
+import com.example.blogkimscafe.service.coolSmsService;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.iamportservice;
 import com.example.blogkimscafe.service.reservationservice;
@@ -56,6 +57,8 @@ public class restcontroller {
     private iamportservice iamportservice;
     @Autowired
     private aboutSeatService aboutSeatService;
+    @Autowired
+    private coolSmsService coolSmsService;
 
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -68,8 +71,34 @@ public class restcontroller {
     }
     @PostMapping("/sendemail")
     public JSONObject sendEmail(@AuthenticationPrincipal principaldetail principaldetail) {
-  
         return  emailservice.sendEmail(principaldetail.getUsername(),6);
+    }
+    @PostMapping("/sendSms")
+    public JSONObject sendSms(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody JSONObject phone,HttpSession httpSession) {
+        if(principaldetail.getUsername()!=null){
+            String smsRandNum=utilservice.GetRandomNum(6);
+            httpSession.setAttribute("phoneNum", phone.get("phone"));
+            httpSession.setAttribute("smsRandNum", smsRandNum);
+            if(coolSmsService.sendMessege((String)phone.get("phone"), smsRandNum)){
+                return responToFront("sendNumToSms");
+            }
+            return responToFront("failNumToSms");
+        } 
+        return responToFront("noLoginUser");
+    }
+    @PostMapping("/confrimsmsnum")
+    public JSONObject confrimSmsNum(@AuthenticationPrincipal principaldetail principaldetail,HttpSession httpSession,@RequestBody JSONObject jsonObject) {
+        if(principaldetail.getUsername()!=null){
+            if(httpSession.getAttribute("smsRandNum").equals(jsonObject.get("randnum"))){
+                principaldetail.getUservo().setPhonecheck("true");
+                userservice.changeSmsCheck(principaldetail.getUsername(),(String)httpSession.getAttribute("phoneNum"));
+                httpSession.removeAttribute("phoneNum");
+                httpSession.removeAttribute("smsRandNum");
+                return responToFront("rightTempNum");
+            }
+            return responToFront("wrongTempNum");
+        }
+        return responToFront("noLoginUser");
     }
     @PostMapping("/sendemailnologin")
     public JSONObject sendEmailnologin(@RequestBody Map<String,Object>map) {
@@ -87,6 +116,7 @@ public class restcontroller {
         return jsonObject;
         
     }
+   
     @PostMapping("/sendtemppwd")
     public JSONObject sendTempPwd(@RequestParam("email")String email,@RequestParam("randnum")String randnum) {
         JSONObject jsonObject=userservice.confrimRandnum(email, randnum);
@@ -136,7 +166,8 @@ public class restcontroller {
     }
     @PostMapping("/deletecomment")
     public JSONObject deleteComment(@RequestParam("cid")int cid,@AuthenticationPrincipal principaldetail principaldetail) {
-        return commentservice.deleteCommentByCid(cid, principaldetail.getUsername());
+        
+        return commentservice.deleteCommentByCid(commentservice.getCommentVo(cid), principaldetail.getUsername());
     }
     @PostMapping("/getimebyseat")
     public List<Integer> getReservation(@RequestParam("seat") String seat,@AuthenticationPrincipal principaldetail principaldetail) {

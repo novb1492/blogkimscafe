@@ -119,6 +119,46 @@ function doSendEamil(){
             }
         }  
 }
+function doSendSms(){
+    var xhr,url='/sendSms',data=JSON.stringify({"phone":""+document.getElementById('phoneNum').value+""});
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+        var result=JSON.parse(xhr.response);
+            if(result.result){
+                document.getElementById('sendTempNum2').disabled=false;
+                alert(result.messege);
+            }else{
+                alert(result.messege);
+            }  
+        }else{
+            alert('통신에 실패했습니다');
+        }
+    }  
+}
+function doConfrimSmsNum(){
+    var sendTempNum= document.getElementById('sendTempNum2');
+    sendTempNum.disabled=true;
+    var xhr,url='/confrimsmsnum',data=JSON.stringify({"randnum":""+document.getElementById('randnum2').value+""});//'randnum='+document.getElementById('randnum').value;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+                var result=JSON.parse(xhr.response);
+                if(result.result){
+                    alert(result.messege);
+                    location.href='/mypage';
+                }else{
+                    sendTempNum.disabled=false;
+                    alert(result.messege);
+                }  
+        }else{
+            alert('통신에 실패했습니다');
+            sendTempNum.disabled=false;
+        }
+    }    
+}
 function doConfrimTempnum(){
     var sendTempNum= document.getElementById('sendTempNum');
     sendTempNum.disabled=true;
