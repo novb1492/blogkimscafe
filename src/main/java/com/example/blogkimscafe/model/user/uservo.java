@@ -11,9 +11,12 @@ import javax.persistence.Table;
 import com.example.blogkimscafe.config.provider.ioauth2;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 @Table(name="blogusers")
 @Entity
 public class uservo {

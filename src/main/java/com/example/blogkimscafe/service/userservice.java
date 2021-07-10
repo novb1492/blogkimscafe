@@ -185,6 +185,16 @@ public class userservice {
            throw new RuntimeException("changeSmsCheck 오류가 발생했습니다");
         }
     }
+    public void insertOauthLogin(JSONObject jsonObject,String email,String pwd,String phoneNum) {
+        try {
+            BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
+            uservo uservo=new uservo(0, email, bCryptPasswordEncoder.encode(pwd),(String)jsonObject.get("name"), null, "ROLE_USER","naver", (String)jsonObject.get("id"), "true", null,phoneNum, "true");
+            userdao.save(uservo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("insertOauthLogin 오류가 발생했습니다");
+        }
+    }
     private JSONObject callNotExistsUser() {
         return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
     }

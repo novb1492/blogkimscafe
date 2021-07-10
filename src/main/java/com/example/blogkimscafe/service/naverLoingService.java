@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.example.blogkimscafe.model.naverDto;
-import com.example.blogkimscafe.model.user.userdto;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -62,11 +61,9 @@ public class naverLoingService {
                email=email2[0]+"@naver.com";
            }
            if(userservice.confrimEmail(email)==false){
-               userdto userdto=new userdto();
-               userdto.setEmail(email);
-               userdto.setName((String)naverDto.getResponse().get("name"));
-               userdto.setPwd(pwd);
-               userservice.insertUser(userdto);
+               String num=(String) naverDto.getResponse().get("mobile_e164");
+               String[] num2=num.split("2");
+               userservice.insertOauthLogin((JSONObject)naverDto.getResponse(),email,pwd,"0"+num2[1]);
            }
            Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pwd));
            SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -76,4 +73,5 @@ public class naverLoingService {
             headers.clear();
         }
      }
+     
 }
