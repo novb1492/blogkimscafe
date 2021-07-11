@@ -119,18 +119,6 @@ function doSendEamil(){
             }
         }  
 }
-function goNaverLogin(){
-        var xhr,url='/auth/naver',data=null;
-        var contentType="application/json";
-        xhr=doajax(url,data,contentType);
-        xhr.onload = function() { 
-            if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-            location.href=xhr.response;
-            }else{
-                alert('통신에 실패했습니다');
-            }
-        }  
-}
 function doSendSms(){
     var xhr,url='/sendSms',data=JSON.stringify({"phone":""+document.getElementById('phoneNum').value+""});
     var contentType="application/json";
@@ -422,6 +410,31 @@ function doUpdateReservation(id){
             alert('통신에 실패했습니다');
         }
     }   
+}
+///////////oauth로그인
+function goNaverLogin(){
+    var xhr,url='/auth/naver',data=null;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+        location.href=xhr.response;
+        }else{
+            alert('통신에 실패했습니다');
+        }
+    }  
+}
+function goKakaoLogin(){
+    var xhr,url='/auth/kakao',data=null;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+        location.href=xhr.response;
+        }else{
+            alert('통신에 실패했습니다');
+        }
+    }  
 }
 
 

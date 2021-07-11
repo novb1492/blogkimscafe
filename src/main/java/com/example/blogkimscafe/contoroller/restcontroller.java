@@ -27,6 +27,7 @@ import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.coolSmsService;
 import com.example.blogkimscafe.service.emailservice;
 import com.example.blogkimscafe.service.iamportservice;
+import com.example.blogkimscafe.service.kakaoLoginService;
 import com.example.blogkimscafe.service.naverLoingService;
 import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
@@ -63,6 +64,8 @@ public class restcontroller {
     private coolSmsService coolSmsService;
     @Autowired
     private naverLoingService naverLoingService;
+    @Autowired
+    private kakaoLoginService kakaoLoginService;
 
     @PostMapping("/auth/insertuser")
     public JSONObject insertUser(@Valid userdto userdto) {
@@ -258,9 +261,18 @@ public class restcontroller {
     public void naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
         naverLoingService.LoginNaver(naverLoingService.getNaverToken(code, state));
     }
+    @PostMapping("/auth/kakao")
+    public String  kakaoLogin() {
+        return kakaoLoginService.kakaoGetCode();
+    }
+    @GetMapping("/auth/kakaocallback")
+    public void kakaoLogin2(@RequestParam("code")String code) {
+      kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
+    }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());
     }
+   
 
 
     
