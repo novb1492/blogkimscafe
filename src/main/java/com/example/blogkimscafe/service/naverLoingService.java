@@ -53,6 +53,8 @@ public class naverLoingService {
 
            if(!split[1].equals("naver.com")){
                email=split[0]+"@naver.com";
+           }else{
+               email=naverDto.getResponse().get("email").toString();
            }
            if(userservice.confrimEmail(email)==false){
                split=naverDto.getResponse().get("mobile_e164").toString().split("2");
