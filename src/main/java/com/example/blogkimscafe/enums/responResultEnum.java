@@ -24,6 +24,7 @@ public enum responResultEnum {
     notEqualsUser("사용자 정보가 일치 하지 않습니다", false),
     sucDeleteUser("회원 탈퇴 완료", true),
     noLoginUser("로그인을 부탁드립니다",false),
+    failPhoneCheck("핸드폰 인증 부탁드립니다",false),
     //////////////board///////////////////////////////////
     findNoImageFile("이미지가 아닌 파일이 존재합니다 ",false),
     sucInsertArticle("게시글을 등록했습니다",true),

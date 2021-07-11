@@ -91,14 +91,11 @@ public class userservice {
             throw new RuntimeException("오류가 발생했습니다 잠시후 다시시도 바랍니다");
         }
     }
-    public JSONObject getEmailCheck(String email) {
-        if(confrimEmail(email)){
+    public boolean getEmailCheck(String email) {
            if(userdao.getEmailCheckfindByEmailNative(email).equals("true")){
-                return utilservice.makeJson(responResultEnum.emailCheckIsTrue.getBool(), responResultEnum.emailCheckIsTrue.getMessege());
+                return true;
            }
-           return utilservice.makeJson(responResultEnum.emailCheckIsFalse.getBool(), responResultEnum.emailCheckIsFalse.getMessege()); 
-        }
-        return callNotExistsUser();
+           return false;
     }
     @Transactional
     public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,pwddto pwddto ) {
@@ -190,6 +187,13 @@ public class userservice {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("insertOauthLogin 오류가 발생했습니다");
+        }
+    }
+    public boolean getPhoneCheck(String email) {
+        if(userdao.findByEmail(email).getPhonecheck().equals("true")){
+            return true;
+        }else{
+            return false;
         }
     }
     private JSONObject callNotExistsUser() {

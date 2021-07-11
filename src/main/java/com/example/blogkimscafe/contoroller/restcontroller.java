@@ -131,13 +131,14 @@ public class restcontroller {
     }   
     @PostMapping("/updatepwd")
     public JSONObject updatePwd(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody@Valid pwddto pwddto) {
-
         return  userservice.updatePwd(principaldetail,pwddto);
-        
     }
     @PostMapping("/confrimemailcheck")
     public JSONObject writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
-       return userservice.getEmailCheck(principaldetail.getUsername());
+        if( userservice.getEmailCheck(principaldetail.getUsername())){
+            return responToFront("emailCheckIsTrue");
+        }
+       return responToFront("emailCheckIsFalse");
     }
     @PostMapping("/insertarticle")
     public JSONObject insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
@@ -157,11 +158,10 @@ public class restcontroller {
     @PostMapping("/insertcomment")
     public JSONObject insertComment(@RequestBody@Valid commentdto commentdto,@AuthenticationPrincipal principaldetail principaldetail) {
         String email= principaldetail.getUsername();
-        JSONObject jsonObject=userservice.getEmailCheck(email);
-        if((boolean) jsonObject.get("result")){
+        if(userservice.getEmailCheck(email)){
             return commentservice.insertComment(commentdto,email); 
         }
-        return jsonObject;
+        return responToFront("emailCheckIsFalse");
        
     }
     @PostMapping("/updatecomment")
@@ -181,19 +181,22 @@ public class restcontroller {
     @PostMapping("/insertreservation")
     public JSONObject insertReservation(@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
         String email=principaldetail.getUsername();
-        JSONObject jsonObject=userservice.getEmailCheck(email);
         try {
-            if((boolean) jsonObject.get("result")){
-                seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
-                if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
-                    reservationdto.setPrice(seatInforVo.getPrice());
-                    return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession);
+            if(userservice.getEmailCheck(email)){
+                if(userservice.getPhoneCheck(email)){
+                    seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
+                    if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
+                        reservationdto.setPrice(seatInforVo.getPrice());
+                        return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession);
+                    }
+                    iamportservice.cancleBuy(imp_uid,0);
+                    return responToFront("failConfrimBuyerInfor");
                 }
                 iamportservice.cancleBuy(imp_uid,0);
-                return responToFront("failConfrimBuyerInfor");
+                return responToFront("failPhoneCheck");
             }
             iamportservice.cancleBuy(imp_uid,0);
-            return jsonObject;
+            return responToFront("emailCheckIsFalse");
         } catch (Exception e) {
             e.printStackTrace();
             iamportservice.cancleBuy(imp_uid,0);
@@ -223,11 +226,12 @@ public class restcontroller {
     public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("name")String name,@RequestParam("email")String email) {
         String loginEmail=principaldetail.getUsername();
         if(loginEmail.equals(email)&&principaldetail.getUservo().getName().equals(name)){
-            return userservice.getEmailCheck(loginEmail);
+            if(userservice.getEmailCheck(loginEmail)){
+                return  responToFront("");
+            }
+            return responToFront("emailCheckIsFalse");
         }
-        
-        return responToFront("notEqualsUser");
-        
+        return responToFront("notEqualsUser"); 
     }
     @PostMapping("/getpricebyhour")
     public int getPriceByHour(HttpSession session) {

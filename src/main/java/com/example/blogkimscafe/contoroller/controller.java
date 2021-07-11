@@ -66,7 +66,7 @@ public class controller {
     }
     @GetMapping("/writearticle")
     public String writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if((boolean) userservice.getEmailCheck(principaldetail.getUsername()).get("result")){
+        if(userservice.getEmailCheck(principaldetail.getUsername())){
             return "writearticlepage";
         }
         return "/auth/boardlist";

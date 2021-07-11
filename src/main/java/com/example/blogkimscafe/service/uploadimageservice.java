@@ -43,6 +43,7 @@ public class uploadimageservice {
                 String filename=f.getOriginalFilename();
                 String savename=utilservice.getUUID()+filename;
                 String localLocation=windowLocal+savename;
+                System.out.println(localLocation+" locallocation");
                 f.transferTo(new File(localLocation));
                 boardimagevo boardimagevo=new boardimagevo(boarddto,email,saveDbName+savename,savename,localLocation);
                 array.add(boardimagevo);
