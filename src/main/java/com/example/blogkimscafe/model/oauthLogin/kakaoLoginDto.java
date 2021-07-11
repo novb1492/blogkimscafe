@@ -1,15 +1,15 @@
 package com.example.blogkimscafe.model.oauthLogin;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class kakaoLoginDto {
-    private String token_type;
-    private String access_token;
-    private String expires_in;
-    private String refresh_token;
-    private String refresh_token_expires_in;
-    private String scope;
+    private String id;
+    private String connected_at;
+    private JSONObject kakao_account;
+    
 }

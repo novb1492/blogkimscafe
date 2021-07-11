@@ -1,11 +1,18 @@
 package com.example.blogkimscafe.service;
 
+import java.util.LinkedHashMap;
+
+import com.example.blogkimscafe.model.oauthLogin.kakaoAccountDto;
 import com.example.blogkimscafe.model.oauthLogin.kakaoLoginDto;
+import com.example.blogkimscafe.model.oauthLogin.kakaoToketnDto;
 import com.nimbusds.jose.shaded.json.JSONObject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,6 +27,11 @@ public class kakaoLoginService {
     private HttpHeaders headers=new HttpHeaders();
     private MultiValueMap<String,String> body=new LinkedMultiValueMap<>();
 
+    @Autowired
+    private userservice userservice;
+    @Autowired
+    private utilservice utilservice;
+
     public String kakaoGetCode() {
         try {
             return "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+apikey+"&redirect_uri="+callBackUrl+"";
@@ -28,7 +40,7 @@ public class kakaoLoginService {
             throw new RuntimeException("kakaoGetCode 오류 발생");
         }
     }
-    public kakaoLoginDto getKakaoToken(String code) {
+    public kakaoToketnDto getKakaoToken(String code) {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         body.add("grant_type", "authorization_code");
         body.add("client_id", apikey);
@@ -36,7 +48,7 @@ public class kakaoLoginService {
         body.add("code", code);
         try {
             HttpEntity<MultiValueMap<String,String>>entity=new HttpEntity<>(body,headers);
-            kakaoLoginDto kakaoLoginDto=restTemplate.postForObject("https://kauth.kakao.com/oauth/token",entity,kakaoLoginDto.class);
+            kakaoToketnDto kakaoLoginDto=restTemplate.postForObject("https://kauth.kakao.com/oauth/token",entity,kakaoToketnDto.class);
             System.out.println(kakaoLoginDto+" kakaotoken");
             return kakaoLoginDto;
         } catch (Exception e) {
@@ -47,13 +59,25 @@ public class kakaoLoginService {
             body.clear();
         }
     }
-    public void getKakaoProfile(kakaoLoginDto kakaoLoginDto) {
-        headers.add("Authorization", "Bearer "+kakaoLoginDto.getAccess_token());
+    public void getKakaoProfile(kakaoToketnDto kakaoToketnDto) {
+        headers.add("Authorization", "Bearer "+kakaoToketnDto.getAccess_token());
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         try {
             HttpEntity<MultiValueMap<String,String>>entity=new HttpEntity<>(headers);
-            JSONObject jsonObject=restTemplate.postForObject("https://kapi.kakao.com",entity,JSONObject.class);
-            System.out.println(jsonObject+" kakaoprofile");
+            kakaoLoginDto kakaoLoginDto =restTemplate.postForObject("https://kapi.kakao.com/v2/user/me",entity,kakaoLoginDto.class);
+            System.out.println(kakaoLoginDto+" kakaoprofile");
+           
+            kakaoAccountDto kakaoAccountDto =new kakaoAccountDto((boolean)kakaoLoginDto.getKakao_account().get("email_needs_agreement"),(boolean)kakaoLoginDto.getKakao_account().get("profile_nickname_needs_agreement"),(LinkedHashMap<String,String>)kakaoLoginDto.getKakao_account().get("profile"),(boolean)kakaoLoginDto.getKakao_account().get("is_email_valid"),(boolean)kakaoLoginDto.getKakao_account().get("is_email_verified"),(boolean)kakaoLoginDto.getKakao_account().get("has_email"),(String)kakaoLoginDto.getKakao_account().get("email"));
+
+            String email=kakaoAccountDto.getEmail();
+            if(userservice.confrimEmail(email)==false){
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("id", kakaoLoginDto.getId());
+                jsonObject.put("name", kakaoAccountDto.getProfile().get("nickname"));
+                jsonObject.put("provider", "kakao");
+                userservice.insertOauthLogin(jsonObject, email,apikey, "010-테스트중-못받음");
+            }
+            utilservice.setAuthentication(email, apikey);
         } catch (Exception e) {
             e.printStackTrace();
         }

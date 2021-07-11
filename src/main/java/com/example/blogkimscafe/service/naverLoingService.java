@@ -58,7 +58,7 @@ public class naverLoingService {
            }
            if(userservice.confrimEmail(email)==false){
                split=naverDto.getResponse().get("mobile_e164").toString().split("2");
-               userservice.insertOauthLogin((JSONObject)naverDto.getResponse(),email,pwd,"0"+split[1]);
+               userservice.insertOauthLogin((JSONObject)naverDto.getResponse().put("provider", "naver"),email,pwd,"0"+split[1]);
            }
            utilservice.setAuthentication(email, pwd);
         } catch (Exception e) {
