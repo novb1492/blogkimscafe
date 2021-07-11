@@ -264,10 +264,11 @@ public class restcontroller {
     @PostMapping("/auth/kakao")
     public String  kakaoLogin() {
         return kakaoLoginService.kakaoGetCode();
-    }
+    }   
     @GetMapping("/auth/kakaocallback")
-    public void kakaoLogin2(@RequestParam("code")String code) {
-      kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
+    public String kakaoLogin2(@RequestParam("code")String code) {
+        kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
+        return "/mypage";
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

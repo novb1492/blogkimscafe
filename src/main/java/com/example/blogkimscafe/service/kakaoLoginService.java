@@ -57,7 +57,7 @@ public class kakaoLoginService {
             body.clear();
         }
     }
-    public void getKakaoProfile(kakaoToketnDto kakaoToketnDto) {
+    public boolean getKakaoProfile(kakaoToketnDto kakaoToketnDto) {
         headers.add("Authorization", "Bearer "+kakaoToketnDto.getAccess_token());
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         try {
@@ -76,8 +76,10 @@ public class kakaoLoginService {
                 userservice.insertOauthLogin(jsonObject, email,apikey, "010-테스트중-못받음");
             }
             utilservice.setAuthentication(email, apikey);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

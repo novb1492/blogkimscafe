@@ -2,7 +2,6 @@ package com.example.blogkimscafe.model.oauthLogin;
 
 import java.util.LinkedHashMap;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
