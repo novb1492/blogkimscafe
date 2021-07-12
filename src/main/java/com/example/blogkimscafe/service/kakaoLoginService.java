@@ -75,7 +75,7 @@ public class kakaoLoginService {
                 jsonObject.put("id", kakaoLoginDto.getId());
                 jsonObject.put("name", kakaoAccountDto.getProfile().get("nickname"));
                 jsonObject.put("provider", "kakao");
-                userservice.insertOauthLogin(jsonObject, email,apikey, "010-테스트중-못받음");
+                userservice.insertOauthLogin(jsonObject,email,apikey,"010-테스트중-못받음");
             }
             utilservice.setAuthentication(email, apikey);
             return true;

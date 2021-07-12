@@ -69,7 +69,7 @@ public class reservationservice {
         }
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime,String imp_uid,HttpSession httpSession) {
+    public JSONObject insertReservation(reservationdto reservationdto,String email,String name,List<Integer>requestTime,String imp_uid,HttpSession httpSession,String phone) {
         try {
             String seat=reservationdto.getSeat();
             String confirm=confrimTime(seat, requestTime);
@@ -81,8 +81,8 @@ public class reservationservice {
                     historyservice.insertHistory(reservationvo);
                 }
                 String done=utilservice.sendReservtionOkMessege(requestTime,seat);
-                //sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
-                //coolSmsService.sendMessege("", done);
+                sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
+                coolSmsService.sendMessege(phone, done);
                 utilservice.emthySession(httpSession);
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
@@ -135,7 +135,8 @@ public class reservationservice {
         }
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject deleteReservation(String email,int rid) {
+    public JSONObject deleteReservation(String email,int rid,String phone) {
+        System.out.println(phone+" 예약취소");
         try {
         reservationvo reservationvo=confrimReservation(rid,email);
           if(reservationvo!=null){
@@ -143,8 +144,8 @@ public class reservationservice {
                 reservationdao.deleteById(rid);
                 historyservice.deleteHistory(rid);
                 String done=utilservice.sendReservationCandleMessege(reservationvo.getRequesthour(),reservationvo.getSeat());
-                //sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
-                //coolSmsService.sendMessege("",done);
+                sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
+                coolSmsService.sendMessege(phone,done);
                 return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
           }
           return utilservice.makeJson(responResultEnum.failDeleteReservation.getBool(), responResultEnum.failDeleteReservation.getMessege());

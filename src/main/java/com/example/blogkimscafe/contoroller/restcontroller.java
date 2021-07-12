@@ -189,7 +189,7 @@ public class restcontroller {
                     seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
                     if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
                         reservationdto.setPrice(seatInforVo.getPrice());
-                        return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession);
+                        return reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession,principaldetail.getUservo().getPhone());
                     }
                     iamportservice.cancleBuy(imp_uid,0);
                     return responToFront("failConfrimBuyerInfor");
@@ -209,7 +209,7 @@ public class restcontroller {
     @PostMapping("/deletereservation")
     public JSONObject deleteReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto  ) {
         System.out.println("취소할 예약 번호"+reservationdto.getRid());
-        return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto.getRid());
+        return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto.getRid(),principaldetail.getUservo().getPhone());
     }
     @PostMapping("/updatereservation")
     public JSONObject updateReservation(@RequestParam("canclerid")int canclerid,@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
@@ -220,8 +220,8 @@ public class restcontroller {
                     seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
                     if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
                         reservationdto.setPrice(seatInforVo.getPrice());
-                        if((boolean) reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession).get("result")){
-                            return reservationservice.deleteReservation(email, canclerid);
+                        if((boolean) reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession,principaldetail.getUservo().getPhone()).get("result")){
+                            return reservationservice.deleteReservation(email, canclerid,principaldetail.getUservo().getPhone());
                         }
                     }
                     iamportservice.cancleBuy(imp_uid,0);
@@ -298,6 +298,21 @@ public class restcontroller {
     public boolean doConfrimPhone(@RequestBody String phone,@AuthenticationPrincipal principaldetail principaldetail) {
         System.out.println( userservice.confrimPhone(phone,principaldetail.getUservo())+"결과");
         return userservice.confrimPhone(phone,principaldetail.getUservo());
+    }
+    @PostMapping("/changephone")
+    public JSONObject doConfrimPhone(@AuthenticationPrincipal principaldetail principaldetail,HttpSession httpSession,@RequestBody JSONObject jsonObject) {
+        if(principaldetail.getUsername()!=null){
+            if(httpSession.getAttribute("smsRandNum").equals(jsonObject.get("randnum"))){
+                principaldetail.getUservo().setPhonecheck("true");
+                principaldetail.getUservo().setPhone((String)httpSession.getAttribute("phoneNum"));
+                userservice.changeSmsCheck(principaldetail.getUsername(),(String)httpSession.getAttribute("phoneNum"));
+                httpSession.removeAttribute("phoneNum");
+                httpSession.removeAttribute("smsRandNum");
+                return responToFront("rightTempNum");
+            }
+            return responToFront("wrongTempNum");
+        }
+        return responToFront("noLoginUser");
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

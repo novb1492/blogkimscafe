@@ -182,8 +182,9 @@ public class userservice {
     }
     public void insertOauthLogin(JSONObject jsonObject,String email,String pwd,String phoneNum) {
         try {
+            System.out.println(jsonObject+email+pwd+phoneNum+" oauth회원가입");
             BCryptPasswordEncoder bCryptPasswordEncoder=security.pwdEncoder();
-            uservo uservo=new uservo(0, email, bCryptPasswordEncoder.encode(pwd),(String)jsonObject.get("name"), null,  Role.USER.getValue(),(String)jsonObject.get("provider"),(String)jsonObject.get("id"),Role.sucEmailSmsCheck.getValue(), null,phoneNum,Role.sucEmailSmsCheck.getValue());
+            uservo uservo=new uservo(0,email,bCryptPasswordEncoder.encode(pwd),(String)jsonObject.get("name"),null, Role.USER.getValue(),(String)jsonObject.get("provider"),(String)jsonObject.get("id"),Role.sucEmailSmsCheck.getValue(), null,phoneNum,Role.sucEmailSmsCheck.getValue());
             userdao.save(uservo);
         } catch (Exception e) {
             e.printStackTrace();

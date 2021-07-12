@@ -57,7 +57,7 @@ public class uservo {
     @Column(name="phone")
     private String phone;
 
-    @Column(name="phonecheck",unique = true)
+    @Column(name="phonecheck")
     private String phonecheck;
 
     public uservo () {}

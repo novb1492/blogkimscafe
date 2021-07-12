@@ -1,15 +1,33 @@
+두번째 토이프로젝트인
 카페를 예약하는 홈페이지입니다
 springboot/gradle을 사용했습니다
+백엔드 위주의 공부가 목적이여서
+프론트는 제가봐도 엉망입니다 
+
+테스트전 
+application.properties에서
+spring.mail.username=
+spring.mail.password=
+보내는 이메일을 설정해주세요
+
+coolSmsService.java에서
+params.put("from", "01011111111");
+보내는 번호를 설정해주세요
+
+카카오/네이버/아임포트/coolsms
+api키를 발급받아주세요
 
 설명
 
 USER
 구현기능
 회원가입
-로그인
+로그인(구글/카카오/네이버)
 마이페이지
 비밀번호변경
+전화번호변경
 이메일인증
+전화인증
 비밀번호찾기
 회원탈퇴
 
@@ -118,6 +136,13 @@ public void emthySession(HttpSession httpSession)
 선택이 가능하고 선택한 종류는
 탈퇴시 같이 db에서 지워지게 만들었습니다
 
+인증은
+두가지로 구성해봤습니다
+email인증은 번호를 db에 저장
+핸든폰인증은 session에 저장해서
+서로 비교하게 만들었습니다
+
+
 그밖의 자세한 내용은
 https://cordingmonster.tistory.com/category/Spring%20boot%20%ED%98%BC%EC%9E%90%20%EB%A7%9B%EB%B3%B4%EA%B8%B0
 에서 좀더 자세히 보실 수 있습니다
@@ -140,6 +165,8 @@ MYSQL 입니다
 | email      | varchar(30)  | NO   | UNI | NULL    |                |
 | emailcheck | varchar(255) | YES  |     | NULL    |                |
 | name       | varchar(20)  | NO   |     | NULL    |                |
+| phone      | varchar(255) | YES  |     | NULL    |                |
+| phonecheck | varchar(255) | YES  |     | NULL    |                |
 | provider   | varchar(255) | YES  |     | NULL    |                |
 | providerid | varchar(255) | YES  |     | NULL    |                |
 | pwd        | varchar(100) | NO   |     | NULL    |                |
