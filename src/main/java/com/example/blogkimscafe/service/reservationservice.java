@@ -2,12 +2,9 @@ package com.example.blogkimscafe.service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
-
 import com.example.blogkimscafe.email.sendemail;
 import com.example.blogkimscafe.enums.responResultEnum;
 import com.example.blogkimscafe.model.reservation.reservationdao;
@@ -84,8 +81,8 @@ public class reservationservice {
                     historyservice.insertHistory(reservationvo);
                 }
                 String done=utilservice.sendReservtionOkMessege(requestTime,seat);
-                //sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
-                //coolSmsService.sendMessege(phone, done);
+                sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
+                coolSmsService.sendMessege(phone, done);
                 utilservice.emthySession(httpSession);
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
@@ -148,8 +145,8 @@ public class reservationservice {
                 reservationdao.deleteById(rid);
                 historyservice.deleteHistory(rid);
                 String done=utilservice.sendReservationCandleMessege(reservationvo.getRequesthour(),reservationvo.getSeat());
-                //sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
-                //coolSmsService.sendMessege(phone,done);
+                sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
+                coolSmsService.sendMessege(phone,done);
                 return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
           }
           return utilservice.makeJson(responResultEnum.failDeleteReservation.getBool(), responResultEnum.failDeleteReservation.getMessege());
