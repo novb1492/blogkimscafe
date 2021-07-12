@@ -83,6 +83,13 @@ public class utilservice {
         }
         return false;
     }    
+    public boolean compareDate(Timestamp timestamp,LocalDateTime localDateTime) {
+        LocalDateTime reservationTime=timestamp.toLocalDateTime();
+        if(reservationTime.isEqual(localDateTime)){
+           return true;
+        }
+        return false;
+    }    
     public void emthySession(HttpSession httpSession) {
         httpSession.removeAttribute("seat");
     }

@@ -1,6 +1,8 @@
 package com.example.blogkimscafe.service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,8 @@ public class reservationservice {
             for(int i=openTime;i<=closeTime;i++){
                 for(int ii=0;ii<alreadyTimes.size();ii++){
                     if(i>nowHour){
-                        if(i==alreadyTimes.get(ii).getRequesthour()){
+                        LocalDateTime localDateTime=LocalDateTime.now().withHour(i).withMinute(0).withSecond(0).withNano(0);
+                        if(utilservice.compareDate(alreadyTimes.get(ii).getReservationdatetime(), localDateTime)){//utilservice.compareDate(alreadyTimes.get(ii).getReservationdatetime())==false){
                             System.out.println("불가능 시간 "+i);
                             break;
                         }else if(ii==alreadyTimes.size()-1){
@@ -81,8 +84,8 @@ public class reservationservice {
                     historyservice.insertHistory(reservationvo);
                 }
                 String done=utilservice.sendReservtionOkMessege(requestTime,seat);
-                sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
-                coolSmsService.sendMessege(phone, done);
+                //sendemail.sendEmail(email, "안녕하세요 예약내역을 보내드립니다", done);
+                //coolSmsService.sendMessege(phone, done);
                 utilservice.emthySession(httpSession);
                 return utilservice.makeJson(responResultEnum.sucInsertReservation.getBool(), responResultEnum.sucInsertReservation.getMessege());  
             }
@@ -104,7 +107,8 @@ public class reservationservice {
                     return "beforeTime";
                 }
                 for(reservationvo r:alreadyTimes){
-                    if(r.getRequesthour()==requestTime.get(i)){
+                    LocalDateTime localDateTime=LocalDateTime.now().withHour(i).withMinute(0).withSecond(0).withNano(0);
+                    if(utilservice.compareDate(r.getReservationdatetime(), localDateTime)){
                         System.out.println("불가이유: 중복시간 요청");
                         return "alreadyTime";
                     }
@@ -144,8 +148,8 @@ public class reservationservice {
                 reservationdao.deleteById(rid);
                 historyservice.deleteHistory(rid);
                 String done=utilservice.sendReservationCandleMessege(reservationvo.getRequesthour(),reservationvo.getSeat());
-                sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
-                coolSmsService.sendMessege(phone,done);
+                //sendemail.sendEmail(email,"예약 취소를 알려드립니다 ", done);
+                //coolSmsService.sendMessege(phone,done);
                 return utilservice.makeJson(responResultEnum.sucDeleteRerservation.getBool(), responResultEnum.sucDeleteRerservation.getMessege());
           }
           return utilservice.makeJson(responResultEnum.failDeleteReservation.getBool(), responResultEnum.failDeleteReservation.getMessege());
