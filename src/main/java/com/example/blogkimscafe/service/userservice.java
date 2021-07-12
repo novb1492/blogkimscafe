@@ -93,6 +93,7 @@ public class userservice {
     }
     public boolean getEmailCheck(String email) {
            if(userdao.getEmailCheckfindByEmailNative(email).equals("true")){
+                System.out.println("이메일 체크 성공");
                 return true;
            }
            return false;

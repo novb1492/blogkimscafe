@@ -49,10 +49,11 @@
                                 <input type="button" id="canclebutton" value="취소">
                             </div>
                         </div>
+                        <input type="hidden" id="cancleRid"th:value="${cancleRid}">
     </div>
 
 <script src="../static/doAjax.js"></script>
-<script src="../static/iamport.js"></script>
+<script src="../static/iamport2.js"></script>
 <script>
     $(function(){
         $('.seat').click(function(){
@@ -110,7 +111,8 @@
                             });
                             var price=data*requesthour.length;
                             console.log(email+'주문자 이메일');
-                            iamport(seat,price,email,name,requesthour);
+                            var cancleRid=document.getElementById('cancleRid').value;
+                            iamport2(seat,price,email,name,requesthour,cancleRid);
                         }
                         else{
                             alert('잘못된 접근 입니다');
@@ -147,7 +149,7 @@
         $( '#requesthourdiv' ).html(" ");///이게 없으면 체크박스가 계속 생긴다 20210528
         requesthour=[];////////////////////이거 없으면 체크박스 초기화 안됨
         $('#insertbutton').attr('disabled',false);
-        $('#canclebutton').attr('disabled',false);
+            $('#canclebutton').attr('disabled',false);
     }
 </script>
 </body>

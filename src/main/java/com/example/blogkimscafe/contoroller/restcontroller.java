@@ -137,11 +137,9 @@ public class restcontroller {
         return  userservice.updatePwd(principaldetail,pwddto);
     }
     @PostMapping("/confrimemailcheck")
-    public JSONObject writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
-        if( userservice.getEmailCheck(principaldetail.getUsername())){
-            return responToFront("emailCheckIsTrue");
-        }
-       return responToFront("emailCheckIsFalse");
+    public boolean writeArticlePage(@AuthenticationPrincipal principaldetail principaldetail) {
+    
+       return userservice.getEmailCheck(principaldetail.getUsername());
     }
     @PostMapping("/insertarticle")
     public JSONObject insertArticle(@AuthenticationPrincipal principaldetail principaldetail,@Valid boarddto boarddto,@RequestParam(value = "file", required = false)List<MultipartFile> file) {
@@ -213,17 +211,43 @@ public class restcontroller {
         return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
     }
     @PostMapping("/updatereservation")
-    public JSONObject updateReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto) {
-        return reservationservice.updateReservation(principaldetail.getUsername(), reservationdto);
+    public JSONObject updateReservation(@RequestParam("canclerid")int canclerid,@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
+        String email=principaldetail.getUsername();
+        try {
+            if(userservice.getEmailCheck(email)){
+                if(userservice.getPhoneCheck(email)){
+                    seatInforVo seatInforVo=(seatInforVo)httpSession.getAttribute("seat");
+                    if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
+                        reservationdto.setPrice(seatInforVo.getPrice());
+                        if((boolean) reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession).get("result")){
+                            reservationdto reservationdto2=new reservationdto();
+                            reservationdto2.setRid(canclerid);
+                            return reservationservice.deleteReservation(email, reservationdto2);
+                        }
+                    }
+                    iamportservice.cancleBuy(imp_uid,0);
+                    return responToFront("failConfrimBuyerInfor");
+                }
+                iamportservice.cancleBuy(imp_uid,0);
+                return responToFront("failPhoneCheck");
+            }
+            iamportservice.cancleBuy(imp_uid,0);
+            return responToFront("emailCheckIsFalse");
+        } catch (Exception e) {
+            e.printStackTrace();
+            iamportservice.cancleBuy(imp_uid,0);
+            utilservice.emthySession(httpSession);
+            throw new RuntimeException("updateReservation 오류가 발생했습니다 ");
+        }
     }
     @PostMapping("/confrimseat")
-    public JSONObject getPriceOneHour(@RequestParam("seat")String seat,HttpSession httpSession) {
+    public boolean getPriceOneHour(@RequestParam("seat")String seat,HttpSession httpSession) {
         seatInforVo seatInforVo=aboutSeatService.confrimSeat(seat);
         if(seatInforVo!=null){
             httpSession.setAttribute("seat", seatInforVo);
-            return responToFront("ExistsSeat");
+            return true;
         }
-        return responToFront("notExistsSeat");
+        return false;
     }
     @PostMapping("/cofrimemailcheck")
     public JSONObject confirmEmailCheck(@AuthenticationPrincipal principaldetail principaldetail,@RequestParam("name")String name,@RequestParam("email")String email) {
@@ -238,6 +262,7 @@ public class restcontroller {
     }
     @PostMapping("/getpricebyhour")
     public int getPriceByHour(HttpSession session) {
+        System.out.println("getPriceByHour 진행중");
         seatInforVo seatInforVo=(seatInforVo)session.getAttribute("seat");
         if(seatInforVo!=null){
             return seatInforVo.getPrice();

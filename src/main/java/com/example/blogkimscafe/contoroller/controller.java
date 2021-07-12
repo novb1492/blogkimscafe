@@ -137,6 +137,17 @@ public class controller {
     public String deleteUserPage() {
         return "deleteuserpage";
     }
+    @GetMapping("/test")
+    public String name() {
+        return "test";
+    }
+    @GetMapping("/updatereservationpage")
+    public String updateReservationPage(@RequestParam("id")int id,Model model,@AuthenticationPrincipal principaldetail principaldetail) {
+        model.addAttribute("cancleRid", id);
+        model.addAttribute("uservo",principaldetail.getUservo());
+        return "updatereservationpage";
+    }
+
   
 
    
