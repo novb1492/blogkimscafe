@@ -374,6 +374,7 @@ function doDeleteReservation(id){
     var url='/deletereservation'; 
     var data=JSON.stringify({"rid":""+id+""});
     var contentType="application/json";
+    alert('취소중 입니다 잠시만 기다려 주세요');
     xhr=doajax(url,data,contentType);
     xhr.onload = function() { 
         if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환

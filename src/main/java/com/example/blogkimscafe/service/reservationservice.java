@@ -75,13 +75,8 @@ public class reservationservice {
             String confirm=confrimTime(seat, requestTime);
             if("true".equals(confirm)){
                 for(int i=0;i<requestTime.size();i++){
-                    reservationvo reservationvo=new reservationvo(reservationdto);
-                    reservationvo.setRequesthour(requestTime.get(i));
-                    reservationvo.setEmail(email);
-                    reservationvo.setName(name);
-                    reservationvo.setImp_uid(imp_uid);
                     Timestamp timestamp=utilservice.makeToTimestamp(requestTime.get(i));
-                    reservationvo.setReservationdatetime(timestamp);
+                    reservationvo reservationvo=new reservationvo(0, reservationdto.getSeat(), name, email, null, requestTime.get(i), timestamp, imp_uid, reservationdto.getPrice());
                     reservationdao.save(reservationvo);
                     historyservice.insertHistory(reservationvo);
                 }

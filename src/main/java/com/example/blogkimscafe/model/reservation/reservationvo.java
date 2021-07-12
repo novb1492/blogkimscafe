@@ -10,11 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
 
+
+@AllArgsConstructor
 @Data
 @Table(name="blogreservation")
 @Entity
