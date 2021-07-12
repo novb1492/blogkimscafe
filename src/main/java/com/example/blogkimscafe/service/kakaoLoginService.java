@@ -39,6 +39,7 @@ public class kakaoLoginService {
         }
     }
     public kakaoToketnDto getKakaoToken(String code) {
+        System.out.println(code+" kakaocode");
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         body.add("grant_type", "authorization_code");
         body.add("client_id", apikey);
@@ -66,6 +67,7 @@ public class kakaoLoginService {
             System.out.println(kakaoLoginDto+" kakaoprofile");
            
             kakaoAccountDto kakaoAccountDto =new kakaoAccountDto((boolean)kakaoLoginDto.getKakao_account().get("email_needs_agreement"),(boolean)kakaoLoginDto.getKakao_account().get("profile_nickname_needs_agreement"),(LinkedHashMap<String,String>)kakaoLoginDto.getKakao_account().get("profile"),(boolean)kakaoLoginDto.getKakao_account().get("is_email_valid"),(boolean)kakaoLoginDto.getKakao_account().get("is_email_verified"),(boolean)kakaoLoginDto.getKakao_account().get("has_email"),(String)kakaoLoginDto.getKakao_account().get("email"));
+            System.out.println(kakaoAccountDto+" kakaoAccountDto");
 
             String email=kakaoAccountDto.getEmail();
             if(userservice.confrimEmail(email)==false){

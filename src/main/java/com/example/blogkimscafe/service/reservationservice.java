@@ -140,10 +140,9 @@ public class reservationservice {
         }
     }
     @Transactional(rollbackFor = {Exception.class})
-    public JSONObject deleteReservation(String email,reservationdto reservationdto) {
-        int rid=reservationdto.getRid();
+    public JSONObject deleteReservation(String email,int rid) {
         try {
-        reservationvo reservationvo=confrimReservation(reservationdto.getRid(),email);
+        reservationvo reservationvo=confrimReservation(rid,email);
           if(reservationvo!=null){
                 iamportservice.cancleBuy(reservationvo.getImp_uid(),reservationvo.getPrice());
                 reservationdao.deleteById(rid);

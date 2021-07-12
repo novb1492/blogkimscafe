@@ -208,7 +208,7 @@ public class restcontroller {
     @PostMapping("/deletereservation")
     public JSONObject deleteReservation(@AuthenticationPrincipal principaldetail principaldetail,@RequestBody reservationdto reservationdto  ) {
         System.out.println("취소할 예약 번호"+reservationdto.getRid());
-        return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto);
+        return reservationservice.deleteReservation(principaldetail.getUsername() ,reservationdto.getRid());
     }
     @PostMapping("/updatereservation")
     public JSONObject updateReservation(@RequestParam("canclerid")int canclerid,@AuthenticationPrincipal principaldetail principaldetail,@Valid reservationdto reservationdto,@RequestParam(value = "requesthour[]")List<Integer> requestTime,@RequestParam("imp_uid")String imp_uid,HttpSession httpSession) {
@@ -220,9 +220,7 @@ public class restcontroller {
                     if(iamportservice.confrimBuyerInfor(imp_uid,reservationservice.getPrice(seatInforVo.getPrice(), requestTime.size()),email)){
                         reservationdto.setPrice(seatInforVo.getPrice());
                         if((boolean) reservationservice.insertReservation(reservationdto,email,principaldetail.getUservo().getName(),requestTime,imp_uid,httpSession).get("result")){
-                            reservationdto reservationdto2=new reservationdto();
-                            reservationdto2.setRid(canclerid);
-                            return reservationservice.deleteReservation(email, reservationdto2);
+                            return reservationservice.deleteReservation(email, canclerid);
                         }
                     }
                     iamportservice.cancleBuy(imp_uid,0);
