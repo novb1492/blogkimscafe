@@ -14,7 +14,7 @@ coolSmsService.java에서
 params.put("from", "01011111111");
 보내는 번호를 설정해주세요
 
-카카오/네이버/아임포트/coolsms
+카카오/네이버/아임포트/coolsms/구글/페이스북
 api키를 발급받아주세요
 
 설명
