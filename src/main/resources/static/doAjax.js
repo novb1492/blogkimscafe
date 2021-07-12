@@ -137,28 +137,6 @@ function doSendSms(){
         }
     }  
 }
-function doConfrimSmsNum(){
-    var sendTempNum= document.getElementById('sendTempNum2');
-    sendTempNum.disabled=true;
-    var xhr,url='/confrimsmsnum',data=JSON.stringify({"randnum":""+document.getElementById('randnum2').value+""});//'randnum='+document.getElementById('randnum').value;
-    var contentType="application/json";
-    xhr=doajax(url,data,contentType);
-    xhr.onload = function() { 
-        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
-                var result=JSON.parse(xhr.response);
-                if(result.result){
-                    alert(result.messege);
-                    location.href='/mypage';
-                }else{
-                    sendTempNum.disabled=false;
-                    alert(result.messege);
-                }  
-        }else{
-            alert('통신에 실패했습니다');
-            sendTempNum.disabled=false;
-        }
-    }    
-}
 function doConfrimTempnum(){
     var sendTempNum= document.getElementById('sendTempNum');
     sendTempNum.disabled=true;
@@ -419,6 +397,48 @@ function goKakaoLogin(){
         }
     }  
 }
+////////인증에 관련된 함수들
+function doConfrimSmsNum(){
+    var sendTempNum= document.getElementById('sendTempNum2');
+    sendTempNum.disabled=true;
+    var xhr,url='/confrimsmsnum',data=JSON.stringify({"randnum":""+document.getElementById('randnum2').value+""});//'randnum='+document.getElementById('randnum').value;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+                var result=JSON.parse(xhr.response);
+                if(result.result){
+                    alert(result.messege);
+                    location.href='/mypage';
+                }else{
+                    sendTempNum.disabled=false;
+                    alert(result.messege);
+                }  
+        }else{
+            alert('통신에 실패했습니다');
+            sendTempNum.disabled=false;
+        }
+    }    
+}
+function doCofrimPhone(){
+    var xhr,url='/cofrimphone',data=document.getElementById("beforephone").value;
+    var contentType="application/json";
+    xhr=doajax(url,data,contentType);
+    xhr.onload = function() { 
+        if(xhr.status==200){ // success:function(data)부분 통신 성공시 200반환
+            if((xhr.response==='true')){
+                document.getElementById("doCofrimPhoneButton").disabled=true;
+                document.getElementById("beforephone").disabled=true;
+                alert('전화번호가 일치합니다');
+            }else{
+                alert('존재하지 않는 번호 입니다');
+            }
+        }else{
+            alert('통신에 실패했습니다');
+        }
+    }   
+}
+
 
 
 

@@ -98,6 +98,7 @@ public class restcontroller {
         if(principaldetail.getUsername()!=null){
             if(httpSession.getAttribute("smsRandNum").equals(jsonObject.get("randnum"))){
                 principaldetail.getUservo().setPhonecheck("true");
+                principaldetail.getUservo().setPhone((String)httpSession.getAttribute("phoneNum"));
                 userservice.changeSmsCheck(principaldetail.getUsername(),(String)httpSession.getAttribute("phoneNum"));
                 httpSession.removeAttribute("phoneNum");
                 httpSession.removeAttribute("smsRandNum");
@@ -292,6 +293,11 @@ public class restcontroller {
     public String kakaoLogin2(@RequestParam("code")String code) {
         kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
         return "/mypage";
+    }
+    @PostMapping("/cofrimphone")
+    public boolean doConfrimPhone(@RequestBody String phone,@AuthenticationPrincipal principaldetail principaldetail) {
+        System.out.println( userservice.confrimPhone(phone,principaldetail.getUservo())+"결과");
+        return userservice.confrimPhone(phone,principaldetail.getUservo());
     }
     private JSONObject responToFront(String text) {  
         return utilservice.makeJson(responResultEnum.valueOf(text).getBool(), responResultEnum.valueOf(text).getMessege());

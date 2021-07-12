@@ -147,6 +147,10 @@ public class controller {
         model.addAttribute("uservo",principaldetail.getUservo());
         return "updatereservationpage";
     }
+    @GetMapping("/updatephonepage")
+    public String updatePhonePage() {
+        return "updatephonepage";
+    }
 
   
 

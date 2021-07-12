@@ -41,6 +41,7 @@
         </div>
         <div th:if="${uservo.getPhonecheck()=='true'}">
             전화인증이 완료되었습니다.<br>
+        전화번호<div th:text="${uservo.getPhone}"></div>
         </div>
             <br>
                 <a href="/showreservationpage">예약내역</a>
@@ -48,6 +49,7 @@
                         <a href="/updatepwdpage">비밀번호 변경하러 가기</a>
                             <br>
                                 <a href="/deleteuserpage">회원탈퇴</a>
+                                    <a href="/updatephonepage">전화번호 변경 </a>
         <script src="../static/doAjax.js"></script>
 
 </body>

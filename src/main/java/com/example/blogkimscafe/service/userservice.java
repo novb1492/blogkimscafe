@@ -197,6 +197,17 @@ public class userservice {
             return false;
         }
     }
+    public boolean confrimPhone(String phone,uservo uservo) {
+        try {
+            System.out.println(phone+" 이전 전화번호");
+            if(uservo.getPhone().equals(phone)){
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     private JSONObject callNotExistsUser() {
         return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
     }
