@@ -17,6 +17,9 @@ params.put("from", "01011111111");
 카카오/네이버/아임포트/coolsms/구글/페이스북
 api키를 발급받아주세요
 
+uploadimageservice.java에서
+windowLocal/saveDbName를 설정해주세요
+
 설명
 
 USER
