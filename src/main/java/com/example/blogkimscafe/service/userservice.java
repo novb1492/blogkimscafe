@@ -209,6 +209,18 @@ public class userservice {
         }
         return false;
     }
+    public uservo getUservo(String email) {
+        try {
+            uservo uservo=userdao.findByEmail(email);
+            if(uservo!=null){
+                return uservo;
+            }
+            throw new Exception();
+        } catch (Exception e) {
+           e.printStackTrace();
+           throw new RuntimeException("getUservo null이 반환됨");
+        }
+    }
     private JSONObject callNotExistsUser() {
         return utilservice.makeJson(responResultEnum.notExistsUser.getBool(), responResultEnum.notExistsUser.getMessege());
     }

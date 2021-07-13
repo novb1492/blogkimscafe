@@ -17,7 +17,7 @@ public class coolSmsService {
     private final String apiSecret="AHZNZ3IIMGSYIXFLR7HQDBYA5KPFSFCS";
 
     public boolean sendMessege(String phoneNum,String messege) {
-       
+       System.out.println(phoneNum+" 문자전송번호");
         Message coolsms = new Message(apikey, apiSecret);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("to", phoneNum);

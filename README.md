@@ -20,6 +20,10 @@ api키를 발급받아주세요
 uploadimageservice.java에서
 windowLocal/saveDbName를 설정해주세요
 
+blogseatinfor테이블에
+상품을 넣어주세요
+ex) insert into blogseatinfor(limited,price,seat)values(1,500,'a-1');
+
 설명
 
 USER

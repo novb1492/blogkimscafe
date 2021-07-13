@@ -9,7 +9,6 @@ package com.example.blogkimscafe.contoroller;
 import com.example.blogkimscafe.config.auth.principaldetail;
 import com.example.blogkimscafe.model.board.boardvo;
 import com.example.blogkimscafe.model.boardimage.boardimagedao;
-import com.example.blogkimscafe.model.user.uservo;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.historyservice;
@@ -18,6 +17,7 @@ import com.example.blogkimscafe.service.userservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -112,11 +112,11 @@ public class controller {
         return "boardlist";
     }
     @GetMapping("/auth/reservationpage")
-    public String reservationPage(Model model,@AuthenticationPrincipal principaldetail principaldetail) {
-        uservo uservo=principaldetail.getUservo();
-        if(uservo!=null){
-            model.addAttribute("uservo",uservo);
-
+    public String reservationPage(Model model) {
+        String email=SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(email);
+        if(!email.equals("anonymousUser")){
+            model.addAttribute("uservo", userservice.getUservo(email));
         }
         return "reservationpage";
     }
