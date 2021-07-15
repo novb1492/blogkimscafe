@@ -281,19 +281,11 @@ public class restcontroller {
     public String naverLogin() {
         return  naverLoingService.naverLogin();
     }
-    @GetMapping("/auth/navercallback")
-    public void naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
-        naverLoingService.LoginNaver(naverLoingService.getNaverToken(code, state));
-    }
+    
     @PostMapping("/auth/kakao")
     public String  kakaoLogin() {
         return kakaoLoginService.kakaoGetCode();
     }   
-    @GetMapping("/auth/kakaocallback")
-    public String kakaoLogin2(@RequestParam("code")String code) {
-        kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
-        return "/mypage";
-    }
     @PostMapping("/cofrimphone")
     public boolean doConfrimPhone(@RequestBody String phone,@AuthenticationPrincipal principaldetail principaldetail) {
         System.out.println( userservice.confrimPhone(phone,principaldetail.getUservo())+"결과");

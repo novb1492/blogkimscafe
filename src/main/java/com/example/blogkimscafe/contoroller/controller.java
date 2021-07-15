@@ -12,6 +12,8 @@ import com.example.blogkimscafe.model.boardimage.boardimagedao;
 import com.example.blogkimscafe.service.boardservice;
 import com.example.blogkimscafe.service.commentservice;
 import com.example.blogkimscafe.service.historyservice;
+import com.example.blogkimscafe.service.kakaoLoginService;
+import com.example.blogkimscafe.service.naverLoingService;
 import com.example.blogkimscafe.service.reservationservice;
 import com.example.blogkimscafe.service.userservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,10 @@ public class controller {
     private reservationservice reservationservice;
     @Autowired
     private historyservice historyservice;
+    @Autowired
+    private naverLoingService naverLoingService;
+    @Autowired
+    private kakaoLoginService kakaoLoginService;
 
 
     @GetMapping("/auth/joinpage")
@@ -150,6 +156,16 @@ public class controller {
     @GetMapping("/updatephonepage")
     public String updatePhonePage() {
         return "updatephonepage";
+    }
+    @GetMapping("/auth/navercallback")
+    public String  naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
+        naverLoingService.LoginNaver(naverLoingService.getNaverToken(code, state));
+        return "index";
+    }
+    @GetMapping("/auth/kakaocallback")
+    public String kakaoLogin2(@RequestParam("code")String code) {
+        kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
+        return "index";
     }
 
   
