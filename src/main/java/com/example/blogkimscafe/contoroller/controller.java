@@ -160,12 +160,12 @@ public class controller {
     @GetMapping("/auth/navercallback")
     public String  naverLogin2(@RequestParam("code")String code, @RequestParam("state") String state) {
         naverLoingService.LoginNaver(naverLoingService.getNaverToken(code, state));
-        return "index";
+        return "redirect:/";
     }
     @GetMapping("/auth/kakaocallback")
     public String kakaoLogin2(@RequestParam("code")String code) {
         kakaoLoginService.getKakaoProfile(kakaoLoginService.getKakaoToken(code));
-        return "index";
+        return "redirect:/";
     }
 
   
