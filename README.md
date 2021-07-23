@@ -151,8 +151,8 @@ email인증은 번호를 db에 저장
 
 컨트롤러는 
 만들다 보니거의 
-서비스 처럼 지저분 해졌습니다
-좀더 신경써야될 부분 같습니다
+서비스 처럼 구현된 
+부분이 아쉽게 느껴집니다
 
 그밖의 자세한 내용은
 https://cordingmonster.tistory.com/category/Spring%20boot%20%ED%98%BC%EC%9E%90%20%EB%A7%9B%EB%B3%B4%EA%B8%B0
