@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 두번째 토이프로젝트인  
 카페를 예약하는 홈페이지입니다  
 springboot/gradle을 사용했습니다  
@@ -63,6 +64,94 @@ img태그에 넣을 수 있도록 db에는 링크식으로 저장했습니다
 public List<boardimagevo> insertImageLocal  
 public void insertImageToDb  
   
+=======
+두번째 토이프로젝트인
+카페를 예약하는 홈페이지입니다
+springboot/gradle을 사용했습니다
+백엔드 위주의 공부가 목적이여서
+프론트는 제가봐도 엉망입니다
+
+USER
+구현기능
+회원가입
+로그인(구글/카카오/네이버)
+마이페이지
+비밀번호변경
+전화번호변경
+이메일인증
+전화인증
+비밀번호찾기
+회원탈퇴
+
+RESERVATION
+당일 예약 시스템
+아임포트를 이용한 결제 시스템
+(아임포트 api호출)
+예약내역 페이지
+예약변경/취소가능
+예약히스토리구현
+
+BOARD
+글쓰기
+글검색
+글수정
+글삭제
+조회수
+댓글쓰기
+댓글삭제
+댓글수정
+
+사용언어 
+
+프론트
+html/바닐라js/j쿼리/css
+-백엔드 위주로 공부하고 싶어서
+자세히는 알지 못하나 최대한 바닐라js로 구성하려했습니다
+하지만 예약하는 부분에서 좀 복잡해서 j쿼리의 도움을 받았습니다
+아이디 중복검사에서 비동기 검사를 보고 너무 신기해서
+대부분 비동기 통신으로 구성했습니다
+
+백엔드
+자바/스프링/jpa
+-MultipartFile을 이용해서 파일형식을 받을 수 있다는 걸 공부 했습니다
+그래서 프론트의 사진을 받았습니다
+RestTemplate/HttpHeaders/HttpEntity 를 이용해서 아임포트api를 호출합니다
+자바 서버에서 외부 api를 호출하는 방법을 익혔습니다
+(물론 회사마다 방법이 약간씩 다른거 같습니다)
+@Transactional(rollbackFor = {Exception.class}) 이용해 롤백을 구현했습니다
+@RestControllerAdvice를이용해서 예외처리를 했습니다
+
+
+글작성시 사진은 
+로컬 과 db에 http://local~식/로컬경로 이렇게 
+두가지 로 저장했습니다
+프론트에게 던저줄때
+img태그에 넣을 수 있도록 db에는 링크식으로 저장했습니다
+public List<boardimagevo> insertImageLocal
+public void insertImageToDb
+
+글변경에서 사진은 
+일단 기존 사진들의 변화를 감지해야 했습니다
+예를들어 처음 사용자가 글을 쓰때 a/b/c라는 사진을 넣었다고 하고
+글 수정중 b를 제거한 상황이 발생했습니다
+이럴때는 프론트에서 a/c남은 사진만 서버로 주면 
+서버에서 글에 해당하는 사진 db로가서 모두가져 온다음
+a/b/c중 빠진 사진이 있다면 이경우에는 b가 되겠죠
+b를 list에 넣어준다음 db에서 삭제 해주는 형식으로 했습니다
+이런방식을 쓰면 모든 사진을 삭제하고 수정하거나
+모든사진을 삭제하고 새사진을 넣을때나
+기존사진에 변경이 생겼을때 잘 컨트롤 할 수있을 거라고 생각 되어서 만들었습니다
+private List<boardimagevo> selectDeleteImage(List<Integer>alreadyimages,int bid) 
+그리고 그다음 새사진이 있다면
+사진을 글씨기 처럼 추가해주게 만들었습니다
+즉 기존사진변화처리->새사진이있다면등록
+기존사진/새사진을 따로따로 생각하고 처리했습니다
+
+글 형식은 varchar가아닌 blob사용 해서 
+mysql조회시 글내용이 아니라 용량으로 나오게 하고싶은데
+아직 구현하지 못했습니다
+
+>>>>>>> a4f9cec4d78fdc038c7e1bc1ded5850c8d609d56
 예외는
 @RestControllerAdvice 사용했습니다  
 restcontroller전역에서 예외를 잡아서 한번에  
