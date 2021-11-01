@@ -1,43 +1,21 @@
-두번째 토이프로젝트인
-카페를 예약하는 홈페이지입니다
-springboot/gradle을 사용했습니다
-백엔드 위주의 공부가 목적이여서
-프론트는 제가봐도 엉망입니다 
+두번째 토이프로젝트인  
+카페를 예약하는 홈페이지입니다  
+springboot/gradle을 사용했습니다  
+백엔드 위주의 공부가 목적이여서  
+프론트는 제가봐도 엉망입니다   
 
-테스트전 
-application.properties에서
-spring.mail.username=
-spring.mail.password=
-보내는 이메일을 설정해주세요
-
-coolSmsService.java에서
-params.put("from", "01011111111");
-보내는 번호를 설정해주세요
-
-카카오/네이버/아임포트/coolsms/구글/페이스북
-api키를 발급받아주세요
-
-uploadimageservice.java에서
-windowLocal/saveDbName를 설정해주세요
-
-blogseatinfor테이블에
-상품을 넣어주세요
-ex) insert into blogseatinfor(limited,price,seat)values(1,500,'a-1');
-
-설명
-
-USER
-구현기능
-회원가입
-로그인(구글/카카오/네이버)
-마이페이지
-비밀번호변경
-전화번호변경
-이메일인증
-전화인증
-비밀번호찾기
-회원탈퇴
-
+USER  
+구현기능  
+회원가입  
+로그인(구글/카카오/네이버)  
+마이페이지  
+비밀번호변경  
+전화번호변경  
+이메일인증  
+전화인증  
+비밀번호찾기  
+회원탈퇴  
+  
 RESERVATION
 당일 예약 시스템
 아임포트를 이용한 결제 시스템
